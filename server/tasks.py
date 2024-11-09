@@ -1,0 +1,120 @@
+from pprint import pprint
+
+from config import MONGO_URI
+from database import CustomMotorClient
+from models import User, Task
+
+import random
+from enum import IntEnum
+
+db= CustomMotorClient(MONGO_URI)
+
+
+
+class OpCodes(IntEnum):
+    # JETTON messages
+    transfer = 0xF8A7EA5
+    internal_transfer = 0x178D4519
+    transfer_notification = 0x7362D09C
+    excesses = 0xD53276DB
+    burn = 0x595F07BC
+    burn_notification = 0x7BDD97DE
+
+    # TON messages
+    default_message = 0x00000000
+
+    # TonCrypto
+    dedust_swap = 0x9C610DE3
+    dedust_deposit = 0xB544F4A4
+
+    def __repr__(self):
+        return f"{self.value}"
+
+    @classmethod
+    def get_random(cls):
+        all_ = list(cls)
+        return all_[random.randint(0, len(all_) - 1)]
+
+    @classmethod
+    def get_by_code(cls, code):
+        for opcode in cls:
+            if opcode.value == code:
+                return opcode.name
+        return cls.default_message.name
+
+    @classmethod
+    def item_list(cls):
+        return [opcode.value for opcode in cls]
+
+
+parent_task = Task(
+    id=1,
+    title="Complete the second task",
+    icon="https://example.com/icon.png",
+    description="Complete the second task to earn 200 XP",
+    images=["https://example.com/image1.png"],
+    active=True,
+    xp=200,
+    contract_addresses=[],
+    op_code=None,
+    min_amount=0,
+    parent_id=None,
+)
+
+tasks = [
+    Task(
+        id=2,
+        title="Complete the first task",
+        icon="https://example.com/icon.png",
+        description="Complete the first task to earn 100 XP",
+        images=["https://example.com/image1.png"],
+        active=True,
+        xp=100,
+        contract_addresses=[],
+        op_code=OpCodes.default_message,
+        min_amount=0,
+        parent_id=parent_task.id,
+    ),
+    Task(
+        id=3,
+        title="Complete the third task",
+        icon="https://example.com/icon.png",
+        description="Complete the third task to earn 300 XP",
+        images=["https://example.com/image1.png"],
+        active=True,
+        xp=300,
+        contract_addresses=[],
+        op_code=OpCodes.dedust_swap,
+        min_amount=0,
+        parent_id=parent_task.id,
+    ),
+    Task(
+        id=4,
+        title="Complete the fourth task",
+        icon="https://example.com/icon.png",
+        description="Complete the fourth task to earn 400 XP",
+        images=["https://example.com/image1.png"],
+        active=True,
+        xp=400,
+        contract_addresses=[],
+        op_code=OpCodes.dedust_deposit,
+        min_amount=0,
+        parent_id=2,
+    ),
+]
+
+
+async def add_tasks():
+    await db.create_task(parent_task)
+    for task in tasks:
+        await db.create_task(task)
+
+async def delete_all_tasks():
+    tasks = await db.get_tasks()
+    for task in tasks:
+        await db.db.tasks.delete_one({"id": task.id})
+
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(add_tasks())

@@ -1,0 +1,7 @@
+pydantic==2.9.2
+fastapi==0.115.4
+
+motor-3.6.0
+pymongo-4.9.2
+pytoniq==0.1.40
+uvicorn==0.32.0
