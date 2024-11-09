@@ -29,6 +29,7 @@ class Task(pydantic.BaseModel):
     op_code: Optional[str] = None
     min_amount: float
     parent_id: int | None = None
+    external_url: Optional[str] = None
 
 
 class CompleteTask(pydantic.BaseModel):

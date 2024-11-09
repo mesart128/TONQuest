@@ -49,9 +49,9 @@ class OpCodes(IntEnum):
 
 parent_task = Task(
     id=1,
-    title="Complete the second task",
+    title="Connect your wallet",
     icon="https://example.com/icon.png",
-    description="Complete the second task to earn 200 XP",
+    description="Connect your wallet to earn 200 XP",
     images=["https://example.com/image1.png"],
     active=True,
     xp=200,
@@ -64,9 +64,9 @@ parent_task = Task(
 tasks = [
     Task(
         id=2,
-        title="Complete the first task",
+        title="Deposit TON to your wallet",
         icon="https://example.com/icon.png",
-        description="Complete the first task to earn 100 XP",
+        description="Deposit TON to your wallet to earn 200 XP",
         images=["https://example.com/image1.png"],
         active=True,
         xp=100,
@@ -77,9 +77,10 @@ tasks = [
     ),
     Task(
         id=3,
-        title="Complete the third task",
+        title="Make dedust swap at any pool",
         icon="https://example.com/icon.png",
-        description="Complete the third task to earn 300 XP",
+        description="Make dedust swap at any pool to earn 300 XP. "
+                    "For example you can use this more safety pool.",
         images=["https://example.com/image1.png"],
         active=True,
         xp=300,
@@ -87,10 +88,11 @@ tasks = [
         op_code=OpCodes.dedust_swap,
         min_amount=0,
         parent_id=parent_task.id,
+        external_url="https://dedust.io/swap/TON/USDT"
     ),
     Task(
         id=4,
-        title="Complete the fourth task",
+        title="Make deposit at any pool",
         icon="https://example.com/icon.png",
         description="Complete the fourth task to earn 400 XP",
         images=["https://example.com/image1.png"],
@@ -100,6 +102,7 @@ tasks = [
         op_code=OpCodes.dedust_deposit,
         min_amount=0,
         parent_id=2,
+        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r"
     ),
 ]
 
