@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pydantic
 
 class User(pydantic.BaseModel):
@@ -8,6 +10,7 @@ class User(pydantic.BaseModel):
     xp: int = 0
     level: int = 0
     profile_photo: str
+
 
 class CreateUser(pydantic.BaseModel):
     id: int
@@ -23,6 +26,11 @@ class Task(pydantic.BaseModel):
     active: bool
     xp: int
     contract_addresses: list
-    op_code: str
+    op_code: Optional[str] = None
     min_amount: float
-    parent_id: int
+    parent_id: int | None = None
+
+
+class CompleteTask(pydantic.BaseModel):
+    address: str
+    op_code: str

@@ -1,20 +1,52 @@
+import logging
+
 import fastapi
 from aiogram.utils.web_app import safe_parse_webapp_init_data
-from database import CustomMotorClient
-from models import User, Task, CreateUser
+
+from database import CustomMotorClient, NotFound
+from models import User, Task, CreateUser, CompleteTask
 from config import MONGO_URI, BOT_TOKEN
+from pytoniq_core import Address
+
+from api_client import scanner_producer
 
 db = CustomMotorClient(MONGO_URI)
 app = fastapi.FastAPI()
 
+logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger("uvicorn")
+
+
 @app.get("/users/{user_id}")
 async def get_user(user_id: int) -> dict:
-    user = await db.get_user(user_id)
+    try:
+        user = await db.get_user(user_id)
+    except NotFound:
+        return {"error": "User not found"}
     # user = await db.create_user(user_id)
     return user.dict()
 
+# @app.post("/users/wallet")
+# async def create_user_wallet(user_id: int, wallet: str) -> dict:
+#     user = await db.get_user(user_id)
+#     try:
+#         user.address = Address(wallet).to_str(False)
+#     except ValueError:
+#         return {"error": "Invalid wallet address"}
+#     await db.db.users.update_one({"id": user_id}, {"$set": {"address": user.address}})
+#     await scanner_producer.add_user_to_track(user.address)
+#     await db.complete_task(user.address, None)
+#     return user.dict()
+
+
 @app.post("/users/")
 async def create_user(user: CreateUser) -> dict:
+    try:
+        await db.get_user(user.id)
+        return {"error": "User already exist"}
+    except NotFound:
+        pass
     _user = User(**user.dict())
     await db.create_user(_user)
     return user.dict()
@@ -22,9 +54,15 @@ async def create_user(user: CreateUser) -> dict:
 @app.post("/users/address/{address}")
 async def set_user_address(user_id: int, address: str) -> dict:
     user = await db.get_user(user_id)
-    user.address = address
-    await db.db.users.update_one({"id": user_id}, {"$set": {"address": address}})
+    try:
+        user.address = Address(address).to_str(False)
+    except ValueError:
+        return {"error": "Invalid wallet address"}
+    await db.db.users.update_one({"id": user_id}, {"$set": {"address": user.address}})
+    await scanner_producer.add_user_to_track(user.address)
+    await db.complete_task(user.address, None)
     return user.dict()
+
 
 @app.get("/tasks/{task_id}")
 async def get_task(task_id: int) -> Task:
@@ -52,8 +90,16 @@ async def create_task(task: Task) -> dict:
     return task.dict()
 
 @app.post("/tasks/complete")
-async def complete_task(address: str, op_code: str) -> dict:
-    await db.complete_task(address, op_code)
+async def complete_task(data: CompleteTask) -> dict:
+    await db.complete_task(data.address, data.op_code)
+    return {"status": "ok"}
+
+@app.get("/tasks/random")
+async def generate_default_tasks() -> dict:
+    from tasks import parent_task, tasks
+    await db.create_task(parent_task)
+    for task in tasks:
+        await db.create_task(task)
     return {"status": "ok"}
 
 
@@ -70,4 +116,4 @@ async def complete_task(address: str, op_code: str) -> dict:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="debug")

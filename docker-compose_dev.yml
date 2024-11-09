@@ -1,0 +1,37 @@
+version: '3.8'
+
+volumes:
+  redis-volume:
+  mongo-volume:
+
+services:
+  python:
+    build:
+      context: .
+    volumes:
+      - ./logs:/usr/src/ton_quests/logs
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    command: [ "sh", "./deploy/entrypoints/run_python.sh" ]
+
+#  mongodb:
+#    image: mongo:6
+#    restart: unless-stopped
+#    volumes:
+#      - mongo-volume:/data/db
+#    ports:
+#      - "27017:27017"
+#
+#  redis:
+#    image: redis:6.2
+#    restart: unless-stopped
+#    volumes:
+#      - redis-volume:/data
+#    ports:
+#      - "6379:6379"
+
+
+
