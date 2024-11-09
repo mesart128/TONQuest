@@ -13,14 +13,6 @@ db= CustomMotorClient(MONGO_URI)
 
 class OpCodes(IntEnum):
     # JETTON messages
-    transfer = 0xF8A7EA5
-    internal_transfer = 0x178D4519
-    transfer_notification = 0x7362D09C
-    excesses = 0xD53276DB
-    burn = 0x595F07BC
-    burn_notification = 0x7BDD97DE
-
-    # TON messages
     default_message = 0x00000000
 
     # TonCrypto
@@ -34,13 +26,6 @@ class OpCodes(IntEnum):
     def get_random(cls):
         all_ = list(cls)
         return all_[random.randint(0, len(all_) - 1)]
-
-    @classmethod
-    def get_by_code(cls, code):
-        for opcode in cls:
-            if opcode.value == code:
-                return opcode.name
-        return cls.default_message.name
 
     @classmethod
     def item_list(cls):
