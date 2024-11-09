@@ -16,7 +16,8 @@ class CreateUser(pydantic.BaseModel):
     id: int
     name: str
     profile_photo: str
-    
+
+
 class Task(pydantic.BaseModel):
     id: int
     title: str
