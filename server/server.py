@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import fastapi
 from aiogram.utils.web_app import safe_parse_webapp_init_data
@@ -78,10 +79,11 @@ async def get_user_task(user_id: int, task_id: int) -> dict:
     return {"completed": completed}
 
 @app.get("/tasks")
-async def get_tasks() -> list:
-    tasks = await db.get_tasks()
-    return [task.dict() for task in tasks]
-    
+async def get_tasks() -> Any:
+    tasks = await db.get_all_tasks_by_root()
+    result = await db.build_task_tree(tasks)
+    return [task.dict() for task in result]
+
 
 @app.post("/tasks/")
 async def create_task(task: Task) -> dict:
@@ -92,14 +94,6 @@ async def create_task(task: Task) -> dict:
 @app.post("/tasks/complete")
 async def complete_task(data: CompleteTask) -> dict:
     await db.complete_task(data.address, data.op_code)
-    return {"status": "ok"}
-
-@app.get("/tasks/random")
-async def generate_default_tasks() -> dict:
-    from tasks import parent_task, tasks
-    await db.create_task(parent_task)
-    for task in tasks:
-        await db.create_task(task)
     return {"status": "ok"}
 
 
