@@ -20,7 +20,7 @@
       direction="vertical"
     >
       <template v-slot:node="{ node, collapsed }">
-        <div class="task task-inactive" v-on:click="clickTask(node.tid)">
+        <div class="task task-inactive" v-on:click="clickTask(node.tid)" v-on:touchend="clickTask(node.tid)">
           <div :class="{'inactive-filter': !node.active}"></div>
           <div :class="{'completed-filter': user.completed_tasks.includes(node.tid)}"></div>
           <div class="task-icon">
