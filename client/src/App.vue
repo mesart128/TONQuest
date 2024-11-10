@@ -206,10 +206,11 @@ export default {
           headers: {
             "ngrok-skip-browser-warning": "true",
           },
-        })
+        }).then((response) => {
         this.user.completed_tasks.push(-1);
         this.user.xp += 300;
         this.getUser(window.Telegram.WebApp.initDataUnsafe.user.id).then((data) => this.user = data);
+        })
       } else {
         console.log('Wallet disconnected');
       }
