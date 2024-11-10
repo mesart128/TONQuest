@@ -1,7 +1,7 @@
 import logging
 
 from motor.motor_asyncio import AsyncIOMotorClient
-from models import User, Task
+from models import User, Task, ResponseAllTask
 from typing import List, Optional
 
 
@@ -58,7 +58,24 @@ class CustomMotorClient(AsyncIOMotorClient):
         return False
     
     async def create_task(self, task: Task) -> Task:
-        ls = await self.db.tasks.insert_one(task.dict())
-        print(ls)
+        await self.db.tasks.insert_one(task.dict())
         return task
 
+    async def get_all_tasks_by_root(self) -> List[Task]:
+        tasks_data = self.db.tasks.find({})
+        tasks = [ResponseAllTask(**task) async for task in tasks_data]
+        return tasks
+
+    async def build_task_tree(self, tasks: List[Task]) -> List[Task]:
+        task_dict = {task.id: task for task in tasks}
+        root_tasks = []
+
+        for task in tasks:
+            if task.parent_id is None:
+                root_tasks.append(task)
+            else:
+                parent_task = task_dict.get(task.parent_id)
+                if parent_task:
+                    parent_task.child_tasks.append(task)
+
+        return root_tasks
