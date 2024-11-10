@@ -72,9 +72,10 @@ tasks = [
         contract_addresses=[],
         op_code=OpCodes.dedust_swap,
         min_amount=0,
-        parent_id=parent_task.id,
-        external_url="https://dedust.io/swap/TON/USDT"
-    ),
+        parent_id=2,
+        external_url="https://dedust.io/swap/TON/USDT",
+
+),
     Task(
         id=4,
         title="Make deposit at any pool",
@@ -87,8 +88,8 @@ tasks = [
         op_code=OpCodes.dedust_deposit,
         min_amount=0,
         parent_id=2,
-        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r"
-    ),
+        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r",
+),
 ]
 
 
