@@ -7,3 +7,4 @@ const app = createApp(App);
 // app.provide(TonConnectUIOptionsContext, setOptions);
 
 app.mount('#app');
+// window.Telegram.WebApp.ready()

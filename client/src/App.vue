@@ -1,18 +1,18 @@
 <template>
   <!-- <TonConnectButton /> -->
   <!-- <div class="buttonbox" v-on:click="tonConnectUI.openModal()" style="width: 200px; height: 200px; background-color: black;"></div> -->
-  
+  <div v-if="this.loading !== true">
     <div class="user">
-      <div class="user-icon">
-          <img src="https://t.me/i/userpic/160/ASEEL_SALAH1.jpg">
-      </div>
+      <!-- <div class="user-icon"> -->
+          <!-- <img src="https://t.me/i/userpic/160/ASEEL_SALAH1.jpg"> -->
+      <!-- </div> -->
       <div class="user-content">
-          <div class="user-title">{{user.first_name}}</div>
-          <div class="user-xp">{{user.xp}}</div>
+          <div class="user-title">{{this.user.name}}</div>
+          <div class="user-xp">{{this.user.xp}}</div>
       </div>
     </div>
     <vue-tree
-      style="width: 100%; height: 100vh; border: 1px solid gray"
+      style="width: 100%; height: 100vh;"
       :dataset="tasksk"
       :config="treeConfig"
       :collapseEnabled="false"
@@ -20,9 +20,9 @@
       direction="vertical"
     >
       <template v-slot:node="{ node, collapsed }">
-        <div class="task task-inactive">
+        <div class="task task-inactive" v-on:click="clickTask(node.tid)">
           <div :class="{'inactive-filter': !node.active}"></div>
-          <div :class="{'completed-filter': node.tid in user.completed_tasks}"></div>
+          <div :class="{'completed-filter': user.completed_tasks.includes(node.tid)}"></div>
           <div class="task-icon">
               <img :src=node.icon>
           </div>
@@ -33,6 +33,7 @@
       </div>
       </template>
     </vue-tree>
+  </div>
 </template>
 
 <!-- <template>
@@ -44,6 +45,10 @@ import VueTree from "@ssthouse/vue3-tree-chart";
 import "@ssthouse/vue3-tree-chart/dist/vue3-tree-chart.css";
 import {TonConnectUI} from '@tonconnect/ui'
 
+const apiurl = 'https://cleanly-engaging-pegasus.ngrok-free.app/'
+const tonConnectUI = new TonConnectUI({
+      manifestUrl: 'https://gist.githubusercontent.com/siandreev/75f1a2ccf2f3b4e2771f6089aeb06d7f/raw/d4986344010ec7a2d1cc8a2a9baa57de37aaccb8/gistfile1.txt',
+    });
 
 console.log()
 // import Task from "./components/Task.vue";
@@ -55,12 +60,14 @@ export default {
   components: { VueTree},
   data() {
     return {
+      loading: true,
       user: {id: 110, completed_tasks: [1]},
       tasksk: {
-        tid: 1,
-        title: "Deposit TON",
+        tid: -1,
+        title: "Connect Wallet",
         icon: "https://cryptologos.cc/logos/toncoin-ton-logo.png",
         xp: 100,
+        active: true,
         children: [
           {
             title: "Perform Swap",
@@ -113,26 +120,69 @@ export default {
         .then((data) => {
           this.tasks = data;
         });
-    }
+    },
+    async clickTask(task_id) {
+      console.log(task_id);
+      if (task_id === -1) {
+        await tonConnectUI.openModal();
+      }
+    },
   },
   mounted() {
-    this.getTasks();
-    this.tonConnectUI = new TonConnectUI({
-      manifestUrl: 'https://gist.githubusercontent.com/siandreev/75f1a2ccf2f3b4e2771f6089aeb06d7f/raw/d4986344010ec7a2d1cc8a2a9baa57de37aaccb8/gistfile1.txt',
-    });
-    this.tonConnectUI.onStatusChange((wallet) => {
-      if (wallet) {
+    fetch(apiurl + "users/" + window.Telegram.WebApp.initDataUnsafe.user.id, {
+      headers: {
+            "ngrok-skip-browser-warning": "true",
+          },
+    })
+      .then((response) => this.user = response.json().then((data) => {
+        if (data.error) {
+          fetch(apiurl + "users/", {
+            method: "POST",
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({id: window.Telegram.WebApp.initDataUnsafe.user.id, name: window.Telegram.WebApp.initDataUnsafe.user.first_name, profile_photo: ''}),
+          }).then((response) => this.user = response.json().then((data) => this.user = data))
+        }
+        else {
+          this.user = data;
+        }
+        if (this.user.address) {
+          this.user.completed_tasks.push(-1);
+        }
+      }))
+
+    fetch(apiurl + "tasks", {
+      headers: {
+            "ngrok-skip-browser-warning": "true",
+          },
+    })
+      .then((response) => this.tasks = response.json().then((data) => this.tasks = data))
+    
+    setTimeout(() => {
+      this.loading = false;
+    }, 4000);
+    console.log(this.user);
+    // this.getTasks();
+    tonConnectUI.onStatusChange((wallet) => {
+      if (wallet.account.address) {
         console.log('Wallet connected:mhznvcbdamnbBND MSNAMDNAMSNBDMANSBDMNABSMDNBMASBCDVsgajdhagcsdvasgnndg', wallet);
-        fetch("https://e9d6-65-109-92-27.ngrok-free.app/users/address/555/" + wallet.account.address, {
+        fetch(apiurl + "users/address/555/" + wallet.account.address, {
           method: "GET",
           headers: {
             "ngrok-skip-browser-warning": "true",
           },
         })
+        this.user.completed_tasks.push(-1);
       } else {
         console.log('Wallet disconnected');
       }
     });
+
+    
+
+    
   },
     
 };
@@ -141,6 +191,8 @@ export default {
 <style>
 body {
   font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 .task {
@@ -272,6 +324,10 @@ body {
   font-family: 'Roboto', sans-serif;
   
   color: white;
+}
+
+.loading {
+  display: none;
 }
 
 </style>
