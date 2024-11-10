@@ -20,9 +20,9 @@
       direction="vertical"
     >
       <template v-slot:node="{ node, collapsed }">
-        <div class="task task-inactive" v-on:click="clickTask(node.tid)" v-on:touchend="clickTask(node.tid)">
+        <div class="task task-inactive" v-on:click="clickTask(node.id, node.external_url)" v-on:touchend="clickTask(node.id, node.external_url)">
           <div :class="{'inactive-filter': !node.active}"></div>
-          <div :class="{'completed-filter': user.completed_tasks.includes(node.tid)}"></div>
+          <div :class="{'completed-filter': user.completed_tasks.includes(node.id)}"></div>
           <div class="task-icon">
               <img :src=node.icon>
           </div>
@@ -63,42 +63,13 @@ export default {
       loading: true,
       user: {id: 110, completed_tasks: [1]},
       tasksk: {
-        tid: -1,
+        id: -1,
         title: "Connect Wallet",
         icon: "https://cryptologos.cc/logos/toncoin-ton-logo.png",
         xp: 100,
         active: true,
         children: [
-          {
-            title: "Perform Swap",
-            xp: 5000,
-            icon: "https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png",
-            children: [
-              {
-                active: true,
-                title: "Add liquidity",
-                xp: 150,
-                icon: "https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png"
-              },
-            ],
-          },
-          {
-            title: "Perform Swap",
-            xp: 50,
-            icon: "https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png",
-            children: [
-              {
-                title: "Add liquidity",
-                xp: 150,
-                icon: "https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png"
-              },
-              {
-                title: "Add liquidity",
-                xp: 150,
-                icon: "https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png"
-              },
-            ],
-          }
+          
         ],
         links: [
           { parent: 1, child: 2 },
@@ -107,7 +78,7 @@ export default {
         ],
         identifier: "customID",
       },
-      treeConfig: { nodeWidth: 250, nodeHeight: 80, levelHeight: 120 },
+      treeConfig: { nodeWidth: 150, nodeHeight: 80, levelHeight: 120 },
     };
   },
   methods: {
@@ -143,48 +114,84 @@ export default {
           this.tasks = data;
         });
     },
-    async clickTask(task_id) {
+    async clickTask(task_id, external_url) {
       console.log(task_id);
       if (task_id === -1) {
         await tonConnectUI.openModal();
       }
+      else {
+        window.Telegram.WebApp.openLink(external_url);
+      }
     },
+    async getUser(user_id) {
+      let data =  await fetch(apiurl + "users/" + user_id, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      })
+      return await data.json();
+    },
+    async createUser(user_data) {
+      let data =  await fetch(apiurl + "users/", {
+        method: "POST",
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user_data),
+      })
+      return await data.json();
+    }
   },
-  mounted() {
+  async mounted() {
     document.getElementById('app').addEventListener("touchstart", this.touchHandler, true);
     document.getElementById('app').addEventListener("touchmove", this.touchHandler, true);
     document.getElementById('app').addEventListener("touchend", this.touchHandler, true);
     document.getElementById('app').addEventListener("touchcancel", this.touchHandler, true);  
-    fetch(apiurl + "users/" + window.Telegram.WebApp.initDataUnsafe.user.id, {
-      headers: {
-            "ngrok-skip-browser-warning": "true",
-          },
-    })
-      .then((response) => this.user = response.json().then((data) => {
-        if (data.error) {
-          fetch(apiurl + "users/", {
-            method: "POST",
-            headers: {
-              "ngrok-skip-browser-warning": "true",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({id: window.Telegram.WebApp.initDataUnsafe.user.id, name: window.Telegram.WebApp.initDataUnsafe.user.first_name, profile_photo: ''}),
-          }).then((response) => this.user = response.json().then((data) => this.user = data))
-        }
-        else {
-          this.user = data;
-        }
-        if (this.user.address) {
-          this.user.completed_tasks.push(-1);
-        }
-      }))
+    // fetch(apiurl + "users/" + window.Telegram.WebApp.initDataUnsafe.user.id, {
+    //   headers: {
+    //         "ngrok-skip-browser-warning": "true",
+    //       },
+    // })
+    //   .then((response) => this.user = response.json().then((data) => {
+    //     if (data.error) {
+    //       fetch(apiurl + "users/", {
+    //         method: "POST",
+    //         headers: {
+    //           "ngrok-skip-browser-warning": "true",
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({id: window.Telegram.WebApp.initDataUnsafe.user.id, name: window.Telegram.WebApp.initDataUnsafe.user.first_name, profile_photo: ''}),
+    //       }).then((response) => this.user = response.json().then((data) => this.user = data))
+    //     }
+    //     else {
+    //       this.user = data;
+    //     }
+    //     if (this.user.address !== "") {
+    //       this.user.completed_tasks.push(-1);
+    //     }
+    //   }))
+    let user = await this.getUser(window.Telegram.WebApp.initDataUnsafe.user.id);
+    console.log(user);
+    if (user.error) {
+        await this.createUser({id: window.Telegram.WebApp.initDataUnsafe.user.id, name: window.Telegram.WebApp.initDataUnsafe.user.first_name, profile_photo: ''});
+        this.user = await this.getUser(window.Telegram.WebApp.initDataUnsafe.user.id);
+    }
+    else {
+      this.user = user;
+    }
+    
+    if (this.user.address !== "") {
+      this.user.completed_tasks.push(-1);
+    }
+
 
     fetch(apiurl + "tasks", {
       headers: {
             "ngrok-skip-browser-warning": "true",
           },
     })
-      .then((response) => this.tasks = response.json().then((data) => this.tasks = data))
+      .then((response) => this.tasks = response.json().then((data) => this.tasksk.children = data))
     
     setTimeout(() => {
       this.loading = false;
@@ -194,13 +201,15 @@ export default {
     tonConnectUI.onStatusChange((wallet) => {
       if (wallet.account.address) {
         console.log('Wallet connected:mhznvcbdamnbBND MSNAMDNAMSNBDMANSBDMNABSMDNBMASBCDVsgajdhagcsdvasgnndg', wallet);
-        fetch(apiurl + "users/address/555/" + wallet.account.address, {
+        fetch(apiurl + "users/address/" + window.Telegram.WebApp.initDataUnsafe.user.id + "/" + wallet.account.address, {
           method: "GET",
           headers: {
             "ngrok-skip-browser-warning": "true",
           },
         })
         this.user.completed_tasks.push(-1);
+        this.user.xp += 300;
+        this.getUser(window.Telegram.WebApp.initDataUnsafe.user.id).then((data) => this.user = data);
       } else {
         console.log('Wallet disconnected');
       }
