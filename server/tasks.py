@@ -72,7 +72,7 @@ tasks = [
         contract_addresses=[],
         op_code=OpCodes.dedust_swap,
         min_amount=0,
-        parent_id=parent_task.id,
+        parent_id=2,
         external_url="https://dedust.io/swap/TON/USDT",
 
 ),
