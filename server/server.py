@@ -1,6 +1,7 @@
 import logging
 
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
 from aiogram.utils.web_app import safe_parse_webapp_init_data
 
 from database import CustomMotorClient, NotFound
@@ -12,6 +13,14 @@ from api_client import scanner_producer
 
 db = CustomMotorClient(MONGO_URI)
 app = fastapi.FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -51,7 +60,7 @@ async def create_user(user: CreateUser) -> dict:
     await db.create_user(_user)
     return user.dict()
 
-@app.post("/users/address/{address}")
+@app.post("/users/address/")
 async def set_user_address(user_id: int, address: str) -> dict:
     user = await db.get_user(user_id)
     try:
@@ -116,4 +125,4 @@ async def generate_default_tasks() -> dict:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="debug")
+    uvicorn.run(app, host="localhost", port=8000)
