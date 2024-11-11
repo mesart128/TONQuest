@@ -1,0 +1,25 @@
+{
+  "name": "vue-project",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "add-ts": "vue add typescript"
+  },
+  "dependencies": {
+    "@ssthouse/vue3-tree-chart": "^0.2.6",
+    "@tonconnect/ui": "^2.0.9",
+    "ton-ui-vue": "^0.1.5",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "less": "^4.2.0",
+    "vite": "^5.4.10",
+    "vite-plugin-mkcert": "^1.17.6",
+    "vite-plugin-vue-devtools": "^7.5.4"
+  }
+}
