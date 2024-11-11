@@ -46,6 +46,8 @@ class ResponseAllTask(pydantic.BaseModel):
     parent_id: int | None = None
     external_url: Optional[str] = None
     child_tasks: list = []
+    children: list = []
+
 
 
 class CompleteTask(pydantic.BaseModel):

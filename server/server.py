@@ -61,14 +61,16 @@ async def create_user(user: CreateUser) -> dict:
     await db.create_user(_user)
     return user.dict()
 
-@app.post("/users/address/")
+@app.get("/users/address/{user_id}/{address}")
 async def set_user_address(user_id: int, address: str) -> dict:
     user = await db.get_user(user_id)
+    if user.address !=  "":
+        return {"error": "User already has address"}
     try:
         user.address = Address(address).to_str(False)
     except ValueError:
         return {"error": "Invalid wallet address"}
-    await db.db.users.update_one({"id": user_id}, {"$set": {"address": user.address}})
+    await db.db.users.update_one({"id": user_id}, {"$set": {"address": user.address, "xp": 100}})
     await scanner_producer.add_user_to_track(user.address)
     await db.complete_task(user.address, None)
     return user.dict()
@@ -90,7 +92,7 @@ async def get_user_task(user_id: int, task_id: int) -> dict:
 @app.get("/tasks")
 async def get_tasks() -> Any:
     tasks = await db.get_all_tasks_by_root()
-    result = await db.build_task_tree(tasks)
+    result = (await db.build_task_tree(tasks))[0].children
     return [task.dict() for task in result]
 
 

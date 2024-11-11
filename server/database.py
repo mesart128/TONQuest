@@ -50,7 +50,8 @@ class CustomMotorClient(AsyncIOMotorClient):
             return False
         if task.id not in user.completed_tasks:
             user.completed_tasks.append(task.id)
-            await self.db.users.update_one({"address": address}, {"$set": {"completed_tasks": user.completed_tasks}})
+            await self.db.users.update_one({"address": address}, {"$set": {"completed_tasks": user.completed_tasks,
+                                                                           "xp": user.xp + task.xp}})
             logger.info(f"Task {task} completed by user {user}")
             return True
         else:
@@ -61,7 +62,7 @@ class CustomMotorClient(AsyncIOMotorClient):
         await self.db.tasks.insert_one(task.dict())
         return task
 
-    async def get_all_tasks_by_root(self) -> List[Task]:
+    async def get_all_tasks_by_root(self) -> List[ResponseAllTask]:
         tasks_data = self.db.tasks.find({})
         tasks = [ResponseAllTask(**task) async for task in tasks_data]
         return tasks
@@ -74,8 +75,8 @@ class CustomMotorClient(AsyncIOMotorClient):
             if task.parent_id is None:
                 root_tasks.append(task)
             else:
-                parent_task = task_dict.get(task.parent_id)
+                parent_task: ResponseAllTask = task_dict.get(task.parent_id)
                 if parent_task:
-                    parent_task.child_tasks.append(task)
+                    parent_task.children.append(task)
 
         return root_tasks
