@@ -31,9 +31,10 @@ class OpCodes(IntEnum):
     def item_list(cls):
         return [opcode.value for opcode in cls]
 
-
+dedust_url = "https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png"
+stonfi_icon_url = "https://static.ston.fi/favicon/android-chrome-512x512.png"
 parent_task = Task(
-    id=1,
+    id=-1,
     title="Connect your wallet",
     icon="https://example.com/icon.png",
     description="Connect your wallet to earn 200 XP",
@@ -47,39 +48,39 @@ parent_task = Task(
 )
 
 tasks = [
-    Task(
-        id=2,
-        title="Deposit TON to your wallet",
-        icon="https://example.com/icon.png",
-        description="Deposit TON to your wallet to earn 200 XP",
-        images=["https://example.com/image1.png"],
-        active=True,
-        xp=100,
-        contract_addresses=[],
-        op_code=OpCodes.default_message,
-        min_amount=0,
-        parent_id=parent_task.id,
-    ),
+    # Task(
+    #     id=2,
+    #     title="Deposit TON to your wallet",
+    #     icon="https://example.com/icon.png",
+    #     description="Deposit TON to your wallet to earn 200 XP",
+    #     images=["https://example.com/image1.png"],
+    #     active=True,
+    #     xp=100,
+    #     contract_addresses=[],
+    #     op_code=OpCodes.dedust_swap,
+    #     min_amount=0,
+    #     parent_id=parent_task.id,
+    # ),
     Task(
         id=3,
-        title="Make dedust swap at any pool",
-        icon="https://example.com/icon.png",
+        title="Perform swap",
+        icon=dedust_url,
         description="Make dedust swap at any pool to earn 300 XP. "
                     "For example you can use this more safety pool.",
         images=["https://example.com/image1.png"],
         active=True,
         xp=300,
         contract_addresses=[],
-        op_code=OpCodes.dedust_swap,
+        op_code=OpCodes.dedust_deposit,
         min_amount=0,
-        parent_id=2,
+        parent_id=-1,
         external_url="https://dedust.io/swap/TON/USDT",
 
 ),
     Task(
         id=4,
-        title="Make deposit at any pool",
-        icon="https://example.com/icon.png",
+        title="Add liquidity",
+        icon=dedust_url,
         description="Complete the fourth task to earn 400 XP",
         images=["https://example.com/image1.png"],
         active=True,
@@ -87,7 +88,37 @@ tasks = [
         contract_addresses=[],
         op_code=OpCodes.dedust_deposit,
         min_amount=0,
-        parent_id=2,
+        parent_id=3,
+        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r",
+),
+Task(
+        id=5,
+        title="Perform swap",
+        icon=stonfi_icon_url,
+        description="Make dedust swap at any pool to earn 300 XP. "
+                    "For example you can use this more safety pool.",
+        images=["https://example.com/image1.png"],
+        active=False,
+        xp=300,
+        contract_addresses=[],
+        op_code=OpCodes.dedust_deposit,
+        min_amount=0,
+        parent_id=-1,
+        external_url="https://dedust.io/swap/TON/USDT",
+
+),
+    Task(
+        id=6,
+        title="Add liquidity",
+        icon=stonfi_icon_url,
+        description="Complete the fourth task to earn 400 XP",
+        images=["https://example.com/image1.png"],
+        active=False,
+        xp=400,
+        contract_addresses=[],
+        op_code=OpCodes.dedust_deposit,
+        min_amount=0,
+        parent_id=5,
         external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r",
 ),
 ]
