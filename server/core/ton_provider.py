@@ -12,7 +12,7 @@ from tonsdk.boc import Cell as tonsdk_Cell
 from tonsdk.utils import Address as tonsdk_Address
 from tonsdk.utils import bytes_to_b64str
 
-from apps.wallet.schemas import JettonWalletData
+from apps.account.schemas import JettonWalletData
 from core.enums import GetMethodEnum, StrEnum
 from core.schemas import (
     AccountStateEnum,

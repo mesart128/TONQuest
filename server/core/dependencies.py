@@ -1,17 +1,17 @@
 from dependency_injector import containers, providers
 from redis.asyncio.client import Redis
 
-from server.apps.account.repositories import MongoDBAccountRepository
-from server.apps.account.service import AccountService
-from server.apps.scanner.service import BlockScanner
-from server.apps.transaction.service import TransactionService
-from server.core.config import ServerConfig
-from server.core.producer import HttpProducer
-from server.core.ton_provider import (
+from apps.account.repositories import MongoDBAccountRepository
+from apps.account.service import AccountService
+from apps.scanner.service import BlockScanner
+from apps.transaction.service import TransactionService
+from core.config import ServerConfig
+from core.producer import HttpProducer
+from core.ton_provider import (
     TONAPIClientAsync,
 )
-from server.core.database.engine import get_async_mongo_engine
-from server.core.database.local_storage import RedisStorage
+from core.database.engine import get_async_mongo_engine
+from core.database.local_storage import RedisStorage
 
 
 class CoreContainer(containers.DeclarativeContainer):
