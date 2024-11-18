@@ -4,7 +4,7 @@ import typing
 
 import aiohttp
 
-from server.core.ton_provider import MethodsEnum
+from core.ton_provider import MethodsEnum
 
 
 class HttpProducer:

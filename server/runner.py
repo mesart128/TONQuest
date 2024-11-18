@@ -8,11 +8,11 @@ from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from server.core.dependencies import (  # noqa: E402
+from core.dependencies import (  # noqa: E402
     CoreContainer,
     initialize_container,
 )
-from server.core.logger import setup_logging  # noqa: E402
+from core.logger import setup_logging  # noqa: E402
 
 setup_logging()
 

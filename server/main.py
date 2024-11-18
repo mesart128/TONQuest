@@ -1,4 +1,3 @@
-import toml
 from fastapi import Depends, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from application import app_router
@@ -8,13 +7,13 @@ from core.logger import setup_logging
 from core.middlewares import log_body, setup_middlewares
 from core.router import v1_router
 
-pyproject_data = toml.load("pyproject.toml")
-poetry_config = pyproject_data.get("tool", {}).get("poetry", {})
+# pyproject_data = toml.load("pyproject.toml")
+# poetry_config = pyproject_data.get("tool", {}).get("poetry", {})
 
 FASTAPI_CONFIG = {
-    "title": poetry_config.get("name", "TON Service"),
-    "version": poetry_config.get("version", "0.1.0"),
-    "description": poetry_config.get("description", "Default Description"),
+    "title": "TON Service",
+    "version": "0.1.0",
+    "description": "Default Description",
 }
 
 

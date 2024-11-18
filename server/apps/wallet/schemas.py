@@ -3,7 +3,7 @@ from typing import Optional, TypedDict
 from pydantic import BaseModel
 from pytoniq_core import Address
 
-from server.core.types import SystemAddress
+from core.types import SystemAddress
 
 
 class JettonWalletData(TypedDict):
