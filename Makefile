@@ -5,7 +5,7 @@ lint-fix:
 	@echo "Linting is complete"
 
 r:
-	PYTHONPATH=./src poetry run uvicorn main:app --host localhost --port 2024 --reload
+	PYTHONPATH=./server poetry run uvicorn main:app --host localhost --port 2024 --reload
 
 rscan:
 	sh deploy/entrypoints/run_scanner.sh

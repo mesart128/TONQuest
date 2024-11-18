@@ -1,8 +1,6 @@
-from pprint import pprint
-
 from config import MONGO_URI
-from database import CustomMotorClient
-from models import User, Task
+from server.core.database import CustomMotorClient
+from models import Task
 
 import random
 from enum import IntEnum
