@@ -1,0 +1,72 @@
+version: 1
+disable_existing_loggers: true
+
+formatters:
+  simple:
+    class: core.logger.CustomFormatter
+    format: "[%(asctime)s] - [%(levelname)8s] - [%(name)7s] - [%(context_id)s] - %(message)s - - [%(shortened_path)s:%(lineno)d]"
+  file:
+    class: core.logger.CustomFormatter
+    format: "[%(asctime)s] - [%(levelname)8s] - [%(name)7s] - [%(context_id)s] - %(message)s - - [%(shortened_path)s:%(lineno)d]"
+  special:
+      class: core.logger.CustomFormatter
+      format: "%(message)s \n - [%(shortened_path)s:%(lineno)d] - "
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+  debug:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: file
+    filename: "{logdir}/debug.log"
+    encoding: utf8
+    maxBytes: 10485760  # 10 MB
+    backupCount: 5
+  info:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: file
+    filename: "{logdir}/info.log"
+    encoding: utf8
+    maxBytes: 10485760  # 10 MB
+    backupCount: 5
+  error:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: file
+    filename: "{logdir}/error.log"
+    encoding: utf8
+    maxBytes: 10485760  # 10 MB
+    backupCount: 5
+
+loggers:
+  root:
+    level: DEBUG
+    handlers: [ debug, console, info, error ]
+    propagate: no
+
+  uvicorn.access:
+    level: WARNING
+    handlers: [ debug, console ]
+    propagate: no
+
+  uvicorn.error:
+    level: INFO
+    handlers: [ debug, console ]
+    formatter: simple
+    propagate: no
+
+  CustomLiteClient:
+    level: ERROR
+    handlers: [ debug, console ]
+    propagate: no
+
+  multipart.multipart:
+    level: CRITICAL
+
+  passlib:
+    level: CRITICAL
