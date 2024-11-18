@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from server.apps.account.router import account_router
-from server.apps.scanner.router import scanner_router
+from apps.account.router import account_router
+from apps.scanner.router import scanner_router
 
 v1_router = APIRouter()
 

@@ -20,7 +20,6 @@ class CoreContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
             "server.apps.account.router",
-            # "server.scanner.router",
         ]
     )
 
