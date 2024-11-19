@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, Table, Column
 
-from core.database.base import BaseSqlModel
+from database import BaseSqlModel
 
 users_tasks = Table(
     "users_tasks",

@@ -2,8 +2,9 @@ from typing import Any
 
 import fastapi
 
-from database import CustomMotorClient, NotFound
-from models import User, Task, CreateUser, CompleteTask
+from database import NotFound, CustomMotorClient
+from models import Task, CompleteTask
+from apps.ton_quest.schemas import User, CreateUser
 from config import MONGO_URI
 from pytoniq_core import Address
 

@@ -1,5 +1,5 @@
 from config import MONGO_URI
-from core.database import CustomMotorClient
+from database import CustomMotorClient
 from models import Task
 
 import random
