@@ -63,7 +63,7 @@ class BaseSQLAlchemyRepo:
             async with session.begin():
                 res = await session.execute(stmt)
                 instance = res.scalar_one_or_none()
-                return instance.asdict() if instance else None
+                return instance.to_read_model() if instance else None
 
 
 class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):

@@ -165,7 +165,17 @@ class Piece(BaseSqlModel):
     users: Mapped[list["User"]] = relationship("User", secondary="users_pieces", back_populates="pieces")
     branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"), nullable=True)
     branch: Mapped["Branch"] = relationship("Branch", back_populates="pieces")
+    queue: Mapped[int] = mapped_column(default=0, nullable=True)
     nft: Mapped["NFT"] = relationship("NFT", back_populates="pieces")
+
+    def to_read_model(self):
+        return {
+            "id": self.id,
+            "nft_id": self.nft_id,
+            "image": self.image,
+            "branch_id": self.branch_id,
+            "queue": self.queue,
+        }
     
 
 class NFT(BaseSqlModel):
@@ -182,4 +192,5 @@ class NFT(BaseSqlModel):
             "id": self.id,
             "image": self.image,
             "contract_address": self.contract_address,
+            "pieces": [piece.to_read_model() for piece in self.pieces],
         }
