@@ -5,8 +5,7 @@ from typing import Any, Dict, Optional, List
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorClient
 
-from apps.ton_quest.schemas import User
-from models import Task, ResponseAllTask
+from apps.ton_quest.schemas import User, Task, ResponseAllTask
 
 
 class AbstractRepository(ABC):

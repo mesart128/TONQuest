@@ -3,8 +3,7 @@ from typing import Any
 import fastapi
 
 from database.repository import NotFound, CustomMotorClient
-from models import Task, CompleteTask
-from apps.ton_quest.schemas import User, CreateUser
+from apps.ton_quest.schemas import User, CreateUser, Task, CompleteTask
 from config import MONGO_URI
 from pytoniq_core import Address
 

@@ -1,5 +1,4 @@
-from tasks import OpCodes
-import json
+from apps.ton_quest.tasks import OpCodes
 from typing import Optional
 import pydantic
 
