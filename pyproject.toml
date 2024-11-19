@@ -22,6 +22,8 @@ gunicorn = "^23.0.0"
 python-json-logger = "^2.0.7"
 tonsdk = "^1.0.15"
 toml = "^0.10.2"
+sqlalchemy = "^2.0.36"
+alembic = "^1.14.0"
 
 
 [build-system]

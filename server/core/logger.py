@@ -2,24 +2,24 @@ import logging.config
 import os
 import typing
 
-# import yaml
-# from gunicorn import glogging
-# from pythonjsonlogger import jsonlogger
+import yaml
+from gunicorn import glogging
+from pythonjsonlogger import jsonlogger
 
 from core.config import BASE_DIR, CONTEXT_ID, LOG_DIR, LoggerSettings
 from core.enums import CustomLoggingLevels
 
 
-# class CustomJsonFormatter(jsonlogger.JsonFormatter):
-#     def add_fields(self, log_record, record, message_dict):
-#         super().add_fields(log_record, record, message_dict)
+class CustomJsonFormatter(jsonlogger.JsonFormatter):
+    def add_fields(self, log_record, record, message_dict):
+        super().add_fields(log_record, record, message_dict)
 
-#         if log_record.get("level"):
-#             log_record["level"] = log_record["level"].upper()
-#         else:
-#             log_record["level"] = record.levelname
+        if log_record.get("level"):
+            log_record["level"] = log_record["level"].upper()
+        else:
+            log_record["level"] = record.levelname
 
-#         log_record["context_id"] = CONTEXT_ID.get()
+        log_record["context_id"] = CONTEXT_ID.get()
 
 
 class CustomFormatter(logging.Formatter):
@@ -63,13 +63,13 @@ def setup_logging(logger_settings: typing.Optional[LoggerSettings] = None, log_d
         graylog_host=logger_settings.graylog_host,
         graylog_port=logger_settings.graylog_port,
     )
-    # logging.config.dictConfig(yaml.safe_load(log_config))
+    logging.config.dictConfig(yaml.safe_load(log_config))
 
     # Set custom levels
     for level in CustomLoggingLevels:
         logging.addLevelName(level.value, level.name)
 
 
-# class GunicornLogger(glogging.Logger):
-#     def setup(self, cfg):
-#         setup_logging(logger_settings=LoggerSettings())
+class GunicornLogger(glogging.Logger):
+    def setup(self, cfg):
+        setup_logging(logger_settings=LoggerSettings())
