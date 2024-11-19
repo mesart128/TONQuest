@@ -86,6 +86,7 @@ class Branch(BaseSqlModel):
     category: Mapped["Category"] = relationship("Category", back_populates="branches")
     tasks: Mapped[list[Task]] = relationship("Task", back_populates="branch")
     users: Mapped[list["User"]] = relationship("User", secondary="users_branches", back_populates="branches")
+    pieces: Mapped[list["Piece"]] = relationship("Piece", back_populates="branch")
     def to_read_model(self):
         return {
             "id": self.id,
@@ -162,8 +163,9 @@ class Piece(BaseSqlModel):
     nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
     image: Mapped[str] = mapped_column()
     users: Mapped[list["User"]] = relationship("User", secondary="users_pieces", back_populates="pieces")
-    branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"))
+    branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"), nullable=True)
     branch: Mapped["Branch"] = relationship("Branch", back_populates="pieces")
+    nft: Mapped["NFT"] = relationship("NFT", back_populates="pieces")
     
 
 class NFT(BaseSqlModel):

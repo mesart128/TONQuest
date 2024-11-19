@@ -1,5 +1,14 @@
-from core.router import v1_router
+from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
+from database.engine import db
+db: TonQuestSQLAlchemyRepo
 
-@v1_router.get("/nft")
+
+from fastapi import APIRouter
+
+nft_router = APIRouter()
+
+@nft_router.get("/nft")
 async def get_nft():
-    return {"message": "Hello NFT"}
+    nfts = await db.get_nfts()
+    print(nfts)
+    return {}
