@@ -11,6 +11,30 @@ users_tasks = Table(
     Column("completed", Mapped[bool]),
     Column("claimed", Mapped[bool]),
 )
+
+users_branches = Table(
+    "users_branches",
+    BaseSqlModel.metadata,
+    Column("branch_id", ForeignKey("branches.id")),
+    Column("user_id", ForeignKey("users.id")),
+    Column("completed", Mapped[bool]),
+)
+
+users_pieces = Table(
+    "users_pieces",
+    BaseSqlModel.metadata,
+    Column("piece_id", ForeignKey("pieces.id")),
+    Column("user_id", ForeignKey("users.id")),
+    Column("claimed", Mapped[bool]),
+)
+
+users_nfts = Table(
+    "users_nfts",
+    BaseSqlModel.metadata,
+    Column("nft_id", ForeignKey("nfts.id")),
+    Column("user_id", ForeignKey("users.id")),
+    Column("claimed", Mapped[bool]),
+)
     
 class Slide(BaseSqlModel):
     __tablename__ = "slides"
@@ -117,6 +141,9 @@ class User(BaseSqlModel):
     wallet_address: Mapped[str] = mapped_column()
 
     tasks = relationship("Task", secondary=users_tasks)
+    branches = relationship("Branch", secondary=users_branches)
+    pieces = relationship("Piece", secondary=users_pieces)
+    nfts = relationship("NFT", secondary=users_nfts)
 
     def to_read_model(self):
         return {
@@ -129,10 +156,18 @@ class User(BaseSqlModel):
             "wallet_address": self.wallet_address,
         }
 
+class Piece(BaseSqlModel):
+    __tablename__ = "pieces"
+    nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
+    image: Mapped[str] = mapped_column()
+    
+
 class NFT(BaseSqlModel):
     __tablename__ = "nfts"
     image: Mapped[str] = mapped_column()
     contract_address: Mapped[str] = mapped_column()
+
+    pieces: Mapped[Piece] = relationship()
 
     def to_read_model(self):
         return {
