@@ -2,6 +2,8 @@ from typing import List
 
 from sqlalchemy import insert, delete, update, select, desc, ChunkedIteratorResult
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from apps.ton_quest.models import Branch, Category, User, Slide, NFT, Piece, Task
 from database.repository import NotFound
 
@@ -80,7 +82,10 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def get_all_categories(self) -> List[Category]:
         """Получить список всех категорий."""
-        categories = (await self.find_all(Category))
+        stmt = select(Category).options(selectinload(Category.branches).selectinload(
+            Branch.tasks).selectinload(Task.slides)
+        )
+        categories = await self._execute_and_fetch_all(stmt)
         return categories
 
     async def get_category(self, category_id: str) -> Category:

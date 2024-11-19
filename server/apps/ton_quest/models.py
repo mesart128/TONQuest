@@ -36,6 +36,7 @@ class UserNFT(BaseSqlModel):
 class Slide(BaseSqlModel):
     __tablename__ = "slides"
     task_id: Mapped[str] = mapped_column(ForeignKey("tasks.id"))
+    task: Mapped["Task"] = relationship("Task", back_populates="slides")
     title: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
     image: Mapped[str] = mapped_column()
@@ -55,15 +56,15 @@ class Slide(BaseSqlModel):
 class Task(BaseSqlModel):
     __tablename__ = "tasks"
     branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"))
+    branch: Mapped["Branch"] = relationship("Branch", back_populates="tasks")
     title: Mapped[str] = mapped_column()
     xp: Mapped[int] = mapped_column()
     queue: Mapped[int] = mapped_column()
     task_type: Mapped[str] = mapped_column()
     action_url: Mapped[str] = mapped_column()
     call_to_action: Mapped[str] = mapped_column()
-    # users = relationship("User", secondary="users_tasks", back_populates="tasks")
-
-    slides: Mapped[Slide] = relationship(lazy="subquery")
+    users = relationship("User", secondary="users_tasks", back_populates="tasks")
+    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task")
 
     def to_read_model(self):
         return {
@@ -82,9 +83,9 @@ class Branch(BaseSqlModel):
     __tablename__ = "branches"
     title: Mapped[str] = mapped_column()
     category_id: Mapped[str] = mapped_column(ForeignKey("categories.id"))
-    
-    tasks: Mapped[Task] = relationship(lazy="subquery")
-    # users: Mapped[list["User"]] = relationship("User", secondary="users_branches", back_populates="branches")
+    category: Mapped["Category"] = relationship("Category", back_populates="branches")
+    tasks: Mapped[list[Task]] = relationship("Task", back_populates="branch")
+    users: Mapped[list["User"]] = relationship("User", secondary="users_branches", back_populates="branches")
     def to_read_model(self):
         return {
             "id": self.id,
@@ -101,7 +102,7 @@ class Category(BaseSqlModel):
     image: Mapped[str] = mapped_column()
     subtitle: Mapped[str] = mapped_column()
 
-    branches: Mapped[Branch] = relationship(lazy="subquery")
+    branches: Mapped[list[Branch]] = relationship("Branch", back_populates="category")
 
     def to_read_model(self):
         return {
@@ -160,14 +161,14 @@ class Piece(BaseSqlModel):
     __tablename__ = "pieces"
     nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
     image: Mapped[str] = mapped_column()
-    # users: Mapped[list["User"]] = relationship("User", secondary="users_pieces", back_populates="pieces")
+    users: Mapped[list["User"]] = relationship("User", secondary="users_pieces", back_populates="pieces")
     
 
 class NFT(BaseSqlModel):
     __tablename__ = "nfts"
     image: Mapped[str] = mapped_column()
     contract_address: Mapped[str] = mapped_column()
-    # users: Mapped[list["User"]] = relationship("User", secondary="users_nfts", back_populates="nfts")
+    users: Mapped[list["User"]] = relationship("User", secondary="users_nfts", back_populates="nfts")
     pieces: Mapped[Piece] = relationship()
 
     def to_read_model(self):

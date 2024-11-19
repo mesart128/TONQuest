@@ -2,21 +2,20 @@ from typing import Any
 
 import fastapi
 
+from core.config import base_config
 from database.repository import NotFound, CustomMotorClient
 from .repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.schemas import User, CreateUser, Task, CompleteTask
-from config import MONGO_URI
 from pytoniq_core import Address
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 import os
 
 from api_client import scanner_producer
 
 
-engine = create_async_engine("")
-async_session = sessionmaker(
-    engine, expire_on_commit=False, class_=AsyncSession
+engine = create_async_engine(base_config.database_uri, echo=False)
+async_session = async_sessionmaker(
+    engine, expire_on_commit=False
 )
 
 # db = CustomMotorClient(MONGO_URI)
