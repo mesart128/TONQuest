@@ -4,8 +4,11 @@ from typing import Any, Dict, Optional, List
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorClient
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 from apps.ton_quest.schemas import User, Task, ResponseAllTask
+import apps.ton_quest.models as models
 
 
 class AbstractRepository(ABC):
@@ -160,3 +163,44 @@ class CustomMotorClient(AsyncIOMotorClient):
                     parent_task.children.append(task)
 
         return root_tasks
+
+
+class CustomPostgresClient(AsyncSession):
+    async def get_user(self, user_id: int) -> models.User:
+        user = await self.get(models.User, user_id)
+        if user is None:
+            raise NotFound("User not found")
+        return user
+    
+    async def create_user(self, user: models.User) -> models.User:
+        self.add(user)
+        await self.commit()
+        return user
+    
+    async def get_all_categories(self) -> List[models.Category]:
+        categories = (await self.execute(select(models.Category))).scalars().all()
+        return categories
+    
+    async def get_category(self, category_id: int) -> models.Category:
+        category = await self.get(models.Category, category_id)
+        if category is None:
+            raise NotFound("Category not found")
+        return category    
+
+    async def get_branch(self, branch_id: int) -> List[models.Branch]:
+        branch = await self.get(models.Branch, branch_id)
+        if branch is None:
+            raise NotFound("Branch not found")
+        return branch
+    
+    async def get_task(self, task_id: int) -> models.Task:
+        task = await self.get(models.Task, task_id)
+        if task is None:
+            raise NotFound("Task not found")
+        return task
+    
+
+    
+    
+    
+    
