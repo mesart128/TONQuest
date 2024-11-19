@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy import insert, delete, update, select, desc, ChunkedIteratorResult
+from sqlalchemy.ext.asyncio import AsyncSession
 from apps.ton_quest.models import Branch, Category, User, Slide, NFT, Piece, Task
 from database.repository import NotFound
 
@@ -52,10 +53,11 @@ class BaseSQLAlchemyRepo:
         async with self._session_factory() as session:
             async with session.begin():
                 res = await session.execute(stmt)
-                return [row[0].asdict() for row in res.all()]
+                return [row[0] for row in res.all()]
 
     async def _execute_and_fetch_one(self, stmt):
         async with self._session_factory() as session:
+            session: AsyncSession
             async with session.begin():
                 res = await session.execute(stmt)
                 instance = res.scalar_one_or_none()
@@ -64,9 +66,9 @@ class BaseSQLAlchemyRepo:
 
 class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
-    async def get_user(self, user_id: int) -> User:
+    async def get_user(self, telegram_id: int) -> User:
         """Получить пользователя по ID."""
-        user = await self.find_one_by(User, telegram_id=user_id)
+        user = await self.find_one_by(User, telegram_id=telegram_id)
         if user is None:
             raise NotFound("User not found")
         return user
@@ -101,3 +103,19 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         if task is None:
             raise NotFound("Task not found")
         return task
+    
+    async def get_all_nfts(self) -> List[NFT]:
+        nfts = await self.find_all(NFT)
+        return nfts
+    
+    
+    
+    async def add_user_wallet_address(self, user_id: int, wallet_address: str) -> User:
+        user = await self.get_user(user_id)
+        if user.wallet_address:
+            raise ValueError("User already has address")
+        user.wallet_address = wallet_address
+        await self.edit_one(User, user_id, user.asdict())
+        return user
+    
+

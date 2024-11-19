@@ -3,13 +3,24 @@ from typing import Any
 import fastapi
 
 from database.repository import NotFound, CustomMotorClient
+from .repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.schemas import User, CreateUser, Task, CompleteTask
 from config import MONGO_URI
 from pytoniq_core import Address
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
+import os
 
 from api_client import scanner_producer
 
-db = CustomMotorClient(MONGO_URI)
+
+engine = create_async_engine("")
+async_session = sessionmaker(
+    engine, expire_on_commit=False, class_=AsyncSession
+)
+
+# db = CustomMotorClient(MONGO_URI)
+db = TonQuestSQLAlchemyRepo(async_session)
 app_router = fastapi.APIRouter()
 
 @app_router.get("/users/{user_id}")
@@ -91,6 +102,15 @@ async def complete_task(data: CompleteTask) -> dict:
     await db.complete_task(data.address, data.op_code)
     return {"status": "ok"}
 
+@app_router.get("/nfts")
+async def get_nfts() -> Any:
+    nfts = await db.get_all_nfts()
+    return [nft.to_read_model() for nft in nfts]
+
+@app_router.get("/categories")
+async def get_categories() -> Any:
+    categories = await db.get_all_categories()
+    return [category.to_read_model() for category in categories]
 
 # @app.middleware("http")
 # async def add_process_time_header(request: fastapi.Request, call_next):
