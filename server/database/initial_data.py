@@ -2,12 +2,13 @@ import asyncio
 
 from sqlalchemy import ChunkedIteratorResult
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+
+from apps.ton_quest.enums import TaskTypeEnum
 from apps.ton_quest.models import Branch, Category, User, Slide, NFT, Piece, Task
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo  # Замените на реальный путь
 
 DATABASE_URL = "postgresql+asyncpg://creator:creator@localhost/tonquest"  # Укажите свои данные подключения
 
-# Создание репозитория
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionFactory = async_sessionmaker(engine)
 repo = TonQuestSQLAlchemyRepo(SessionFactory)
@@ -24,22 +25,19 @@ async def populate_database():
         "image": "https://kauri.io/images/1x1.png",
         "subtitle": "This branch focuses on introducing users to Dedust through hands-on tasks, with interactive and easy-to-understand explanations.",
     }
-    dex_category_id: ChunkedIteratorResult = await repo.add_one(Category, dex_category_data)
-    print(f"{dex_category_id.scalar_one_or_none()=}")
-    # Ветка
+    dex_category_id = await repo.add_one(Category, dex_category_data)
     dedust_branch_data = {
         "title": "Dedust",
         "category_id": dex_category_id,
     }
     dedust_branch_id = await repo.add_one(Branch, dedust_branch_data)
 
-    # Первая задача и слайды
     dedust_first_task_data = {
         "branch_id": dedust_branch_id,
         "title": "Register on Dedust",
         "xp": 100,
         "queue": 1,
-        "task_type": "dedust_swap",  # Убедитесь, что эта строка соответствует Enum в модели
+        "task_type": TaskTypeEnum.dedust_swap,
         "action_url": "https://dedust.io/register",
         "call_to_action": "Register now",
     }

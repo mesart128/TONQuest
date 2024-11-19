@@ -1,5 +1,9 @@
+from typing import List
+
 from sqlalchemy import insert, delete, update, select, desc, ChunkedIteratorResult
 from apps.ton_quest.models import Branch, Category, User, Slide, NFT, Piece, Task
+from database.repository import NotFound
+
 
 class BaseSQLAlchemyRepo:
 
@@ -8,7 +12,8 @@ class BaseSQLAlchemyRepo:
 
     async def add_one(self, model, data: dict) -> str:
         stmt = insert(model).values(**data).returning(model.id)
-        return await self._execute_and_commit(stmt)
+        result = await self._execute_and_commit(stmt)
+        return str(result.scalar_one_or_none())
 
     async def delete_one(self, model, id_: str):
         stmt = delete(model).where(model.id == id_)
@@ -58,4 +63,41 @@ class BaseSQLAlchemyRepo:
 
 
 class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
-    pass
+
+    async def get_user(self, user_id: int) -> User:
+        """Получить пользователя по ID."""
+        user = await self.find_one_by(User, telegram_id=user_id)
+        if user is None:
+            raise NotFound("User not found")
+        return user
+
+    async def create_user(self, user: User) -> User:
+        """Создать нового пользователя."""
+        await self.add_one(User, user.asdict())  # Передача данных как словаря
+        return user
+
+    async def get_all_categories(self) -> List[Category]:
+        """Получить список всех категорий."""
+        categories = (await self.find_all(Category))
+        return categories
+
+    async def get_category(self, category_id: str) -> Category:
+        """Получить категорию по ID."""
+        category = await self.find_one(Category, category_id)
+        if category is None:
+            raise NotFound("Category not found")
+        return category
+
+    async def get_branch(self, branch_id: str) -> Branch:
+        """Получить ветку по ID."""
+        branch = await self.find_one(Branch, branch_id)
+        if branch is None:
+            raise NotFound("Branch not found")
+        return branch
+
+    async def get_task(self, task_id: str) -> Task:
+        """Получить задачу по ID."""
+        task = await self.find_one(Task, task_id)
+        if task is None:
+            raise NotFound("Task not found")
+        return task
