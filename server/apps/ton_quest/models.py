@@ -1,40 +1,37 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, Table, Column
 
-from database import BaseSqlModel
+from database.base import BaseSqlModel
 
-users_tasks = Table(
-    "users_tasks",
-    BaseSqlModel.metadata,
-    Column("task_id", ForeignKey("tasks.id")),
-    Column("user_id", ForeignKey("users.id")),
-    Column("completed", Mapped[bool]),
-    Column("claimed", Mapped[bool]),
-)
 
-users_branches = Table(
-    "users_branches",
-    BaseSqlModel.metadata,
-    Column("branch_id", ForeignKey("branches.id")),
-    Column("user_id", ForeignKey("users.id")),
-    Column("completed", Mapped[bool]),
-)
+class UserTask(BaseSqlModel):
+    __tablename__ = "users_tasks"
+    task_id: Mapped[int] = mapped_column(ForeignKey("tasks.id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    completed: Mapped[bool] = mapped_column(default=False)
+    claimed: Mapped[bool] = mapped_column(default=False)
 
-users_pieces = Table(
-    "users_pieces",
-    BaseSqlModel.metadata,
-    Column("piece_id", ForeignKey("pieces.id")),
-    Column("user_id", ForeignKey("users.id")),
-    Column("claimed", Mapped[bool]),
-)
 
-users_nfts = Table(
-    "users_nfts",
-    BaseSqlModel.metadata,
-    Column("nft_id", ForeignKey("nfts.id")),
-    Column("user_id", ForeignKey("users.id")),
-    Column("claimed", Mapped[bool]),
-)
+class UserBranch(BaseSqlModel):
+    __tablename__ = "users_branches"
+    branch_id: Mapped[int] = mapped_column(ForeignKey("branches.id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    completed: Mapped[bool] = mapped_column(default=False)
+
+
+class UserPiece(BaseSqlModel):
+    __tablename__ = "users_pieces"
+    piece_id: Mapped[int] = mapped_column(ForeignKey("pieces.id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    claimed: Mapped[bool] = mapped_column(default=False)
+
+
+class UserNFT(BaseSqlModel):
+    __tablename__ = "users_nfts"
+    nft_id: Mapped[int] = mapped_column(ForeignKey("nfts.id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    claimed: Mapped[bool] = mapped_column(default=False)
+
     
 class Slide(BaseSqlModel):
     __tablename__ = "slides"
@@ -140,10 +137,11 @@ class User(BaseSqlModel):
     image: Mapped[str] = mapped_column()
     wallet_address: Mapped[str] = mapped_column()
 
-    tasks = relationship("Task", secondary=users_tasks)
-    branches = relationship("Branch", secondary=users_branches)
-    pieces = relationship("Piece", secondary=users_pieces)
-    nfts = relationship("NFT", secondary=users_nfts)
+    tasks: Mapped[list["Task"]] = relationship("Task", secondary="users_tasks", back_populates="users")
+    branches: Mapped[list["Branch"]] = relationship("Branch", secondary="users_branches", back_populates="users")
+    pieces: Mapped[list["Piece"]] = relationship("Piece", secondary="users_pieces", back_populates="users")
+    nfts: Mapped[list["NFT"]] = relationship("NFT", secondary="users_nfts", back_populates="users")
+
 
     def to_read_model(self):
         return {

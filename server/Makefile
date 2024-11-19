@@ -17,3 +17,6 @@ ddown:
 
 run_server:
 	sh deploy/entrypoints/run_python.sh
+
+migrate:
+	alembic upgrade head
