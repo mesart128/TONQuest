@@ -3,7 +3,7 @@ import os
 import typing
 
 import yaml
-from gunicorn import glogging
+# from gunicorn import glogging
 from pythonjsonlogger import jsonlogger
 
 from core.config import BASE_DIR, CONTEXT_ID, LOG_DIR, LoggerSettings
@@ -44,7 +44,7 @@ class CustomFormatter(logging.Formatter):
         return super().format(record)
 
 
-def setup_logging(logger_settings: typing.Optional[LoggerSettings] = None, log_dir: str = LOG_DIR):
+def setup_logging(logger_settings: typing.Optional[LoggerSettings] = None, log_dir: str = str(LOG_DIR).replace('\\', '/')):
     if logger_settings is None:
         logger_settings = LoggerSettings()
     settings_module = logger_settings.settings_module
@@ -70,6 +70,6 @@ def setup_logging(logger_settings: typing.Optional[LoggerSettings] = None, log_d
         logging.addLevelName(level.value, level.name)
 
 
-class GunicornLogger(glogging.Logger):
-    def setup(self, cfg):
-        setup_logging(logger_settings=LoggerSettings())
+# class GunicornLogger(glogging.Logger):
+#     def setup(self, cfg):
+#         setup_logging(logger_settings=LoggerSettings())

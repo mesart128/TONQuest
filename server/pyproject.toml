@@ -1,0 +1,21 @@
+[project]
+name = "server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiogram>=3.14.0",
+    "dependency-injector>=4.43.0",
+    "fastapi>=0.115.4",
+    "motor>=3.6.0",
+    "pydantic-settings>=2.6.1",
+    "pytoniq>=0.1.40",
+    "pytoniq-core>=0.1.40",
+    "redis>=5.2.0",
+    "tonsdk>=1.0.15",
+    "waitress>=3.0.2",
+    "pyyaml>=6.0.2",
+    "gunicorn>=23.0.0",
+    "python-json-logger>=2.0.7",
+]
