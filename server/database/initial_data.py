@@ -34,12 +34,12 @@ async def populate_database():
 
     dedust_first_task_data = {
         "branch_id": dedust_branch_id,
-        "title": "Register on Dedust",
+        "title": "Perform a token swap on Dedust",
         "xp": 100,
         "queue": 1,
         "task_type": TaskTypeEnum.dedust_swap,
         "action_url": "https://dedust.io/register",
-        "call_to_action": "Register now",
+        "call_to_action": "You have learned how to change one token for another, keep it up!",
     }
     dedust_first_task_id = await repo.add_one(Task, dedust_first_task_data)
 
