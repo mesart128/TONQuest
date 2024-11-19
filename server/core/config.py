@@ -45,3 +45,6 @@ class LoggerSettings(BaseSettings):
         env_file = ".env"
         extra = "allow"
         protected_namespaces = ("model_",)
+
+
+base_config = ServerConfig()

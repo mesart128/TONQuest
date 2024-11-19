@@ -61,6 +61,7 @@ class Task(BaseSqlModel):
     task_type: Mapped[str] = mapped_column()
     action_url: Mapped[str] = mapped_column()
     call_to_action: Mapped[str] = mapped_column()
+    users = relationship("User", secondary="users_tasks", back_populates="tasks")
 
     slides: Mapped[Slide] = relationship()
 
@@ -79,10 +80,11 @@ class Task(BaseSqlModel):
 
 class Branch(BaseSqlModel):
     __tablename__ = "branches"
+    title: Mapped[str] = mapped_column()
     category_id: Mapped[str] = mapped_column(ForeignKey("categories.id"))
     
     tasks: Mapped[Task] = relationship()
-
+    users: Mapped[list["User"]] = relationship("User", secondary="users_branches", back_populates="branches")
     def to_read_model(self):
         return {
             "id": self.id,
@@ -158,13 +160,14 @@ class Piece(BaseSqlModel):
     __tablename__ = "pieces"
     nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
     image: Mapped[str] = mapped_column()
+    users: Mapped[list["User"]] = relationship("User", secondary="users_pieces", back_populates="pieces")
     
 
 class NFT(BaseSqlModel):
     __tablename__ = "nfts"
     image: Mapped[str] = mapped_column()
     contract_address: Mapped[str] = mapped_column()
-
+    users: Mapped[list["User"]] = relationship("User", secondary="users_nfts", back_populates="nfts")
     pieces: Mapped[Piece] = relationship()
 
     def to_read_model(self):
