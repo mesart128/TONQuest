@@ -2,8 +2,8 @@ from typing import Any
 
 import fastapi
 
-from database import CustomMotorClient, NotFound
-from models import User, Task, CreateUser, CompleteTask
+from database.repository import NotFound, CustomMotorClient
+from apps.ton_quest.schemas import User, CreateUser, Task, CompleteTask
 from config import MONGO_URI
 from pytoniq_core import Address
 
@@ -90,19 +90,3 @@ async def create_task(task: Task) -> dict:
 async def complete_task(data: CompleteTask) -> dict:
     await db.complete_task(data.address, data.op_code)
     return {"status": "ok"}
-
-
-# @app.middleware("http")
-# async def add_process_time_header(request: fastapi.Request, call_next):
-#     try:
-#         init_data = request.headers["init-data"]
-#         web_app_data = safe_parse_webapp_init_data(init_data)
-#         # request.web_app_data = web_app_data
-#         response = await call_next(request)
-#     except Exception:
-#         response = fastapi.Response("Invalid init data", status_code=400)
-#     return response
-
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="localhost", port=8000)

@@ -11,7 +11,7 @@ from core.enums import CustomLoggingLevels
 from core.exceptions import JsonException
 from core.schemas import BlockHeader, BlockIdTypedDict
 from core.ton_provider import HandleResponseError, LiteServerUnknownError, TONAPIClientAsync
-from core.database.local_storage import LocalStorage
+from database.local_storage import LocalStorage
 
 
 class BlockScanner:

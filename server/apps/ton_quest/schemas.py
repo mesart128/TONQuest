@@ -2,6 +2,7 @@ from typing import Optional
 
 import pydantic
 
+
 class User(pydantic.BaseModel):
     id: int
     name: str
@@ -32,6 +33,7 @@ class Task(pydantic.BaseModel):
     parent_id: int | None = None
     external_url: Optional[str] = None
 
+
 class ResponseAllTask(pydantic.BaseModel):
     id: int
     title: str
@@ -47,7 +49,6 @@ class ResponseAllTask(pydantic.BaseModel):
     external_url: Optional[str] = None
     child_tasks: list = []
     children: list = []
-
 
 
 class CompleteTask(pydantic.BaseModel):

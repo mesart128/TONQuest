@@ -10,8 +10,8 @@ from core.producer import HttpProducer
 from core.ton_provider import (
     TONAPIClientAsync,
 )
-from core.database.engine import get_async_mongo_engine
-from core.database.local_storage import RedisStorage
+from database.engine import get_async_mongo_engine
+from database.local_storage import RedisStorage
 
 
 class CoreContainer(containers.DeclarativeContainer):

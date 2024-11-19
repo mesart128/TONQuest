@@ -4,7 +4,7 @@ be able alembic see all metadata to autogenerate migrations.
 """
 
 from apps.ton_quest.models import Category, Task, Branch  # noqa: F401
-from core.database.base import Base
+from database.base import Base
 
 metadata = Base.metadata
 __all__ = ["metadata"]

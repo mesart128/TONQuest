@@ -6,7 +6,7 @@ import sys
 from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from core.dependencies import (  # noqa: E402
     CoreContainer,

@@ -1,6 +1,6 @@
 from config import MONGO_URI
-from core.database import CustomMotorClient
-from models import Task
+from database import CustomMotorClient
+from apps.ton_quest.schemas import Task
 
 import random
 from enum import IntEnum
