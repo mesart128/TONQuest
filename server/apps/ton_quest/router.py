@@ -65,7 +65,7 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
 @app_router.get("/users/address/{address}")
 async def set_user_address(address: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> dict:
     user = await db.get_user(web_app_init_data.user.id)
-    if user.wallet_address != "":
+    if user.wallet_address is not None:
         return {"error": "User already has address"}
     try:
         address = Address(address).to_str(False)
