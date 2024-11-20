@@ -3,7 +3,8 @@ import uuid
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pytoniq_core import Slice, Transaction
+from pytoniq_core import Slice, Transaction, Address
+from sqlalchemy.ext.asyncio import async_sessionmaker
 from tonsdk.utils import b64str_to_bytes
 
 from apps.account.account_codes import dedust_swap_pool_code_b64
@@ -29,21 +30,22 @@ async def test_opcodes():
         assert i in dedust_op_list
 
 @pytest.mark.asyncio
-async def test_add_parse_dedust_message(setup_database, ton_quest_repo, mocker):
+async def test_add_parse_dedust_message(database_engine, mocker):
+    SessionFactory = async_sessionmaker(database_engine)
+    ton_quest_repo = TonQuestSQLAlchemyRepo(SessionFactory)
     test_user = User(
         wallet_address="0:1",
         telegram_id=1, username="test", first_name="test", last_name="test", image="test")
     user = await ton_quest_repo.create_user(test_user)
+    print(user)
     raw_transaction_b64 = TestCases.DEDUST_SWAP_EVENT
     raw_tx_bytes = b64str_to_bytes(raw_transaction_b64)
     transaction = Transaction.deserialize(Slice.one_from_boc(raw_tx_bytes))
-    user_uuid = uuid.uuid4()
     ton_rpc_client = AsyncMock()
     transaction_service = TransactionService(
         ton_rpc_client
     )
-    db_mock_get_user_by = AsyncMock(return_value=user)
-    mocker.patch("apps.ton_quest.manager.db.get_user_by", return_value=db_mock_get_user_by)
+    ton_quest_repo_mock = AsyncMock()
     account_service = AccountService(
         transaction_service=transaction_service,
         ton_rpc_client=ton_rpc_client,
@@ -58,6 +60,7 @@ async def test_add_parse_dedust_message(setup_database, ton_quest_repo, mocker):
 
     for msg in transaction.out_msgs:
         await account_service.handle_external_out_msg(msg)
+
     # await account_service.handle_external_out_msg(raw_parsed_transaction)
 
 # async def test_add_parse_dedust_message_not_found_account(self):

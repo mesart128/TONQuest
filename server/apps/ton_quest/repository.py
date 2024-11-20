@@ -115,7 +115,8 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         dict_to_insert.pop("id")
         dict_to_insert.pop("created_at")
         dict_to_insert.pop("updated_at")
-        await self.add_one(User, dict_to_insert)  # Передача данных как словаря
+        user_id = await self.add_one(User, dict_to_insert)  # Передача данных как словаря
+        user = await self.find_one(User, user_id)
         return user
 
     async def add_user_wallet_address(self, user_id: int, wallet_address: str) -> User:
@@ -264,7 +265,7 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         return await self.find_one(UserTask, user_task_id)
 
 
-    async def complete_task(self, user_id: int, task_id: str) -> bool:
+    async def complete_task(self, user_id: str, task_id: str) -> bool:
         # insert UserTask with completed=True
         user_task = await self.create_user_task(user_id, task_id)
         user_task.completed = True

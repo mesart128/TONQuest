@@ -62,7 +62,7 @@ class AccountService:
         if isinstance(account_address, str):
             account_address = Address(account_address)
         user_account = await self.ton_quest_repository.get_user_by(
-            wallet_address=account_address.to_raw()
+            wallet_address=account_address.to_str(False)
         )
         return user_account
 
