@@ -1,41 +1,39 @@
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import questRecycle from '../../assets/quest-recycle.png';
 
-interface QuestCardProps {
-    title: string;
-    description?: string;
-    xpReward?: number;
-    isCompleted?: boolean;
-    onClick?: () => void;
-}
+const QuestCard = () => {
+  return (
+    <div className="max-w-sm mx-auto">
+      <div className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
+      border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]">
+        <div className="text-center mb-8 flex flex-col items-center justify-center gap-4">
+          <h2 className="text-4xl font-bold mb-2 opacity-50">DEX</h2>
+          <h1 className="text-3xl font-bold mb-4">Easy start</h1>
+          <p className="text-xl text-blue-100 opacity-75">
+            You will learn how to use decentralized exchanges tools
+          </p>
+        </div>
 
-const QuestCard = ({
-                       title,
-                       description,
-                       xpReward,
-                       isCompleted = false,
-                       onClick
-                   }: QuestCardProps) => {
-    return (
-        <button
-            onClick={onClick}
-            className="w-full p-4 bg-primary/10 rounded-xl flex items-center justify-between gap-4 border border-primary/20 hover:bg-primary/20 transition-all"
-        >
-            <div className="flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${isCompleted ? 'bg-green-500' : 'bg-primary'}`} />
-                <div className="text-left">
-                    <h3 className="text-white font-medium">{title}</h3>
-                    {description && (
-                        <p className="text-gray-400 text-sm mt-1">{description}</p>
-                    )}
-                    {xpReward && (
-                        <span className="text-primary text-xs mt-2 block">{xpReward} XP</span>
-                    )}
-                </div>
+        <div className="flex justify-center mb-8">
+          <div className="relative w-24 h-24">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img className="max-w-lg" src={questRecycle} />
             </div>
-            <ChevronRight className="text-gray-400" size={20} />
-        </button>
-    );
+          </div>
+        </div>
+
+        <div
+            className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg ">
+          <div className="flex items-center justify-between text-sm mb-2 flex flex-row">
+            <div>0%</div>
+            <div className="bg-white rounded-full h-2"/></div>
+            <div className="bg-blue-400 bg-opacity-40 rounded-full h-2">
+              <span>2/6 NFT + 100 XP</span>
+            </div>
+          </div>
+      </div>
+    </div>
+  );
 };
 
 export default QuestCard;
