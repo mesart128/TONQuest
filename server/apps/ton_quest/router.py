@@ -1,9 +1,10 @@
+from apps.ton_quest.models import Task
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
+from apps.transaction.schemas import TaskResponse
 from database.engine import db
 
 from typing import Any
 from database.repository import NotFound
-from apps.ton_quest.schemas import User, CreateUser, Task, CompleteTask
 from apps.ton_quest import models
 from pytoniq_core import Address
 from aiogram.utils.web_app import WebAppInitData
@@ -77,10 +78,10 @@ async def set_user_address(address: str, web_app_init_data: WebAppInitData = Sec
     return user.dict()
 
 
-@app_router.get("/tasks/{task_id}")
-async def get_task(task_id: str) -> Task:
-    task = await db.get_task(task_id)
-    return task
+@app_router.get("/tasks/{task_id}",)
+async def get_task(task_id: str) -> TaskResponse:
+    task = await db.get_task_with_slides(task_id)
+    return task.to_read_model()
 
 @app_router.get("/task/{task_id}/check")
 async def check_task(task_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> dict:

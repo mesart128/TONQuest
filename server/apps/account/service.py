@@ -7,6 +7,8 @@ from apps.account.account_codes import dedust_swap_pool_code_b64
 from apps.account.repositories import MongoDBAccountRepository
 from apps.account.schemas import AccountSchema
 from apps.account.types import SystemAddress
+from apps.ton_quest.models import User
+from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import RawMessageDTO, RawTransactionDTO
 from apps.transaction.service import TransactionService
@@ -19,70 +21,50 @@ from core.ton_provider import TONAPIClientAsync
 class AccountService:
     def __init__(
         self,
-        repository: MongoDBAccountRepository,
         transaction_service: TransactionService,
         ton_rpc_client: TONAPIClientAsync,
         producer: HttpProducer,
+        ton_quest_repository: TonQuestSQLAlchemyRepo,
     ):
-        self.repository = repository
-        self.ton_rpc_client = ton_rpc_client
         self.transaction_service = transaction_service
+        self.ton_rpc_client = ton_rpc_client
         self.producer = producer
+        self.ton_quest_repository = ton_quest_repository
 
-    async def add_account(self, account_address: str) -> AccountSchema:
-        existed_account = await self.get_account(account_address)
-        if existed_account:
-            return existed_account
-        account_address_system = SystemAddress(account_address).to_raw()
-        return await self._create_account(account_address_system, is_trackable=True)
-
-    async def _create_account(
-        self, account_address: SystemAddress | str, is_trackable: bool
-    ) -> AccountSchema:
-        if isinstance(account_address, str):
-            account_address = SystemAddress(account_address)
-        if await self.get_account(account_address):
-            raise ValueError("Account already exists")
-        account_id = await self.repository.add_one(
-            {
-                "account_address": account_address.to_raw(),
-                "is_trackable": is_trackable,
-            }
-        )
-        result = await self.repository.find_one(account_id)
-        return AccountSchema(**result)
+    # async def add_account(self, account_address: str) -> AccountSchema:
+    #     existed_account = await self.get_account(account_address)
+    #     if existed_account:
+    #         return existed_account
+    #     account_address_system = SystemAddress(account_address).to_raw()
+    #     return await self._create_account(account_address_system, is_trackable=True)
+    #
+    # async def _create_account(
+    #     self, account_address: SystemAddress | str, is_trackable: bool
+    # ) -> AccountSchema:
+    #     if isinstance(account_address, str):
+    #         account_address = SystemAddress(account_address)
+    #     if await self.get_account(account_address):
+    #         raise ValueError("Account already exists")
+    #     account_id = await self.repository.add_one(
+    #         {
+    #             "account_address": account_address.to_raw(),
+    #             "is_trackable": is_trackable,
+    #         }
+    #     )
+    #     result = await self.repository.find_one(account_id)
+    #     return AccountSchema(**result)
 
     async def get_accounts(self, limit: int) -> list[AccountSchema]:
         result = await self.repository.find_all()
         return [AccountSchema(**item) for item in result[:limit]]
 
-    async def make_event(self, address: str, op_code: OpCodes) -> AccountSchema:
-        account = await self.get_account(address)
-        if not account:
-            raise JsonException(
-                error_name="NOT FOUND",
-                error_description=f"Account {address} not found",
-                status_code=404,
-            )
-        await self.producer.publish_task_event(
-            data={
-                "address": account.account_address,
-                "op_code": str(op_code.value),
-            }
-        )
-        return account
-
     async def get_account(
         self, account_address: Union[SystemAddress, Address, str]
-    ) -> AccountSchema | None:
+    ) -> User | None:
         if isinstance(account_address, str):
-            account_address = SystemAddress(account_address)
-        elif isinstance(account_address, SystemAddress):
-            pass
-        elif isinstance(account_address, Address):
-            account_address = SystemAddress(account_address.to_str(False))
-        result = await self.repository.find_one_by(account_address=account_address.to_raw())
-        return AccountSchema(**result) if result else None
+            account_address = Address(account_address)
+        user_account = await self.ton_quest_repository.get_user_by(wallet_address=account_address.to_raw())
+        return user_account
 
     async def handle_external_out_msg(self, out_msg: MessageAny) -> None:
         account: FullAccountState = await self.ton_rpc_client.get_address_information(
@@ -91,16 +73,12 @@ class AccountService:
         if account.code == dedust_swap_pool_code_b64:
             message = await self.transaction_service.parse_external_dedust_messages(out_msg)
             logging.debug(f"Detected dedust message {message}")
-            tracked_account: AccountSchema = await self.get_account(
+            tracked_account: User = await self.get_account(
                 account_address=message["sender_address"]
             )
             if tracked_account:
-                message_to_send = {
-                    "address": tracked_account.account_address,
-                    "op_code": str(message["op_code"]),
-                }
-                logging.debug(f"Account dedust message {message_to_send}")
-                await self.producer.publish_task_event(data=message_to_send)
+                # TODO update tasks here
+                logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
         else:
             logging.warning(
                 f"Detected external message from "

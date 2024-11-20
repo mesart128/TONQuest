@@ -85,6 +85,11 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
             raise NotFound("User not found")
         return user
 
+    async def get_user_by(self, **kwargs) -> User | None:
+        """Получить пользователя по ID."""
+        user = await self.find_one_by(User, **kwargs)
+        return user
+
     async def create_user(self, user: User) -> User:
         """Создать нового пользователя."""
         dict_to_insert = user.asdict()
@@ -157,6 +162,12 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         if task is None:
             raise NotFound("Task not found")
         return task
+
+    async def get_task_with_slides(self, task_id: str) -> Task:
+        """Получить задачу по ID."""
+        smtp = select(Task).where(Task.id == task_id).options(selectinload(Task.slides))
+        task = await self._execute_and_fetch_one(smtp)
+        return task
     
     async def get_user_task(self, user_id: int, task_id: str) -> UserTask:
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
@@ -206,8 +217,6 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         await self.edit_one(UserPiece, user_piece.id, user_piece.asdict())
         return True
             
-
-
 
     async def create_user_task(self, user_id: int, task_id: str) -> UserTask:
         user_task = UserTask(user_id=user_id, task_id=task_id, completed=False, claimed=False)

@@ -27,30 +27,30 @@ from core.ton_provider import TONAPIClientAsync
 class TransactionService:
     def __init__(
         self,
-        repository: TransactionMongoRepository,
+        # repository: TransactionMongoRepository,
         ton_rpc_client: TONAPIClientAsync,
     ):
         self.ton_rpc_client = ton_rpc_client
-        self.repository = repository
+        # self.repository = repository
 
-    async def try_find_tx_by_out_msg(self, out_msg: RawMessageDTO) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(
-            in_msg_dest=out_msg["dest"],
-            in_msg_created_lt=out_msg["created_lt"],
-        )
-        return transaction
+    # async def try_find_tx_by_out_msg(self, out_msg: RawMessageDTO) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(
+    #         in_msg_dest=out_msg["dest"],
+    #         in_msg_created_lt=out_msg["created_lt"],
+    #     )
+    #     return transaction
 
-    async def get_transaction_by_hash(self, hash_: str) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(hash=hash_)
-        return transaction
-
-    async def get_transaction_by(self, **kwargs) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(**kwargs)
-        return transaction
-
-    async def get_transaction_with_messages(self, id_: str) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(id_)
-        return transaction
+    # async def get_transaction_by_hash(self, hash_: str) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(hash=hash_)
+    #     return transaction
+    #
+    # async def get_transaction_by(self, **kwargs) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(**kwargs)
+    #     return transaction
+    #
+    # async def get_transaction_with_messages(self, id_: str) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(id_)
+    #     return transaction
 
     async def chain_transaction_to_dto(
         self, transaction: Transaction, block: BlockIdExt, masterchain_seqno: int
