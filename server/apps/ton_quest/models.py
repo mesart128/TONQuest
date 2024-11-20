@@ -139,7 +139,7 @@ class User(BaseSqlModel):
     first_name: Mapped[str] = mapped_column()
     last_name: Mapped[str] = mapped_column()
     image: Mapped[str] = mapped_column()
-    wallet_address: Mapped[str] = mapped_column()
+    wallet_address: Mapped[str] = mapped_column(nullable=True)
 
     tasks: Mapped[list["Task"]] = relationship("Task", secondary="users_tasks", back_populates="users")
     branches: Mapped[list["Branch"]] = relationship("Branch", secondary="users_branches", back_populates="users")

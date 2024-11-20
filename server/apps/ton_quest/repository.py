@@ -87,7 +87,11 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def create_user(self, user: User) -> User:
         """Создать нового пользователя."""
-        await self.add_one(User, user.asdict())  # Передача данных как словаря
+        dict_to_insert = user.asdict()
+        dict_to_insert.pop("id")
+        dict_to_insert.pop("created_at")
+        dict_to_insert.pop("updated_at")
+        await self.add_one(User, dict_to_insert)  # Передача данных как словаря
         return user
     
     async def add_user_wallet_address(self, user_id: int, wallet_address: str) -> User:

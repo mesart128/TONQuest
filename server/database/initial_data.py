@@ -15,8 +15,9 @@ repo = TonQuestSQLAlchemyRepo(SessionFactory)
 
 async def populate_database():
     async with engine.begin() as conn:
+        # await conn.run_sync(Branch.metadata.drop_all)  # Создание таблиц, если они отсутствуют
         await conn.run_sync(Branch.metadata.create_all)  # Создание таблиц, если они отсутствуют
-
+    # return
     # Категория
     dex_category_data = {
         "head": "DEX",
@@ -100,7 +101,6 @@ async def populate_database():
         "first_name": "Test",
         "last_name": "User",
         "image": "https://kauri.io/images/user.png",
-        "wallet_address": "0x123456789abcdef",
     }
     test_user_id = await repo.add_one(User, test_user_data)
 
