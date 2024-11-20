@@ -18,6 +18,7 @@ class User(pydantic.BaseModel):
     claimed_pieces: List[UUID] = []
     nfts: List[UUID] = []
 
+
 class Slide(pydantic.BaseModel):
     id: UUID
     task_id: UUID
@@ -25,9 +26,6 @@ class Slide(pydantic.BaseModel):
     description: str
     image: str
     queue: int
-
-    class Config:
-        from_attributes = True
 
 class Task(pydantic.BaseModel):
     id: UUID
@@ -40,9 +38,6 @@ class Task(pydantic.BaseModel):
     call_to_action: str
     slides: List[Slide]
 
-    class Config:
-        from_attributes = True
-
 class Piece(pydantic.BaseModel):
     id: UUID
     nft_id: UUID
@@ -50,25 +45,16 @@ class Piece(pydantic.BaseModel):
     branch_id: Optional[str]
     queue: Optional[int]
 
-    class Config:
-        from_attributes = True
-
 class NFT(pydantic.BaseModel):
     id: UUID
     image: str
     contract_address: str
     pieces: List[Piece]
 
-    class Config:
-        from_attributes = True
-
 class Branch(pydantic.BaseModel):
     id: UUID
     category_id: UUID
     tasks: List[Task]
-
-    class Config:
-        from_attributes = True
 
 class Category(pydantic.BaseModel):
     id: UUID
@@ -79,40 +65,14 @@ class Category(pydantic.BaseModel):
     subtitle: str
     branches: List[Branch]
 
-    class Config:
-        from_attributes = True
+class SuccessResponse(pydantic.BaseModel):
+    success: bool
 
+class ErrorResponse(pydantic.BaseModel):
+    error: str
 
-
-class CreateUser(pydantic.BaseModel):
-    telegram_id: int
-    username: str
-    first_name: str
-    last_name: str
-    image: str
-
-
-class ResponseAllTask(pydantic.BaseModel):
-    id: int
-    title: str
-    icon: str
-    description: str
-    images: list
-    active: bool
-    xp: int
-    contract_addresses: list
-    op_code: Optional[str] = None
-    min_amount: float
-    parent_id: int | None = None
-    external_url: Optional[str] = None
-    child_tasks: list = []
-    children: list = []
-
-
-class CompleteTask(pydantic.BaseModel):
-    address: str
-    op_code: str
-
+class IsCompletedResponse(pydantic.BaseModel):
+    completed: bool
 
 class DedustEvent(pydantic.BaseModel):
     event_type: str

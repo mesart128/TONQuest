@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, List, Union
+from uuid import UUID
 
 from aiogram.utils.web_app import WebAppInitData
 from fastapi import APIRouter, Security
@@ -23,23 +24,7 @@ async def login(web_app_init_data: WebAppInitData = Security(web_app_auth_header
     return web_app_init_data
 
 
-@ton_quest_router.get("/nfts")
-async def get_nfts():
-    nfts = await db.get_nfts()
-    result = [nft.to_read_model() for nft in nfts]
-    return result
-
-
-@ton_quest_router.get("/nfts/{ntf_id}")
-async def get_nft(ntf_id: str) -> dict:
-    nft = await db.get_nft(ntf_id)
-    return nft
-
-
-app_router = ton_quest_router
-
-
-@app_router.get("/users")
+@ton_quest_router.get("/users")
 async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> schemas.User:
     try:
         user = await db.get_user(web_app_init_data.user.id)
@@ -52,25 +37,12 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
             image=web_app_init_data.user.photo_url,
         )
         user = await db.create_user(user)
-    return schemas.User(user.to_read_model())
+    return schemas.User(**user.to_read_model())
 
-
-# @app_router.post("/users/")
-# async def create_user(user: CreateUser) -> dict:
-#     try:
-#         await db.get_user(user.id)
-#         return {"error": "User already exist"}
-#     except NotFound:
-#         pass
-#     _user = models.User(**user.dict())
-#     await db.create_user(_user)
-#     return _user.dict()
-
-
-@app_router.get("/users/address/{address}")
+@ton_quest_router.get("/users/address/{address}")
 async def set_user_address(
     address: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> dict:
+) -> schemas.User:
     user = await db.get_user(web_app_init_data.user.id)
     if user.wallet_address is not None:
         return {"error": "User already has address"}
@@ -81,21 +53,21 @@ async def set_user_address(
     user = await db.add_user_wallet_address(web_app_init_data.user.id, address)
     # await scanner_producer.add_user_to_track(user.address)
     # await db.complete_task(user.address, None)
-    return user.dict()
+    return schemas.User(**user.to_read_model())
 
 
-@app_router.get(
+@ton_quest_router.get(
     "/tasks/{task_id}",
 )
-async def get_task(task_id: str) -> TaskResponse:
+async def get_task(task_id: UUID) -> schemas.Task:
     task = await db.get_task_with_slides(task_id)
-    return task.to_read_model()
+    return schemas.Task(**task.to_read_model())
 
 
-@app_router.get("/task/{task_id}/check")
+@ton_quest_router.get("/task/{task_id}/check")
 async def check_task(
-    task_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> dict:
+    task_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> Union[schemas.IsCompletedResponse, schemas.ErrorResponse]:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -110,10 +82,10 @@ async def check_task(
     return {"completed": completed}
 
 
-@app_router.post("/task/{task_id}/claim")
+@ton_quest_router.post("/task/{task_id}/claim")
 async def claim_task(
-    task_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> dict:
+    task_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> Union[schemas.SuccessResponse, schemas.ErrorResponse]:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -131,10 +103,10 @@ async def claim_task(
     return {"success": True}
 
 
-@app_router.get("/tasks/{task_id}/complete")
+@ton_quest_router.get("/tasks/{task_id}/complete")
 async def complete_task(
-    task_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> dict:
+    task_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> Union[schemas.SuccessResponse, schemas.ErrorResponse]:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -163,28 +135,28 @@ async def complete_task(
     return {"success": True}
 
 
-@app_router.get("/categories")
-async def get_categories() -> Any:
+@ton_quest_router.get("/categories")
+async def get_categories() -> List[schemas.Category]:
     categories = await db.get_all_categories()
-    return [category.to_read_model() for category in categories]
+    return [schemas.Category(**category.to_read_model()) for category in categories]
 
 
-@app_router.get("/categories/{category_id}")
-async def get_category(category_id: str) -> Any:
+@ton_quest_router.get("/categories/{category_id}")
+async def get_category(category_id: UUID) -> schemas.Category:
     category = await db.get_category(category_id)
-    return category.to_read_model()
+    return schemas.Category(**category.to_read_model())
 
 
-@app_router.get("/branches/{branch_id}")
-async def get_branch(branch_id: str) -> Any:
+@ton_quest_router.get("/branches/{branch_id}")
+async def get_branch(branch_id: UUID) -> schemas.Branch:
     branch = await db.get_branch(branch_id)
-    return branch.to_read_model()
+    return schemas.Branch(**branch.to_read_model())
 
 
-@app_router.get("/branches/{branch_id}/check")
+@ton_quest_router.get("/branches/{branch_id}/check")
 async def check_branch(
-    branch_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> dict:
+    branch_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> Union[schemas.IsCompletedResponse, schemas.ErrorResponse]:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -199,10 +171,10 @@ async def check_branch(
     return {"completed": completed}
 
 
-@app_router.get("/branches/{branch_id}/complete")
+@ton_quest_router.get("/branches/{branch_id}/complete")
 async def complete_branch(
-    branch_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> Any:
+    branch_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> Union[schemas.SuccessResponse, schemas.ErrorResponse]:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -228,10 +200,21 @@ async def complete_branch(
     return {"success": True}
 
 
-@app_router.get("/pieces/{piece_id}/claim")
+@ton_quest_router.get("/nfts")
+async def get_nfts() -> List[schemas.NFT]:
+    nfts = await db.get_nfts()
+    return [schemas.NFT(**nft.to_read_model()) for nft in nfts]
+
+@ton_quest_router.get("/nfts/{ntf_id}")
+async def get_nft(ntf_id: UUID) -> schemas.NFT:
+    nft = await db.get_nft(ntf_id)
+    return schemas.NFT(**nft.to_read_model())
+
+
+@ton_quest_router.get("/pieces/{piece_id}/claim")
 async def claim_piece(
-    piece_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> Any:
+    piece_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> Union[schemas.SuccessResponse, schemas.ErrorResponse]:
     try:
         piece = await db.get_piece(piece_id)
     except NotFound:
