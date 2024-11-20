@@ -1,17 +1,88 @@
-from typing import Optional
+from typing import List, Optional
+from uuid import UUID
 
 import pydantic
 from pytoniq_core import Address
 
 
 class User(pydantic.BaseModel):
-    id: int
-    name: str
-    completed_tasks: list = []
-    address: str = ""
-    xp: int = 0
-    level: int = 0
-    profile_photo: str
+    id: UUID
+    telegram_id: int
+    username: str
+    first_name: str
+    last_name: str
+    image: str
+    wallet_address: Optional[str] = None
+    completed_tasks: List[UUID] = []
+    claimed_tasks: List[UUID] = []
+    completed_branches: List[UUID] = []
+    claimed_pieces: List[UUID] = []
+    nfts: List[UUID] = []
+
+class Slide(pydantic.BaseModel):
+    id: UUID
+    task_id: UUID
+    title: str
+    description: str
+    image: str
+    queue: int
+
+    class Config:
+        from_attributes = True
+
+class Task(pydantic.BaseModel):
+    id: UUID
+    branch_id: UUID
+    title: str
+    xp: int
+    queue: int
+    task_type: str
+    action_url: str
+    call_to_action: str
+    slides: List[Slide]
+
+    class Config:
+        from_attributes = True
+
+class Piece(pydantic.BaseModel):
+    id: UUID
+    nft_id: UUID
+    image: str
+    branch_id: Optional[str]
+    queue: Optional[int]
+
+    class Config:
+        from_attributes = True
+
+class NFT(pydantic.BaseModel):
+    id: UUID
+    image: str
+    contract_address: str
+    pieces: List[Piece]
+
+    class Config:
+        from_attributes = True
+
+class Branch(pydantic.BaseModel):
+    id: UUID
+    category_id: UUID
+    tasks: List[Task]
+
+    class Config:
+        from_attributes = True
+
+class Category(pydantic.BaseModel):
+    id: UUID
+    head: str
+    title: str
+    description: str
+    image: str
+    subtitle: str
+    branches: List[Branch]
+
+    class Config:
+        from_attributes = True
+
 
 
 class CreateUser(pydantic.BaseModel):
