@@ -49,7 +49,7 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
             last_name=web_app_init_data.user.last_name,
             image=web_app_init_data.user.photo_url
         )
-        await db.create_user(user)
+        user = await db.create_user(user)
     return user.to_read_model()
 
 # @app_router.post("/users/")
@@ -128,6 +128,13 @@ async def complete_task(task_id: str, web_app_init_data: WebAppInitData = Securi
     except NotFound:
         return {"error": "Task not found"}
     
+    branch_tasks = (await db.get_branch(task.branch_id)).tasks
+    for branch_task in branch_tasks:
+        if branch_task.queue < task.queue:
+            completed = await db.check_task_completed(web_app_init_data.user.id, branch_task.id)
+            if not completed:
+                return {"error": "Previous task not completed"}
+
     try:
         user_task = await db.get_user_task(web_app_init_data.user.id, task_id)
         if user_task.completed:

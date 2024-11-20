@@ -6,30 +6,30 @@ from database.base import BaseSqlModel
 
 class UserTask(BaseSqlModel):
     __tablename__ = "users_tasks"
-    task_id: Mapped[int] = mapped_column(ForeignKey("tasks.id"), primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    task_id: Mapped[str] = mapped_column(ForeignKey("tasks.id"), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     completed: Mapped[bool] = mapped_column(default=False)
     claimed: Mapped[bool] = mapped_column(default=False)
 
 
 class UserBranch(BaseSqlModel):
     __tablename__ = "users_branches"
-    branch_id: Mapped[int] = mapped_column(ForeignKey("branches.id"), primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     completed: Mapped[bool] = mapped_column(default=False)
 
 
 class UserPiece(BaseSqlModel):
     __tablename__ = "users_pieces"
-    piece_id: Mapped[int] = mapped_column(ForeignKey("pieces.id"), primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    piece_id: Mapped[str] = mapped_column(ForeignKey("pieces.id"), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     claimed: Mapped[bool] = mapped_column(default=False)
 
 
 class UserNFT(BaseSqlModel):
     __tablename__ = "users_nfts"
-    nft_id: Mapped[int] = mapped_column(ForeignKey("nfts.id"), primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     claimed: Mapped[bool] = mapped_column(default=False)
 
     
