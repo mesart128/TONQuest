@@ -6,7 +6,7 @@ from uuid import uuid4
 from pydantic import RedisDsn
 from pydantic_settings import BaseSettings
 
-BASE_DIR = pathlib.Path(__file__).parent.parent.parent
+BASE_DIR = pathlib.Path(__file__).parent.parent
 PROJECT_DIR = BASE_DIR / "src"
 LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(exist_ok=True)
@@ -45,3 +45,6 @@ class LoggerSettings(BaseSettings):
         env_file = ".env"
         extra = "allow"
         protected_namespaces = ("model_",)
+
+
+base_config = ServerConfig()
