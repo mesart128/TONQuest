@@ -1,5 +1,7 @@
 from typing import List, Literal, Optional, TypedDict
 
+from pydantic import UUID4, BaseModel, HttpUrl
+
 
 class RawMessageDTO(TypedDict):
     id: Optional[str]
@@ -36,9 +38,6 @@ class RawTransactionDTO(ParsedTransactionDTO):
     shard_seqno: int
 
 
-from pydantic import BaseModel, HttpUrl, UUID4
-from typing import List
-
 class Slide(BaseModel):
     id: UUID4
     task_id: UUID4
@@ -46,6 +45,7 @@ class Slide(BaseModel):
     description: str
     image: HttpUrl
     queue: int
+
 
 class TaskResponse(BaseModel):
     id: UUID4
@@ -57,6 +57,7 @@ class TaskResponse(BaseModel):
     action_url: HttpUrl
     call_to_action: str
     slides: List[Slide]
+
 
 # Example response for documentation
 example_response = {
@@ -75,7 +76,7 @@ example_response = {
             "title": "Introduction to Dedust",
             "description": "Learn the basics of decentralized exchanges.",
             "image": "https://kauri.io/images/slide1.png",
-            "queue": 1
+            "queue": 1,
         }
-    ]
+    ],
 }

@@ -1,6 +1,9 @@
-from apps.ton_quest.tasks import OpCodes
 from typing import Optional
+
 import pydantic
+
+from apps.ton_quest.tasks import OpCodes
+
 
 class Task(pydantic.BaseModel):
     id: int
@@ -17,6 +20,7 @@ class Task(pydantic.BaseModel):
     external_url: Optional[str] = None
     children: list = []
 
+
 def reformat_tasks(tasks):
     task_dict = {task.id: task for task in tasks}
     root_tasks = []
@@ -30,6 +34,7 @@ def reformat_tasks(tasks):
                 parent_task.children.append(task)
 
     return root_tasks
+
 
 # Example usage
 tasks = [
@@ -45,14 +50,14 @@ tasks = [
         op_code=OpCodes.default_message,
         min_amount=0,
         parent_id=0,
-        external_url="https://example.com"
+        external_url="https://example.com",
     ),
     Task(
         id=3,
         title="Perform a swap",
         icon="https://tonstarter-cdn.ams3.digitaloceanspaces.com/openrating/dedust/dedust.png",
         description="Make dedust swap at any pool to earn 300 XP. "
-                    "For example you can use this more safety pool.",
+        "For example you can use this more safety pool.",
         images=["https://example.com/image1.png"],
         active=True,
         xp=50,
@@ -60,7 +65,7 @@ tasks = [
         op_code=OpCodes.dedust_swap,
         min_amount=0,
         parent_id=2,
-        external_url="https://dedust.io/swap/TON/USDT"
+        external_url="https://dedust.io/swap/TON/USDT",
     ),
     Task(
         id=4,
@@ -74,7 +79,7 @@ tasks = [
         op_code=OpCodes.dedust_deposit,
         min_amount=0,
         parent_id=3,
-        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r"
+        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r",
     ),
     Task(
         id=5,
@@ -88,7 +93,7 @@ tasks = [
         op_code=OpCodes.dedust_deposit,
         min_amount=0,
         parent_id=2,
-        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r"
+        external_url="https://dedust.io/pools/EQA-X_yo3fzzbDbJ_0bzFWKqtRuZFIRa1sJsveZJ1YpViO3r",
     ),
 ]
 

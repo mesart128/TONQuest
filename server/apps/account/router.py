@@ -20,15 +20,6 @@ async def add_account(
     return result
 
 
-@account_router.get("", description="Add account accounts list", response_model=List[AccountSchema])
-@inject
-async def get_accounts(
-    limit: int = 100,
-    account_service: AccountService = Depends(Provide["account_service"]),
-):
-    return await account_service.get_accounts(limit)
-
-
 @account_router.get(
     "/{address}", description="Add account accounts list", response_model=AccountSchema
 )

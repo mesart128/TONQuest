@@ -1,8 +1,7 @@
 from dependency_injector import containers, providers
 from redis.asyncio.client import Redis
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from apps.account.repositories import MongoDBAccountRepository
 from apps.account.service import AccountService
 from apps.scanner.service import BlockScanner
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
@@ -12,7 +11,6 @@ from core.producer import HttpProducer
 from core.ton_provider import (
     TONAPIClientAsync,
 )
-from database.engine import get_async_mongo_engine
 from database.local_storage import RedisStorage
 
 
@@ -27,9 +25,7 @@ class CoreContainer(containers.DeclarativeContainer):
     )
 
     engine = providers.Singleton(create_async_engine, config.database_uri, echo=False)
-    async_session = providers.Factory(async_sessionmaker,
-        engine, expire_on_commit=False
-    )
+    async_session = providers.Factory(async_sessionmaker, engine, expire_on_commit=False)
     db = providers.Singleton(TonQuestSQLAlchemyRepo, async_session)
 
     local_storage = providers.ThreadLocalSingleton(
@@ -53,7 +49,7 @@ class CoreContainer(containers.DeclarativeContainer):
         ),
         ton_rpc_client=ton_rpc_client,
         producer=producer,
-        ton_quest_repository=db
+        ton_quest_repository=db,
     )
 
     scanner_service = providers.Singleton(

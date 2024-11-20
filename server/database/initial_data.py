@@ -1,19 +1,19 @@
 import asyncio
 
-from sqlalchemy import ChunkedIteratorResult
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from apps.ton_quest.enums import TaskTypeEnum
-from apps.ton_quest.models import Branch, Category, User, Slide, NFT, Piece, Task
+from apps.ton_quest.models import NFT, Branch, Category, Piece, Slide, Task, User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo  # Замените на реальный путь
 
-DATABASE_URL = "postgresql+asyncpg://creator:creator@localhost/tonquest"  # Укажите свои данные подключения
+DATABASE_URL = (
+    "postgresql+asyncpg://creator:creator@localhost/tonquest"  # Укажите свои данные подключения
+)
 
-engine = create_async_engine(DATABASE_URL, echo=True)
-SessionFactory = async_sessionmaker(engine)
-repo = TonQuestSQLAlchemyRepo(SessionFactory)
 
-async def populate_database():
+
+
+async def populate_database(engine, repo):
     async with engine.begin() as conn:
         # await conn.run_sync(Branch.metadata.drop_all)  # Создание таблиц, если они отсутствуют
         await conn.run_sync(Branch.metadata.create_all)  # Создание таблиц, если они отсутствуют
@@ -24,7 +24,8 @@ async def populate_database():
         "title": "Easy start",
         "description": "You will learn how to use decentralized exchange tools",
         "image": "https://kauri.io/images/1x1.png",
-        "subtitle": "This branch focuses on introducing users to Dedust through hands-on tasks, with interactive and easy-to-understand explanations.",
+        "subtitle": "This branch focuses on introducing users"
+        " to Dedust through hands-on tasks, with interactive and easy-to-understand explanations.",
     }
     dex_category_id = await repo.add_one(Category, dex_category_data)
     dedust_branch_data = {
@@ -102,7 +103,7 @@ async def populate_database():
         "last_name": "User",
         "image": "https://kauri.io/images/user.png",
     }
-    test_user_id = await repo.add_one(User, test_user_data)
+    await repo.add_one(User, test_user_data)
 
     # NFT и части
     test_nft_data = {
@@ -120,6 +121,13 @@ async def populate_database():
 
     print("Database population completed.")
 
+
 # Запуск скрипта
 if __name__ == "__main__":
-    asyncio.run(populate_database())
+    engine = create_async_engine(DATABASE_URL, echo=True)
+    SessionFactory = async_sessionmaker(engine)
+    repo = TonQuestSQLAlchemyRepo(SessionFactory)
+    asyncio.run(populate_database(
+        engine=engine,
+        repo=repo
+    ))
