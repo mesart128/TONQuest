@@ -1,15 +1,24 @@
 from typing import List
 
-from sqlalchemy import insert, delete, update, select, desc, ChunkedIteratorResult
+from sqlalchemy import ChunkedIteratorResult, delete, desc, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from apps.ton_quest.models import Branch, Category, User, Slide, NFT, Piece, Task, UserTask, UserBranch, UserNFT, UserPiece
+from apps.ton_quest.models import (
+    NFT,
+    Branch,
+    Category,
+    Piece,
+    Task,
+    User,
+    UserBranch,
+    UserPiece,
+    UserTask,
+)
 from database.repository import NotFound
 
 
 class BaseSQLAlchemyRepo:
-
     def __init__(self, session_factory):
         self._session_factory = session_factory
 
@@ -66,6 +75,10 @@ class BaseSQLAlchemyRepo:
 
 
 class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
+    async def get_task_by_task_type(self, task_type: str) -> Task | None:
+        stmt = select(Task).where(Task.task_type == task_type)
+        task = await self._execute_and_fetch_one(stmt)
+        return task
 
     async def get_nft(self, nft_id: str) -> NFT:
         smtp = select(NFT).where(NFT.id == nft_id).options(selectinload(NFT.pieces))
@@ -76,7 +89,6 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         stmt = select(NFT).options(selectinload(NFT.pieces))
         nfts = await self._execute_and_fetch_all(stmt)
         return nfts
-
 
     async def get_user(self, telegram_id: int) -> User:
         """Получить пользователя по ID."""
@@ -98,33 +110,33 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         dict_to_insert.pop("updated_at")
         await self.add_one(User, dict_to_insert)  # Передача данных как словаря
         return user
-    
+
     async def add_user_wallet_address(self, user_id: int, wallet_address: str) -> User:
         user = await self.get_user(user_id)
         user.wallet_address = wallet_address
         await self.edit_one(User, user_id, user.asdict())
         return user
-    
 
     async def get_all_categories(self) -> List[Category]:
         """Получить список всех категорий."""
-        stmt = select(Category).options(selectinload(Category.branches).selectinload(
-            Branch.tasks).selectinload(Task.slides)
+        stmt = select(Category).options(
+            selectinload(Category.branches).selectinload(Branch.tasks).selectinload(Task.slides)
         )
         categories = await self._execute_and_fetch_all(stmt)
         return categories
 
     async def get_category(self, category_id: str) -> Category:
         """Получить категорию по ID."""
-        stmt = select(Category).where(Category.id == category_id).options(selectinload(Category.branches).selectinload(
-            Branch.tasks)
+        stmt = (
+            select(Category)
+            .where(Category.id == category_id)
+            .options(selectinload(Category.branches).selectinload(Branch.tasks))
         )
         category = await self._execute_and_fetch_one(stmt)
         category = await self.find_one(Category, category_id)
         if category is None:
             raise NotFound("Category not found")
         return category
-    
 
     async def get_branch(self, branch_id: str) -> Branch:
         """Получить ветку по ID."""
@@ -132,7 +144,7 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         if branch is None:
             raise NotFound("Branch not found")
         return branch
-    
+
     async def complete_branch(self, user_id: int, branch_id: str):
         user = await self.get_user(user_id)
         user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=True)
@@ -143,18 +155,17 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         if user_branch is None:
             return False
         return user_branch.completed
-    
+
     async def get_user_branch(self, user_id: int, branch_id: str) -> UserBranch:
         user_branch = await self.find_one_by(UserBranch, user_id=user_id, branch_id=branch_id)
         if user_branch is None:
             raise NotFound("User branch not found")
         return user_branch
-    
+
     async def create_user_branch(self, user_id: int, branch_id: str) -> UserBranch:
         user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=False)
         await self.add_one(UserBranch, user_branch.asdict())
         return user_branch
-    
 
     async def get_task(self, task_id: str) -> Task:
         """Получить задачу по ID."""
@@ -168,13 +179,13 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         smtp = select(Task).where(Task.id == task_id).options(selectinload(Task.slides))
         task = await self._execute_and_fetch_one(smtp)
         return task
-    
+
     async def get_user_task(self, user_id: int, task_id: str) -> UserTask:
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
         if user_task is None:
             raise NotFound("User task not found")
         return user_task
-    
+
     async def check_task_completed(self, user_id: int, task_id: str) -> bool:
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
         if user_task is None:
@@ -190,7 +201,6 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         user_task.claimed = True
         await self.edit_one(UserTask, user_task.id, user_task.asdict())
         return True
-    
 
     async def get_piece(self, piece_id: str) -> Piece:
         piece = await self.find_one(Piece, piece_id)
@@ -206,9 +216,9 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
     async def get_user_piece(self, user_id: int, piece_id: str) -> UserPiece:
         user_piece = await self.find_one_by(UserPiece, user_id=user_id, piece_id=piece_id)
         if user_piece is None:
-            raise NotFound("User piece not found")         
+            raise NotFound("User piece not found")
         return user_piece
-    
+
     async def claim_piece(self, user_id: int, piece_id: str) -> bool:
         user = await self.get_user(user_id)
         piece = await self.get_piece(piece_id)
@@ -216,13 +226,12 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         user_piece.claimed = True
         await self.edit_one(UserPiece, user_piece.id, user_piece.asdict())
         return True
-            
 
     async def create_user_task(self, user_id: int, task_id: str) -> UserTask:
         user_task = UserTask(user_id=user_id, task_id=task_id, completed=False, claimed=False)
         await self.add_one(UserTask, user_task.asdict())
         return user_task
-    
+
     async def complete_task(self, user_id: int, task_id: str) -> bool:
         user = await self.get_user(user_id)
         task = await self.get_task(task_id)
@@ -230,9 +239,3 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         user_task.completed = True
         await self.edit_one(UserTask, user_task.id, user_task.asdict())
         return True
-
-    
-    
-
-    
-

@@ -2,13 +2,13 @@ import asyncio
 import os
 from logging.config import fileConfig
 
-from dotenv import load_dotenv, find_dotenv
+from dotenv import find_dotenv, load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-from database.metadata import metadata
 
 from alembic import context
+from database.metadata import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

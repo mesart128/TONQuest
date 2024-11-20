@@ -3,6 +3,7 @@ import os
 import typing
 
 import yaml
+
 # from gunicorn import glogging
 from pythonjsonlogger import jsonlogger
 
@@ -44,7 +45,10 @@ class CustomFormatter(logging.Formatter):
         return super().format(record)
 
 
-def setup_logging(logger_settings: typing.Optional[LoggerSettings] = None, log_dir: str = str(LOG_DIR).replace('\\', '/')):
+def setup_logging(
+    logger_settings: typing.Optional[LoggerSettings] = None,
+    log_dir: str = str(LOG_DIR).replace("\\", "/"),
+):
     if logger_settings is None:
         logger_settings = LoggerSettings()
     settings_module = logger_settings.settings_module

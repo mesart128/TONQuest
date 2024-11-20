@@ -1,5 +1,5 @@
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, Table, Column
 
 from database.base import BaseSqlModel
 
@@ -32,7 +32,7 @@ class UserNFT(BaseSqlModel):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     claimed: Mapped[bool] = mapped_column(default=False)
 
-    
+
 class Slide(BaseSqlModel):
     __tablename__ = "slides"
     task_id: Mapped[str] = mapped_column(ForeignKey("tasks.id"))
@@ -79,20 +79,24 @@ class Task(BaseSqlModel):
             "slides": [slide.to_read_model() for slide in self.slides],
         }
 
+
 class Branch(BaseSqlModel):
     __tablename__ = "branches"
     title: Mapped[str] = mapped_column()
     category_id: Mapped[str] = mapped_column(ForeignKey("categories.id"))
     category: Mapped["Category"] = relationship("Category", back_populates="branches")
     tasks: Mapped[list[Task]] = relationship("Task", back_populates="branch", lazy="subquery")
-    users: Mapped[list["User"]] = relationship("User", secondary="users_branches", back_populates="branches")
+    users: Mapped[list["User"]] = relationship(
+        "User", secondary="users_branches", back_populates="branches"
+    )
     pieces: Mapped[list["Piece"]] = relationship("Piece", back_populates="branch")
+
     def to_read_model(self):
         return {
             "id": self.id,
             "category_id": self.category_id,
             "tasks": [task.to_read_model() for task in self.tasks],
-        }    
+        }
 
 
 class Category(BaseSqlModel):
@@ -103,7 +107,9 @@ class Category(BaseSqlModel):
     image: Mapped[str] = mapped_column()
     subtitle: Mapped[str] = mapped_column()
 
-    branches: Mapped[list[Branch]] = relationship("Branch", back_populates="category", lazy="subquery")
+    branches: Mapped[list[Branch]] = relationship(
+        "Branch", back_populates="category", lazy="subquery"
+    )
 
     def to_read_model(self):
         return {
@@ -115,7 +121,8 @@ class Category(BaseSqlModel):
             "subtitle": self.subtitle,
             "branches": [branch.to_read_model() for branch in self.branches],
         }
-    
+
+
 class UserTask(BaseSqlModel):
     __tablename__ = "user_tasks"
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
@@ -132,6 +139,7 @@ class UserTask(BaseSqlModel):
             "claimed": self.claimed,
         }
 
+
 class User(BaseSqlModel):
     __tablename__ = "users"
     telegram_id: Mapped[int] = mapped_column()
@@ -141,11 +149,16 @@ class User(BaseSqlModel):
     image: Mapped[str] = mapped_column()
     wallet_address: Mapped[str] = mapped_column(nullable=True)
 
-    tasks: Mapped[list["Task"]] = relationship("Task", secondary="users_tasks", back_populates="users")
-    branches: Mapped[list["Branch"]] = relationship("Branch", secondary="users_branches", back_populates="users")
-    pieces: Mapped[list["Piece"]] = relationship("Piece", secondary="users_pieces", back_populates="users")
+    tasks: Mapped[list["Task"]] = relationship(
+        "Task", secondary="users_tasks", back_populates="users"
+    )
+    branches: Mapped[list["Branch"]] = relationship(
+        "Branch", secondary="users_branches", back_populates="users"
+    )
+    pieces: Mapped[list["Piece"]] = relationship(
+        "Piece", secondary="users_pieces", back_populates="users"
+    )
     nfts: Mapped[list["NFT"]] = relationship("NFT", secondary="users_nfts", back_populates="users")
-
 
     def to_read_model(self):
         return {
@@ -158,11 +171,14 @@ class User(BaseSqlModel):
             "wallet_address": self.wallet_address,
         }
 
+
 class Piece(BaseSqlModel):
     __tablename__ = "pieces"
     nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
     image: Mapped[str] = mapped_column()
-    users: Mapped[list["User"]] = relationship("User", secondary="users_pieces", back_populates="pieces")
+    users: Mapped[list["User"]] = relationship(
+        "User", secondary="users_pieces", back_populates="pieces"
+    )
     branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"), nullable=True)
     branch: Mapped["Branch"] = relationship("Branch", back_populates="pieces")
     queue: Mapped[int] = mapped_column(default=0, nullable=True)
@@ -176,16 +192,16 @@ class Piece(BaseSqlModel):
             "branch_id": self.branch_id,
             "queue": self.queue,
         }
-    
+
 
 class NFT(BaseSqlModel):
     __tablename__ = "nfts"
     image: Mapped[str] = mapped_column()
     contract_address: Mapped[str] = mapped_column()
-    users: Mapped[list["User"]] = relationship("User", secondary="users_nfts", back_populates="nfts")
-    pieces: Mapped[list[Piece]] = relationship(
-        "Piece", back_populates="nft"
+    users: Mapped[list["User"]] = relationship(
+        "User", secondary="users_nfts", back_populates="nfts"
     )
+    pieces: Mapped[list[Piece]] = relationship("Piece", back_populates="nft")
 
     def to_read_model(self):
         return {

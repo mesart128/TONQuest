@@ -12,10 +12,10 @@ from pytoniq_core import (
 )
 from tonsdk.utils import b64str_to_bytes, bytes_to_b64str
 
-from apps.account.enums import AccountEventEnum
 from apps.currency.common.asset import Asset
+from apps.ton_quest.enums import TaskTypeEnum
+from apps.ton_quest.schemas import DedustEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
-from apps.transaction.repositories import TransactionMongoRepository
 from apps.transaction.schemas import (
     ParsedTransactionDTO,
     RawMessageDTO,
@@ -52,6 +52,7 @@ class TransactionService:
     #     transaction: RawTransactionDTO = await self.repository.find_one_by(id_)
     #     return transaction
 
+    @classmethod
     async def chain_transaction_to_dto(
         self, transaction: Transaction, block: BlockIdExt, masterchain_seqno: int
     ) -> RawTransactionDTO:
@@ -184,32 +185,45 @@ class TransactionService:
         return result
 
     @staticmethod
-    async def parse_external_dedust_messages(out_msg: MessageAny):
+    async def parse_external_dedust_messages(out_msg: MessageAny) -> DedustEvent:
         body = out_msg.body.to_slice()
         op = body.load_uint(32)
-
+        event = None
         if op == OpCodes.dedust_swap.value:
             event = {
-                "event_type": AccountEventEnum.dedust_swap.value,
-                "asset_in": Asset.from_slice(body).address,
-                "asset_out": Asset.from_slice(body).address,
+                "event_type": TaskTypeEnum.dedust_swap.value,
+                "asset_in": Asset.from_slice(body).address.to_str(False),
+                "asset_out": Asset.from_slice(body).address.to_str(False),
                 "amount_out": body.load_coins(),
                 "amount_in": body.load_coins(),
-                "sender_address": body.load_ref().begin_parse().load_address(),
+                "sender_address": body.load_ref().begin_parse().load_address().to_str(False),
                 "op_code": op,
             }
             logging.info(event)
-            return event
         elif op == OpCodes.dedust_deposit.value:
             event = {
-                "event_type": AccountEventEnum.dedust_deposit.value,
-                "asset_in": Asset.from_slice(body).address.to_str(),
-                "asset_out": Asset.from_slice(body).address.to_str(),
+                "event_type": TaskTypeEnum.dedust_liquidity.value,
+                "asset_in": Asset.from_slice(body).address.to_str(False),
+                "asset_out": Asset.from_slice(body).address.to_str(False),
                 "amount_out": body.load_coins(),
                 "amount_in": body.load_coins(),
-                "sender_address": body.load_ref().begin_parse().load_address().to_str(),
+                "sender_address": body.load_ref().begin_parse().load_address().to_str(False),
                 "op_code": op,
             }
-
             logging.info(event)
-            return event
+        elif op == OpCodes.dedust_withdraw.value:
+            event = {
+                "event_type": TaskTypeEnum.dedust_withdraw.value,
+                "asset_in": Asset.from_slice(body).address.to_str(False),
+                "asset_out": Asset.from_slice(body).address.to_str(False),
+                "amount_out": body.load_coins(),
+                "amount_in": body.load_coins(),
+                "sender_address": body.load_ref().begin_parse().load_address().to_str(False),
+                "op_code": op,
+            }
+            logging.info(event)
+        else:
+            logging.warning(f"Unknown dedust op code {op}")
+            raise ValueError(f"Unknown dedust op code {op}")
+        result = DedustEvent(**event)
+        return result

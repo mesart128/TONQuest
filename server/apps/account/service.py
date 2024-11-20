@@ -4,15 +4,15 @@ from typing import Optional, Union
 from pytoniq_core import Address, MessageAny
 
 from apps.account.account_codes import dedust_swap_pool_code_b64
-from apps.account.repositories import MongoDBAccountRepository
 from apps.account.schemas import AccountSchema
 from apps.account.types import SystemAddress
+from apps.ton_quest import manager as ton_quest_manager
 from apps.ton_quest.models import User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
+from apps.ton_quest.schemas import DedustEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import RawMessageDTO, RawTransactionDTO
 from apps.transaction.service import TransactionService
-from core.exceptions import JsonException
 from core.producer import HttpProducer
 from core.schemas import FullAccountState
 from core.ton_provider import TONAPIClientAsync
@@ -58,12 +58,12 @@ class AccountService:
         result = await self.repository.find_all()
         return [AccountSchema(**item) for item in result[:limit]]
 
-    async def get_account(
-        self, account_address: Union[SystemAddress, Address, str]
-    ) -> User | None:
+    async def get_account(self, account_address: Union[SystemAddress, Address, str]) -> User | None:
         if isinstance(account_address, str):
             account_address = Address(account_address)
-        user_account = await self.ton_quest_repository.get_user_by(wallet_address=account_address.to_raw())
+        user_account = await self.ton_quest_repository.get_user_by(
+            wallet_address=account_address.to_raw()
+        )
         return user_account
 
     async def handle_external_out_msg(self, out_msg: MessageAny) -> None:
@@ -71,12 +71,19 @@ class AccountService:
             out_msg.info.src.to_str()
         )
         if account.code == dedust_swap_pool_code_b64:
-            message = await self.transaction_service.parse_external_dedust_messages(out_msg)
+            try:
+                message: DedustEvent = (
+                    await self.transaction_service.parse_external_dedust_messages(out_msg)
+                )
+            except Exception as e:
+                logging.error(f"Error while parsing dedust message {e}", exc_info=True)
+                return
             logging.debug(f"Detected dedust message {message}")
             tracked_account: User = await self.get_account(
                 account_address=message["sender_address"]
             )
             if tracked_account:
+                await ton_quest_manager.check_task(user_account=tracked_account, event=message)
                 # TODO update tasks here
                 logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
         else:
@@ -155,19 +162,21 @@ class AccountService:
                 "value": msg["value"],
             }
             tx_to_insert["out_msgs"].append(dict_to_insert)
-        await self.repository.add_one(tx_to_insert)
-        full_transaction = await self.transaction_service.get_transaction_by_hash(
-            hash_=parsed_transaction["hash"]
-        )
-        return full_transaction
+        # await self.repository.add_one(tx_to_insert)
+        # full_transaction = await self.transaction_service.get_transaction_by_hash(
+        #     hash_=parsed_transaction["hash"]
+        # )
+        return parsed_transaction
 
     async def handle_transaction_on_account(self, parsed_transaction: RawTransactionDTO) -> None:
         try:
-            account: Optional[AccountSchema] = await self.get_account(
+            account: Optional[User] = await self.get_account(
                 Address(parsed_transaction["account_address"])
             )
             if not account:
                 return
+            logging.debug(f"Detected account {account.wallet_address}")
+            return
             existed_transaction = await self.transaction_service.get_transaction_by_hash(
                 hash_=parsed_transaction["hash"]
             )
