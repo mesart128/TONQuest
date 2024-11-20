@@ -4,7 +4,7 @@ from aiogram.utils.web_app import WebAppInitData
 from fastapi import APIRouter, Security
 from pytoniq_core import Address
 
-from apps.ton_quest import models
+from apps.ton_quest import models, schemas
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
 from apps.transaction.schemas import TaskResponse
@@ -40,7 +40,7 @@ app_router = ton_quest_router
 
 
 @app_router.get("/users")
-async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> dict:
+async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> schemas.User:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -52,7 +52,7 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
             image=web_app_init_data.user.photo_url,
         )
         user = await db.create_user(user)
-    return user.to_read_model()
+    return schemas.User(user.to_read_model())
 
 
 # @app_router.post("/users/")
@@ -106,7 +106,7 @@ async def check_task(
     except NotFound:
         return {"error": "Task not found"}
 
-    completed = await db.check_task_completed(web_app_init_data.user.id, task_id)
+    completed = await db.check_task_completed(user.id, task_id)
     return {"completed": completed}
 
 
@@ -124,7 +124,7 @@ async def claim_task(
     except NotFound:
         return {"error": "Task not found"}
 
-    completed = await db.check_task_completed(web_app_init_data.user.id, task_id)
+    completed = await db.check_task_completed(user.id, task_id)
     if not completed:
         return {"error": "Task not completed"}
     await db.claim_task(web_app_init_data.user.id, task_id)
@@ -134,7 +134,7 @@ async def claim_task(
 @app_router.get("/tasks/{task_id}/complete")
 async def complete_task(
     task_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> bool:
+) -> dict:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -148,18 +148,18 @@ async def complete_task(
     branch_tasks = (await db.get_branch(task.branch_id)).tasks
     for branch_task in branch_tasks:
         if branch_task.queue < task.queue:
-            completed = await db.check_task_completed(web_app_init_data.user.id, branch_task.id)
+            completed = await db.check_task_completed(user.id, branch_task.id)
             if not completed:
                 return {"error": "Previous task not completed"}
 
     try:
-        user_task = await db.get_user_task(web_app_init_data.user.id, task_id)
+        user_task = await db.get_user_task(user.id, task_id)
         if user_task.completed:
             return {"error": "Task already completed"}
     except NotFound:
-        user_task = await db.create_user_task(web_app_init_data.user.id, task_id)
+        user_task = await db.create_user_task(user.id, task_id)
 
-    await db.complete_task(web_app_init_data.user.id, task_id)
+    await db.complete_task(user.id, task_id)
     return {"success": True}
 
 
@@ -184,7 +184,7 @@ async def get_branch(branch_id: str) -> Any:
 @app_router.get("/branches/{branch_id}/check")
 async def check_branch(
     branch_id: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> bool:
+) -> dict:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -195,7 +195,7 @@ async def check_branch(
     except NotFound:
         return {"error": "Branch not found"}
 
-    completed = await db.check_branch_completed(web_app_init_data.user.id, branch_id)
+    completed = await db.check_branch_completed(user.id, branch_id)
     return {"completed": completed}
 
 
@@ -214,17 +214,17 @@ async def complete_branch(
         return {"error": "Branch not found"}
 
     try:
-        user_branch = await db.get_user_branch(web_app_init_data.user.id, branch_id)
+        user_branch = await db.get_user_branch(user.id, branch_id)
         if user_branch.completed:
             return {"error": "Branch already completed"}
     except NotFound:
-        user_branch = await db.create_user_branch(web_app_init_data.user.id, branch_id)
+        user_branch = await db.create_user_branch(user.id, branch_id)
 
     for task in branch.tasks:
-        completed = await db.check_task_completed(web_app_init_data.user.id, task.id)
+        completed = await db.check_task_completed(user.id, task.id)
         if not completed:
             return {"error": "Not all tasks in branch completed"}
-    await db.complete_branch(web_app_init_data.user.id, branch_id)
+    await db.complete_branch(user.id, branch_id)
     return {"success": True}
 
 
@@ -238,20 +238,20 @@ async def claim_piece(
         return {"error": "Piece not found"}
 
     try:
-        await db.get_user(web_app_init_data.user.id)
+        user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
         return {"error": "User not found"}
 
     try:
-        user_piece = await db.get_user_piece(web_app_init_data.user.id, piece_id)
+        user_piece = await db.get_user_piece(user.id, piece_id)
         if user_piece.claimed:
             return {"error": "Piece already claimed"}
     except NotFound:
-        await db.create_user_piece(web_app_init_data.user.id, piece_id)
+        await db.create_user_piece(user.id, piece_id)
 
-    branch_completed = await db.check_branch_completed(web_app_init_data.user.id, piece.branch_id)
+    branch_completed = await db.check_branch_completed(user.id, piece.branch_id)
     if not branch_completed:
         return {"error": "Branch not completed"}
 
-    await db.claim_piece(web_app_init_data.user.id, piece_id)
+    await db.claim_piece(user.id, piece_id)
     return {"success": True}

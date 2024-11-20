@@ -92,7 +92,13 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def get_user(self, telegram_id: int) -> User:
         """Получить пользователя по ID."""
-        user = await self.find_one_by(User, telegram_id=telegram_id)
+        # user = await self.find_one_by(User, telegram_id=telegram_id)
+        stmt = select(User).options(selectinload(User.completed_tasks), 
+                                    selectinload(User.claimed_pieces), 
+                                    selectinload(User.completed_branches),
+                                    selectinload(User.claimed_pieces),
+                                    selectinload(User.nfts)).where(User.telegram_id == telegram_id)
+        user = await self._execute_and_fetch_one(stmt)
         if user is None:
             raise NotFound("User not found")
         return user
@@ -146,9 +152,12 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         return branch
 
     async def complete_branch(self, user_id: int, branch_id: str):
-        user = await self.get_user(user_id)
         user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=True)
-        await self.add_one(UserBranch, user_branch.asdict())
+        dict_to_insert = user_branch.asdict()
+        dict_to_insert.pop("id")
+        dict_to_insert.pop("created_at")
+        dict_to_insert.pop("updated_at")
+        await self.add_one(UserBranch, dict_to_insert)
 
     async def check_branch_completed(self, user_id: int, branch_id: str) -> bool:
         user_branch = await self.find_one_by(UserBranch, user_id=user_id, branch_id=branch_id)
@@ -164,7 +173,11 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def create_user_branch(self, user_id: int, branch_id: str) -> UserBranch:
         user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=False)
-        await self.add_one(UserBranch, user_branch.asdict())
+        dict_to_insert = user_branch.asdict()
+        dict_to_insert.pop("id")
+        dict_to_insert.pop("created_at")
+        dict_to_insert.pop("updated_at")
+        await self.add_one(UserBranch, dict_to_insert)
         return user_branch
 
     async def get_task(self, task_id: str) -> Task:
@@ -193,8 +206,6 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         return user_task.completed
 
     async def claim_task(self, user_id: int, task_id: str) -> bool:
-        user = await self.get_user(user_id)
-        task = await self.get_task(task_id)
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
         if user_task is None:
             raise NotFound("User task not found")
@@ -210,7 +221,11 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def create_user_piece(self, user_id: int, piece_id: str) -> UserPiece:
         user_piece = UserPiece(user_id=user_id, piece_id=piece_id, claimed=False)
-        await self.add_one(UserPiece, user_piece.asdict())
+        dict_to_insert = user_piece.asdict()
+        dict_to_insert.pop("id")
+        dict_to_insert.pop("created_at")
+        dict_to_insert.pop("updated_at")
+        await self.add_one(UserPiece, dict_to_insert)
         return user_piece
 
     async def get_user_piece(self, user_id: int, piece_id: str) -> UserPiece:
@@ -220,8 +235,6 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         return user_piece
 
     async def claim_piece(self, user_id: int, piece_id: str) -> bool:
-        user = await self.get_user(user_id)
-        piece = await self.get_piece(piece_id)
         user_piece = await self.get_user_piece(user_id, piece_id)
         user_piece.claimed = True
         await self.edit_one(UserPiece, user_piece.id, user_piece.asdict())
@@ -229,12 +242,14 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def create_user_task(self, user_id: int, task_id: str) -> UserTask:
         user_task = UserTask(user_id=user_id, task_id=task_id, completed=False, claimed=False)
-        await self.add_one(UserTask, user_task.asdict())
+        dict_to_insert = user_task.asdict()
+        dict_to_insert.pop("id")
+        dict_to_insert.pop("created_at")
+        dict_to_insert.pop("updated_at")
+        await self.add_one(UserTask, dict_to_insert)
         return user_task
 
     async def complete_task(self, user_id: int, task_id: str) -> bool:
-        user = await self.get_user(user_id)
-        task = await self.get_task(task_id)
         user_task = await self.get_user_task(user_id, task_id)
         user_task.completed = True
         await self.edit_one(UserTask, user_task.id, user_task.asdict())
