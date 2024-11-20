@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import ChunkedIteratorResult, delete, desc, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -265,11 +265,10 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         return await self.find_one(UserTask, user_task_id)
 
 
-    async def complete_task(self, user_id: str, task_id: str) -> bool:
+    async def complete_task(self, user_id: str, task_id: str) -> UserTask:
         # insert UserTask with completed=True
-        user_task = await self.create_user_task(user_id, task_id)
-        user_task.completed = True
-        return True
+        user_task = await self.create_user_task(user_id, task_id, completed=True)
+        return user_task
 
     async def manual_complete_task(self, user_id: str, task_id: str) -> bool:
         user = await self.get_user_by(id=user_id)

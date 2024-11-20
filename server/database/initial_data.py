@@ -20,6 +20,7 @@ async def populate_database(engine, repo):
         await conn.run_sync(Base.metadata.create_all)  # Создание таблиц, если они отсутствуют
     # return
     # Категория
+    # DEX
     dex_category_data = {
         "head": "DEX",
         "title": "Easy start",
@@ -49,15 +50,22 @@ async def populate_database(engine, repo):
     slides_first_task = [
         {
             "task_id": dedust_first_task_id,
-            "title": "Introduction to Dedust",
-            "description": "Learn the basics of decentralized exchanges.",
+            "title": "Task description",
+            "description": "Token swaps allow you to exchange one asset for another. For example, you can swap TON for USDT to secure your assets' value or use the tokens in other DeFi operations.",
             "image": "https://kauri.io/images/slide1.png",
             "queue": 1,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Create a Wallet",
-            "description": "Steps to create a wallet for DEX.",
+            "title": "Fiat Analogy",
+            "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
+            "image": "https://kauri.io/images/slide2.png",
+            "queue": 2,
+        },
+        {
+            "task_id": dedust_first_task_id,
+            "title": "Fiat Analogy",
+            "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
             "image": "https://kauri.io/images/slide2.png",
             "queue": 2,
         },
@@ -103,7 +111,7 @@ async def populate_database(engine, repo):
         "action_url": "https://dedust.io/trade",
         "call_to_action": "You have learned how to withdraw liquidity and reclaim the tokens you added to the pool. ",
     }
-    dedust_third_task_id = await repo.add_one(Task, dedust_second_task_data)
+    dedust_third_task_id = await repo.add_one(Task, dedust_third_task_data)
 
     slides_third_task = [
         {

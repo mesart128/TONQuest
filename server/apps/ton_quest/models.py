@@ -37,9 +37,9 @@ class Slide(BaseSqlModel):
     __tablename__ = "slides"
     task_id: Mapped[str] = mapped_column(ForeignKey("tasks.id"))
     task: Mapped["Task"] = relationship("Task", back_populates="slides")
-    title: Mapped[str] = mapped_column()
-    description: Mapped[str] = mapped_column()
-    image: Mapped[str] = mapped_column()
+    title: Mapped[str] = mapped_column(nullable=True)
+    description: Mapped[str] = mapped_column(nullable=True)
+    image: Mapped[str] = mapped_column(nullable=True)
     queue: Mapped[int] = mapped_column()
 
     def to_read_model(self):

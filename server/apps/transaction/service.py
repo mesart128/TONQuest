@@ -14,7 +14,7 @@ from tonsdk.utils import b64str_to_bytes, bytes_to_b64str
 
 from apps.currency.common.asset import Asset
 from apps.ton_quest.enums import TaskTypeEnum
-from apps.ton_quest.schemas import DedustSwapEvent
+from apps.ton_quest.schemas import DedustSwapEvent, DedustDepositEvent, DedustWithdrawEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import (
     ParsedTransactionDTO,
@@ -188,42 +188,50 @@ class TransactionService:
     async def parse_dedust_swap_event(out_msg: MessageAny) -> DedustSwapEvent:
         body = out_msg.body.to_slice()
         op = body.load_uint(32)
-        event = None
-        if op == OpCodes.dedust_swap.value:
-            event = {
-                "event_type": TaskTypeEnum.dedust_swap.value,
-                "asset_in": Asset.from_slice(body).address,
-                "asset_out": Asset.from_slice(body).address,
-                "amount_out": body.load_coins(),
-                "amount_in": body.load_coins(),
-                "sender_address": body.load_ref().begin_parse().load_address(),
-                "op_code": op,
-            }
-            logging.info(event)
-        # elif op == OpCodes.dedust_deposit.value:
-        #     event = {
-        #         "event_type": TaskTypeEnum.dedust_liquidity.value,
-        #         "asset_in": Asset.from_slice(body).address,
-        #         "asset_out": Asset.from_slice(body).address,
-        #         "amount_out": body.load_coins(),
-        #         "amount_in": body.load_coins(),
-        #         "sender_address": body.load_ref().begin_parse().load_address(),
-        #         "op_code": op,
-        #     }
-        #     logging.info(event)
-        # elif op == OpCodes.dedust_withdraw.value:
-        #     event = {
-        #         "event_type": TaskTypeEnum.dedust_withdraw.value,
-        #         "asset_in": Asset.from_slice(body).address.to_str(False),
-        #         "asset_out": Asset.from_slice(body).address.to_str(False),
-        #         "amount_out": body.load_coins(),
-        #         "amount_in": body.load_coins(),
-        #         "sender_address": body.load_ref().begin_parse().load_address().to_str(False),
-        #         "op_code": op,
-        #     }
-        #     logging.info(event)
-        else:
-            logging.warning(f"Unknown dedust op code {op}")
-            raise ValueError(f"Unknown dedust op code {hex(op)}")
+        event = {
+            "event_type": TaskTypeEnum.dedust_swap.value,
+            "asset_in": Asset.from_slice(body).address,
+            "asset_out": Asset.from_slice(body).address,
+            "amount_out": body.load_coins(),
+            "amount_in": body.load_coins(),
+            "sender_address": body.load_ref().begin_parse().load_address(),
+            "op_code": op,
+        }
+        logging.info(event)
         result = DedustSwapEvent(**event)
+        return result
+
+    @staticmethod
+    async def parse_dedust_liquidity_event(out_msg: MessageAny) -> DedustDepositEvent:
+        body = out_msg.body.to_slice()
+        op = body.load_uint(32)
+        event = {
+            "event_type": TaskTypeEnum.dedust_liquidity.value,
+            "sender_address": body.load_address(),
+            "amount0": body.load_coins(),
+            "amount1": body.load_coins(),
+            "reserve1": body.load_coins(),
+            "liquidity": body.load_coins(),
+            "op_code": op,
+        }
+        logging.info(event)
+        result = DedustDepositEvent(**event)
+        return result
+
+    @staticmethod
+    async def parse_dedust_withdraw_event(out_msg: MessageAny) -> DedustWithdrawEvent:
+        body = out_msg.body.to_slice()
+        op = body.load_uint(32)
+        event = {
+            "event_type": TaskTypeEnum.dedust_withdraw.value,
+            "sender_address": body.load_address(),
+            "liquidity": body.load_coins(),
+            "amount0": body.load_coins(),
+            "amount1": body.load_coins(),
+            "reserve0": body.load_coins(),
+            "reserve1": body.load_coins(),
+            "op_code": op,
+        }
+        logging.info(event)
+        result = DedustWithdrawEvent(**event)
         return result

@@ -87,4 +87,30 @@ class DedustSwapEvent(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+class DedustDepositEvent(pydantic.BaseModel):
+    event_type: str
+    sender_address: Address
+    amount0: int
+    amount1: int
+    reserve1: int
+    liquidity: int
+    op_code: int
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
+class DedustWithdrawEvent(pydantic.BaseModel):
+    event_type: str
+    sender_address: Address
+    liquidity: int
+    amount0: int
+    amount1: int
+    reserve0: int
+    reserve1: int
+    op_code: int
+
+    class Config:
+        arbitrary_types_allowed = True
+
 
