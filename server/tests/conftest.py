@@ -8,12 +8,14 @@ from pytest_postgresql import factories
 from pytest_postgresql.janitor import DatabaseJanitor
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-
+from apps.ton_quest.models import User
 
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
+from core.logger import setup_logging
 
+setup_logging()
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from database.base import Base
 from database.initial_data import populate_database
@@ -68,3 +70,11 @@ def ton_quest_repo(database_engine):
 @pytest_asyncio.fixture(scope="function")
 async def setup_database(database_engine, ton_quest_repo):
     await populate_database(database_engine, ton_quest_repo)
+
+
+@pytest_asyncio.fixture(scope="function")
+async def create_test_user(ton_quest_repo):
+    user = User(
+        wallet_address="0:1",
+        telegram_id=1, username="test", first_name="test", last_name="test", image="test")
+    return await ton_quest_repo.create_user(user)

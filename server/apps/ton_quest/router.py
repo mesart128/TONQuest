@@ -158,8 +158,7 @@ async def complete_task(
             return {"error": "Task already completed"}
     except NotFound:
         user_task = await db.create_user_task(web_app_init_data.user.id, task_id)
-
-    await db.complete_task(web_app_init_data.user.id, task_id)
+    await db.manual_complete_task(user.id, task_id)
     return {"success": True}
 
 

@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from apps.ton_quest.enums import TaskTypeEnum
 from apps.ton_quest.models import NFT, Branch, Category, Piece, Slide, Task, User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo  # Замените на реальный путь
+from database.base import Base
 
 DATABASE_URL = (
     "postgresql+asyncpg://creator:creator@localhost/tonquest"  # Укажите свои данные подключения
@@ -15,8 +16,8 @@ DATABASE_URL = (
 
 async def populate_database(engine, repo):
     async with engine.begin() as conn:
-        # await conn.run_sync(Branch.metadata.drop_all)  # Создание таблиц, если они отсутствуют
-        await conn.run_sync(Branch.metadata.create_all)  # Создание таблиц, если они отсутствуют
+        await conn.run_sync(Base.metadata.drop_all)  # Создание таблиц, если они отсутствуют
+        await conn.run_sync(Base.metadata.create_all)  # Создание таблиц, если они отсутствуют
     # return
     # Категория
     dex_category_data = {
@@ -64,18 +65,16 @@ async def populate_database(engine, repo):
     for slide in slides_first_task:
         await repo.add_one(Slide, slide)
 
-    # Вторая задача и слайды
     dedust_second_task_data = {
         "branch_id": dedust_branch_id,
-        "title": "Make your first trade",
+        "title": "Provide liquidity on Dedust",
         "xp": 200,
-        "queue": 2,
-        "task_type": "dedust_swap",
+        "queue": 3,
+        "task_type": TaskTypeEnum.dedust_liquidity,
         "action_url": "https://dedust.io/trade",
-        "call_to_action": "Start trading",
+        "call_to_action": "You have learned how to provide liquidity and earn rewards, keep it up!",
     }
     dedust_second_task_id = await repo.add_one(Task, dedust_second_task_data)
-
     slides_second_task = [
         {
             "task_id": dedust_second_task_id,
@@ -93,6 +92,36 @@ async def populate_database(engine, repo):
         },
     ]
     for slide in slides_second_task:
+        await repo.add_one(Slide, slide)
+
+    dedust_third_task_data = {
+        "branch_id": dedust_branch_id,
+        "title": "Withdraw liquidity on Dedust",
+        "xp": 300,
+        "queue": 3,
+        "task_type": TaskTypeEnum.dedust_withdraw,
+        "action_url": "https://dedust.io/trade",
+        "call_to_action": "You have learned how to withdraw liquidity and reclaim the tokens you added to the pool. ",
+    }
+    dedust_third_task_id = await repo.add_one(Task, dedust_second_task_data)
+
+    slides_third_task = [
+        {
+            "task_id": dedust_third_task_id,
+            "title": "Trade on Dedust",
+            "description": "Learn how to trade on Dedust.",
+            "image": "https://kauri.io/images/slide3.png",
+            "queue": 1,
+        },
+        {
+            "task_id": dedust_third_task_id,
+            "title": "Trade on Dedust",
+            "description": "Learn how to trade on Dedust.",
+            "image": "https://kauri.io/images/slide4.png",
+            "queue": 2,
+        },
+    ]
+    for slide in slides_third_task:
         await repo.add_one(Slide, slide)
 
     # Пользователь

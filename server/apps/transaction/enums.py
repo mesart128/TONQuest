@@ -14,8 +14,13 @@ class OpCodes(IntEnum):
     default_message = 0x00000000
 
     # TonCrypto
-    dedust_swap = 0x9C610DE3
-    dedust_deposit = 0xB544F4A4
+    dedust_swap = 0x9c610de3
+    dedust_liquidity = 0xb544f4a4
+    dedust_withdraw = 0x3aa870a6
+
+    @classmethod
+    def dedust_code_list(cls):
+        return [cls.dedust_swap, cls.dedust_liquidity, cls.dedust_withdraw]
 
     @classmethod
     def get_by_code(cls, code):

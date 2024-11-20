@@ -143,10 +143,10 @@ class UserTask(BaseSqlModel):
 class User(BaseSqlModel):
     __tablename__ = "users"
     telegram_id: Mapped[int] = mapped_column()
-    username: Mapped[str] = mapped_column()
+    username: Mapped[str] = mapped_column(nullable=True)
     first_name: Mapped[str] = mapped_column()
-    last_name: Mapped[str] = mapped_column()
-    image: Mapped[str] = mapped_column()
+    last_name: Mapped[str] = mapped_column(nullable=True)
+    image: Mapped[str] = mapped_column(nullable=True)
     wallet_address: Mapped[str] = mapped_column(nullable=True)
 
     tasks: Mapped[list["Task"]] = relationship(

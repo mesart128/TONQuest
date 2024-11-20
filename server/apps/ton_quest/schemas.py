@@ -1,6 +1,7 @@
 from typing import Optional
 
 import pydantic
+from pytoniq_core import Address
 
 
 class User(pydantic.BaseModel):
@@ -43,11 +44,16 @@ class CompleteTask(pydantic.BaseModel):
     op_code: str
 
 
-class DedustEvent(pydantic.BaseModel):
+class DedustSwapEvent(pydantic.BaseModel):
     event_type: str
-    asset_in: str
-    asset_out: int
+    asset_in: Address | None
+    asset_out: Address | None
     amount_out: int
     amount_in: int
-    sender_address: str
-    op_code: str
+    sender_address: Address
+    op_code: int
+
+    class Config:
+        arbitrary_types_allowed = True
+
+

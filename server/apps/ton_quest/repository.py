@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from sqlalchemy import ChunkedIteratorResult, delete, desc, insert, select, update
@@ -145,6 +146,16 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
             raise NotFound("Branch not found")
         return branch
 
+    async def get_branch_with_tasks(self, branch_id: str) -> Branch:
+        """Получить ветку по ID."""
+        smtp = select(Branch).where(Branch.id == branch_id).options(selectinload(Branch.tasks))
+        branch = await self._execute_and_fetch_one(smtp)
+        return branch
+
+    async def get_task_by(self, **kwargs) -> Task | None:
+        task = await self.find_one_by(Task, **kwargs)
+        return task
+
     async def complete_branch(self, user_id: int, branch_id: str):
         user = await self.get_user(user_id)
         user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=True)
@@ -180,19 +191,19 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         task = await self._execute_and_fetch_one(smtp)
         return task
 
-    async def get_user_task(self, user_id: int, task_id: str) -> UserTask:
+    async def get_user_task(self, user_id: str, task_id: str) -> UserTask:
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
         if user_task is None:
             raise NotFound("User task not found")
         return user_task
 
-    async def check_task_completed(self, user_id: int, task_id: str) -> bool:
+    async def check_task_completed(self, user_id: str, task_id: str) -> bool:
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
         if user_task is None:
             return False
         return user_task.completed
 
-    async def claim_task(self, user_id: int, task_id: str) -> bool:
+    async def claim_task(self, user_id: str, task_id: str) -> bool:
         user = await self.get_user(user_id)
         task = await self.get_task(task_id)
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
@@ -227,14 +238,35 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         await self.edit_one(UserPiece, user_piece.id, user_piece.asdict())
         return True
 
-    async def create_user_task(self, user_id: int, task_id: str) -> UserTask:
-        user_task = UserTask(user_id=user_id, task_id=task_id, completed=False, claimed=False)
-        await self.add_one(UserTask, user_task.asdict())
-        return user_task
+    async def create_user_task(self, user_id: str, task_id: str, completed: bool = False, claimed: bool = False) -> UserTask:
+        data_dict = {
+            "task_id": task_id,
+            "user_id": user_id,
+            "completed": completed,
+            "claimed": claimed,
+        }
+        user_task_id = await self.add_one(UserTask, data_dict)
+        return await self.find_one(UserTask, user_task_id)
 
-    async def complete_task(self, user_id: int, task_id: str) -> bool:
-        user = await self.get_user(user_id)
-        task = await self.get_task(task_id)
+    async def complete_task(self, user_id: str, task_id: str) -> bool:
+        user = await self.get_user_by(id=user_id)
+        task = await self.get_task_by(id=task_id)
+        if not all([user, task]):
+            logging.error(f"User or task not found. User: {user}, Task: {task}")
+            return False
+
+        # insert UserTask with completed=True
+        user_task = await self.create_user_task(user_id, task_id)
+        user_task.completed = True
+        return True
+
+    async def manual_complete_task(self, user_id: str, task_id: str) -> bool:
+        user = await self.get_user_by(id=user_id)
+        task = await self.get_task_by(id=task_id)
+        if not all([user, task]):
+            logging.error(f"User or task not found. User: {user}, Task: {task}")
+            return False
+
         user_task = await self.get_user_task(user_id, task_id)
         user_task.completed = True
         await self.edit_one(UserTask, user_task.id, user_task.asdict())
