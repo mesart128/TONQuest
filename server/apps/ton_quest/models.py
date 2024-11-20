@@ -64,7 +64,7 @@ class Task(BaseSqlModel):
     action_url: Mapped[str] = mapped_column()
     call_to_action: Mapped[str] = mapped_column()
     users = relationship("User", secondary="users_tasks", back_populates="tasks")
-    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task")
+    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task", lazy="noload")
 
     def to_read_model(self):
         return {
@@ -84,7 +84,7 @@ class Branch(BaseSqlModel):
     title: Mapped[str] = mapped_column()
     category_id: Mapped[str] = mapped_column(ForeignKey("categories.id"))
     category: Mapped["Category"] = relationship("Category", back_populates="branches")
-    tasks: Mapped[list[Task]] = relationship("Task", back_populates="branch")
+    tasks: Mapped[list[Task]] = relationship("Task", back_populates="branch", lazy="subquery")
     users: Mapped[list["User"]] = relationship("User", secondary="users_branches", back_populates="branches")
     pieces: Mapped[list["Piece"]] = relationship("Piece", back_populates="branch")
     def to_read_model(self):
@@ -103,7 +103,7 @@ class Category(BaseSqlModel):
     image: Mapped[str] = mapped_column()
     subtitle: Mapped[str] = mapped_column()
 
-    branches: Mapped[list[Branch]] = relationship("Branch", back_populates="category")
+    branches: Mapped[list[Branch]] = relationship("Branch", back_populates="category", lazy="subquery")
 
     def to_read_model(self):
         return {

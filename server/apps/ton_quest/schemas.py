@@ -14,9 +14,11 @@ class User(pydantic.BaseModel):
 
 
 class CreateUser(pydantic.BaseModel):
-    id: int
-    name: str
-    profile_photo: str
+    telegram_id: int
+    username: str
+    first_name: str
+    last_name: str
+    image: str
 
 
 class Task(pydantic.BaseModel):
