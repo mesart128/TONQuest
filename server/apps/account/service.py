@@ -9,7 +9,7 @@ from apps.account.types import SystemAddress
 from apps.ton_quest import manager as ton_quest_manager
 from apps.ton_quest.models import User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
-from apps.ton_quest.schemas import DedustEvent
+from apps.ton_quest.schemas import DedustSwapEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import RawMessageDTO, RawTransactionDTO
 from apps.transaction.service import TransactionService
@@ -71,21 +71,24 @@ class AccountService:
             out_msg.info.src.to_str()
         )
         if account.code == dedust_swap_pool_code_b64:
-            try:
-                message: DedustEvent = (
-                    await self.transaction_service.parse_external_dedust_messages(out_msg)
+            body = out_msg.body.to_slice()
+            op = body.load_uint(32)
+            if op == OpCodes.dedust_swap:
+                try:
+                    message: DedustSwapEvent = (
+                        await self.transaction_service.parse_dedust_swap_event(out_msg)
+                    )
+                except Exception as e:
+                    logging.error(f"Error while parsing dedust message {e}", exc_info=True)
+                    return
+                logging.debug(f"Detected dedust message {message}")
+                tracked_account: User = await self.get_account(
+                    account_address=message.sender_address
                 )
-            except Exception as e:
-                logging.error(f"Error while parsing dedust message {e}", exc_info=True)
-                return
-            logging.debug(f"Detected dedust message {message}")
-            tracked_account: User = await self.get_account(
-                account_address=message["sender_address"]
-            )
-            if tracked_account:
-                await ton_quest_manager.check_task(user_account=tracked_account, event=message)
-                # TODO update tasks here
-                logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
+                if tracked_account:
+                    await ton_quest_manager.check_task(user_account=tracked_account, event_type=message)
+                    # TODO update tasks here
+                    logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
         else:
             logging.warning(
                 f"Detected external message from "
@@ -103,12 +106,8 @@ class AccountService:
                 assert account_address == SystemAddress(raw_transaction["account_address"])
                 logging.debug(f"Detected external message to {account_address.to_non_bounceable()}")
                 if in_msg["op_code"] in OpCodes.item_list():
-                    await self.producer.publish_task_event(
-                        data={
-                            "address": account_address.to_raw(),
-                            "op_code": str(in_msg["op_code"]),
-                        }
-                    )
+                    logging.warning(f"Detected internal message with op code {in_msg['op_code']}. "
+                                    f"Account {account_address.to_non_bounceable()}")
                 logging.info(f"handle_account_in_out_msg {raw_transaction['account_address']=}")
         except Exception as e:
             logging.error(
@@ -175,23 +174,8 @@ class AccountService:
             )
             if not account:
                 return
-            logging.debug(f"Detected account {account.wallet_address}")
-            return
-            existed_transaction = await self.transaction_service.get_transaction_by_hash(
-                hash_=parsed_transaction["hash"]
-            )
-            if existed_transaction:
-                logging.info(f"Transaction {parsed_transaction['hash']} already exists")
-                await self.handle_transaction_event(parsed_transaction)
-                return existed_transaction
-            inserted_tx = await self.insert_parsed_raw_tx_dto_to_db_object(
-                parsed_transaction, account_id=account.id
-            )
-            full_transaction = await self.transaction_service.get_transaction_by_hash(
-                parsed_transaction["hash"]
-            )
             await self.handle_transaction_event(parsed_transaction)
-            logging.info(f"Transaction {inserted_tx['hash']} added to db. {full_transaction=}")
+            logging.info(f"Transaction {parsed_transaction['hash']} scanned to db. ")
         except Exception as e:
             logging.error(
                 f"Error while processing detected account {e}. \n" f"Info {parsed_transaction=}",

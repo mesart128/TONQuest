@@ -1,4 +1,5 @@
 import unittest
+import uuid
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -9,6 +10,7 @@ from apps.account.account_codes import dedust_swap_pool_code_b64
 from apps.account.schemas import AccountSchema
 from apps.account.service import AccountService
 from apps.scanner.service import BlockScanner
+from apps.ton_quest.models import User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.transaction.enums import OpCodes
 from apps.transaction.schemas import ParsedTransactionDTO, RawTransactionDTO
@@ -17,25 +19,46 @@ from tests.datasets.transactions import TestCases
 
 
 @pytest.mark.asyncio
-async def test_add_parse_dedust_message(setup_database, ton_quest_repo):
+async def test_opcodes():
+
+    chain_view_codes = [
+        0x9c610de3, int(0x9c610de3)
+    ]
+    dedust_op_list = OpCodes.dedust_code_list()
+    for i in chain_view_codes:
+        assert i in dedust_op_list
+
+@pytest.mark.asyncio
+async def test_add_parse_dedust_message(setup_database, ton_quest_repo, mocker):
+    test_user = User(
+        wallet_address="0:1",
+        telegram_id=1, username="test", first_name="test", last_name="test", image="test")
+    user = await ton_quest_repo.create_user(test_user)
     raw_transaction_b64 = TestCases.DEDUST_SWAP_EVENT
     raw_tx_bytes = b64str_to_bytes(raw_transaction_b64)
     transaction = Transaction.deserialize(Slice.one_from_boc(raw_tx_bytes))
-
+    user_uuid = uuid.uuid4()
     ton_rpc_client = AsyncMock()
     transaction_service = TransactionService(
         ton_rpc_client
     )
+    db_mock_get_user_by = AsyncMock(return_value=user)
+    mocker.patch("apps.ton_quest.manager.db.get_user_by", return_value=db_mock_get_user_by)
     account_service = AccountService(
         transaction_service=transaction_service,
         ton_rpc_client=ton_rpc_client,
         producer=AsyncMock(),
         ton_quest_repository=ton_quest_repo
     )
-    raw_parsed_transaction: ParsedTransactionDTO = await transaction_service.chain_transaction_to_dto(
+    ton_rpc_client.get_address_information = AsyncMock(return_value=MagicMock(code=dedust_swap_pool_code_b64))
+    account_service.get_account = AsyncMock(return_value=user)
+    raw_parsed_transaction: RawTransactionDTO = await transaction_service.chain_transaction_to_dto(
         transaction, block=MagicMock(shard=1), masterchain_seqno=0
     )
-    await account_service.handle_transaction_on_account(transaction)
+
+    for msg in transaction.out_msgs:
+        await account_service.handle_external_out_msg(msg)
+    # await account_service.handle_external_out_msg(raw_parsed_transaction)
 
 # async def test_add_parse_dedust_message_not_found_account(self):
 #     raw_transaction_b64 = TestCases.DEDUST_SWAP_EVENT
