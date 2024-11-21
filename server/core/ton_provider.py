@@ -1,9 +1,11 @@
+import asyncio
 import base64
 import json
 import logging
 import typing
 import uuid
 from abc import ABC, abstractmethod
+import random
 
 import aiohttp
 from aiohttp import ContentTypeError
@@ -66,6 +68,13 @@ class SmartContractIsNotJettonOrNFTError(HandleResponseError):
 
 class AccountUninitializedError(HandleResponseError):
     message = "Account has uninitialized state"
+
+
+class RateLimitError(HandleResponseError):
+    retry_count = 20
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(message)
 
 
 class IncorrectAddressError(HandleResponseError):
@@ -154,16 +163,29 @@ class TonClient(ABC):
 
 
 class TONAPIClientAsync(TonClient):
-    def __init__(self, base_url: typing.Optional[str] = None, key: typing.Optional[str] = None):
-        if base_url is None:
-            base_url = "https://go.getblock.io/95dfd73af9144e4e823cc81f2bed942a"
+    def __init__(self, base_url: typing.Optional[str], keys: typing.List[str], ):
         self.base_url = base_url
+        logging.debug(f"TON API client initialized with base URL: {self.base_url}")
+        self.api_keys = keys
+        self.current_key_index = 0
+        self.update_headers()
 
-        self.headers = {
-            "Content-Type": "application/json",
-        }
-        if key:
-            self.headers["X-API-Key"] = key
+    def update_headers(self):
+        if not self.api_keys or len(self.api_keys) == 0:
+            self.headers = {"Content-Type": "application/json"}
+        else:
+            self.headers = {
+                "Content-Type": "application/json",
+                "X-API-Key": self.api_keys[self.current_key_index],
+            }
+
+    def switch_key(self):
+        if not self.api_keys or len(self.api_keys) == 0:
+            logging.warning("No API keys provided.")
+            return
+        self.current_key_index = (self.current_key_index + 1) % len(self.api_keys)
+        self.update_headers()
+        logging.info(f"Switched to API key: {self.api_keys[self.current_key_index]}")
 
     async def raw_send_boc(self, boc: bytes) -> bool:
         url = self.base_url + "/sendBoc"
@@ -384,17 +406,27 @@ class TONAPIClientAsync(TonClient):
         return response
 
     async def request_wrapper(self, method: MethodsEnum, url: str, params: dict) -> dict:
-        match method:
-            case MethodsEnum.GET:
-                async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.get(url, params=params) as response:
-                        return await self.handle_response(response)
-            case MethodsEnum.POST:
-                async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.post(url, data=json.dumps(params)) as response:
-                        return await self.handle_response(response)
-            case _:
-                raise ValueError(f"Unsupported method: {method}")
+        retries = RateLimitError.retry_count
+        for _ in range(retries):
+            try:
+                if method == MethodsEnum.GET:
+                    async with aiohttp.ClientSession(headers=self.headers) as session:
+                        async with session.get(url, params=params) as response:
+                            return await self.handle_response(response)
+                elif method == MethodsEnum.POST:
+                    async with aiohttp.ClientSession(headers=self.headers) as session:
+                        async with session.post(url, data=json.dumps(params)) as response:
+                            return await self.handle_response(response)
+                else:
+                    raise ValueError(f"Unsupported method: {method}")
+            except RateLimitError as e:
+                logging.warning(f"Request failed with error: {e}. Switching key...")
+                self.switch_key()
+                await asyncio.sleep(0.5)
+            except HandleResponseError as e:
+                logging.debug(f"Method {method} failed with error: {e}."
+                              f"url: {url}, params: {params}")
+        raise HandleResponseError("All API keys have been exhausted.")
 
     async def json_rpc_request(self, method: str, params: dict) -> dict:
         url = self.base_url + "/jsonRPC"
@@ -409,6 +441,9 @@ class TONAPIClientAsync(TonClient):
         except ContentTypeError as e:
             logging.error(f"Error while handling response: {e}. {response=}")
             raise HandleResponseError(f"Error while handling response: {e}, {response=}") from e
+        if result.get('code') == 429:
+            raise RateLimitError(f"{result=}")
+
         if result["ok"] is False:
             if "error" in result:
                 match result["error"]:

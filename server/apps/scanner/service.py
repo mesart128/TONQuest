@@ -11,7 +11,7 @@ from core.enums import CustomLoggingLevels
 from core.exceptions import JsonException
 from core.schemas import BlockHeader, BlockIdTypedDict
 from core.ton_provider import HandleResponseError, LiteServerUnknownError, TONAPIClientAsync
-from core.database.local_storage import LocalStorage
+from database.local_storage import LocalStorage
 
 
 class BlockScanner:
@@ -20,12 +20,10 @@ class BlockScanner:
         ton_rpc_client: TONAPIClientAsync,
         local_storage: LocalStorage,
         account_service: AccountService,
-        # producer: BaseProducer,
     ):
         self.ton_rpc_client = ton_rpc_client
         self.local_storage = local_storage
         self.account_service = account_service
-        # self.producer = producer
         self.shards_storage = {}
         self.blks_queue = asyncio.Queue()
 
@@ -280,7 +278,7 @@ class BlockScanner:
             tx: Transaction
             await self.scan_transaction(tx, block)
 
-        logging.debug(
-            f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
-            f" in {(datetime.now() - time_start).microseconds} microseconds"
-        )
+        # logging.debug(
+        #     f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
+        #     f" in {(datetime.now() - time_start).microseconds} microseconds"
+        # )

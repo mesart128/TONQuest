@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from application import app_router
+
 from core.config import LoggerSettings
 from core.dependencies import CoreContainer, initialize_container
 from core.logger import setup_logging
@@ -30,7 +30,6 @@ def app_factory():
             )
         ],
     )
-    fastapi_app.include_router(app_router)
     fastapi_app.include_router(v1_router)
     fastapi_app.add_middleware(
         CORSMiddleware,

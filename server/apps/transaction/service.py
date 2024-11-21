@@ -12,10 +12,10 @@ from pytoniq_core import (
 )
 from tonsdk.utils import b64str_to_bytes, bytes_to_b64str
 
-from apps.account.enums import AccountEventEnum
 from apps.currency.common.asset import Asset
+from apps.ton_quest.enums import TaskTypeEnum
+from apps.ton_quest.schemas import DedustSwapEvent, DedustDepositEvent, DedustWithdrawEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
-from apps.transaction.repositories import TransactionMongoRepository
 from apps.transaction.schemas import (
     ParsedTransactionDTO,
     RawMessageDTO,
@@ -27,31 +27,32 @@ from core.ton_provider import TONAPIClientAsync
 class TransactionService:
     def __init__(
         self,
-        repository: TransactionMongoRepository,
+        # repository: TransactionMongoRepository,
         ton_rpc_client: TONAPIClientAsync,
     ):
         self.ton_rpc_client = ton_rpc_client
-        self.repository = repository
+        # self.repository = repository
 
-    async def try_find_tx_by_out_msg(self, out_msg: RawMessageDTO) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(
-            in_msg_dest=out_msg["dest"],
-            in_msg_created_lt=out_msg["created_lt"],
-        )
-        return transaction
+    # async def try_find_tx_by_out_msg(self, out_msg: RawMessageDTO) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(
+    #         in_msg_dest=out_msg["dest"],
+    #         in_msg_created_lt=out_msg["created_lt"],
+    #     )
+    #     return transaction
 
-    async def get_transaction_by_hash(self, hash_: str) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(hash=hash_)
-        return transaction
+    # async def get_transaction_by_hash(self, hash_: str) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(hash=hash_)
+    #     return transaction
+    #
+    # async def get_transaction_by(self, **kwargs) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(**kwargs)
+    #     return transaction
+    #
+    # async def get_transaction_with_messages(self, id_: str) -> RawTransactionDTO | None:
+    #     transaction: RawTransactionDTO = await self.repository.find_one_by(id_)
+    #     return transaction
 
-    async def get_transaction_by(self, **kwargs) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(**kwargs)
-        return transaction
-
-    async def get_transaction_with_messages(self, id_: str) -> RawTransactionDTO | None:
-        transaction: RawTransactionDTO = await self.repository.find_one_by(id_)
-        return transaction
-
+    @classmethod
     async def chain_transaction_to_dto(
         self, transaction: Transaction, block: BlockIdExt, masterchain_seqno: int
     ) -> RawTransactionDTO:
@@ -184,32 +185,53 @@ class TransactionService:
         return result
 
     @staticmethod
-    async def parse_external_dedust_messages(out_msg: MessageAny):
+    async def parse_dedust_swap_event(out_msg: MessageAny) -> DedustSwapEvent:
         body = out_msg.body.to_slice()
         op = body.load_uint(32)
+        event = {
+            "event_type": TaskTypeEnum.dedust_swap.value,
+            "asset_in": Asset.from_slice(body).address,
+            "asset_out": Asset.from_slice(body).address,
+            "amount_out": body.load_coins(),
+            "amount_in": body.load_coins(),
+            "sender_address": body.load_ref().begin_parse().load_address(),
+            "op_code": op,
+        }
+        logging.info(event)
+        result = DedustSwapEvent(**event)
+        return result
 
-        if op == OpCodes.dedust_swap.value:
-            event = {
-                "event_type": AccountEventEnum.dedust_swap.value,
-                "asset_in": Asset.from_slice(body).address,
-                "asset_out": Asset.from_slice(body).address,
-                "amount_out": body.load_coins(),
-                "amount_in": body.load_coins(),
-                "sender_address": body.load_ref().begin_parse().load_address(),
-                "op_code": op,
-            }
-            logging.info(event)
-            return event
-        elif op == OpCodes.dedust_deposit.value:
-            event = {
-                "event_type": AccountEventEnum.dedust_deposit.value,
-                "asset_in": Asset.from_slice(body).address.to_str(),
-                "asset_out": Asset.from_slice(body).address.to_str(),
-                "amount_out": body.load_coins(),
-                "amount_in": body.load_coins(),
-                "sender_address": body.load_ref().begin_parse().load_address().to_str(),
-                "op_code": op,
-            }
+    @staticmethod
+    async def parse_dedust_liquidity_event(out_msg: MessageAny) -> DedustDepositEvent:
+        body = out_msg.body.to_slice()
+        op = body.load_uint(32)
+        event = {
+            "event_type": TaskTypeEnum.dedust_liquidity.value,
+            "sender_address": body.load_address(),
+            "amount0": body.load_coins(),
+            "amount1": body.load_coins(),
+            "reserve1": body.load_coins(),
+            "liquidity": body.load_coins(),
+            "op_code": op,
+        }
+        logging.info(event)
+        result = DedustDepositEvent(**event)
+        return result
 
-            logging.info(event)
-            return event
+    @staticmethod
+    async def parse_dedust_withdraw_event(out_msg: MessageAny) -> DedustWithdrawEvent:
+        body = out_msg.body.to_slice()
+        op = body.load_uint(32)
+        event = {
+            "event_type": TaskTypeEnum.dedust_withdraw.value,
+            "sender_address": body.load_address(),
+            "liquidity": body.load_coins(),
+            "amount0": body.load_coins(),
+            "amount1": body.load_coins(),
+            "reserve0": body.load_coins(),
+            "reserve1": body.load_coins(),
+            "op_code": op,
+        }
+        logging.info(event)
+        result = DedustWithdrawEvent(**event)
+        return result
