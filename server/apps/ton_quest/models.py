@@ -183,12 +183,12 @@ class User(BaseSqlModel):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "image": self.image,
-            # "wallet_address": self.wallet_address,
-            # "completed_tasks": [task.task_id for task in self.completed_tasks],
-            # "claimed_tasks": [task.task_id for task in self.completed_tasks if task.claimed],
-            # "completed_branches": [branch.branch_id for branch in self.completed_branches],
-            # "claimed_pieces": [piece.piece_id for piece in self.claimed_pieces],
-            # "nfts": [nft.to_read_model() for nft in self.nfts],
+            "wallet_address": self.wallet_address,
+            "completed_tasks": [task.task_id for task in self.completed_tasks],
+            "claimed_tasks": [task.task_id for task in self.completed_tasks if task.claimed],
+            "completed_branches": [branch.branch_id for branch in self.completed_branches],
+            "claimed_pieces": [piece.piece_id for piece in self.claimed_pieces],
+            "nfts": [nft.to_read_model() for nft in self.nfts],
         }
 
 
