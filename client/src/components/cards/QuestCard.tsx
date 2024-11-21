@@ -23,14 +23,15 @@ const QuestCard = () => {
         </div>
 
         <div
-            className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg ">
-          <div className="flex items-center justify-between text-sm mb-2 flex flex-row">
-            <div>0%</div>
-            <div className="bg-white rounded-full h-2"/></div>
-            <div className="bg-blue-400 bg-opacity-40 rounded-full h-2">
-              <span>2/6 NFT + 100 XP</span>
-            </div>
-          </div>
+            className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
+          {/*<div className="items-center justify-between text-sm mb-2 flex flex-row">*/}
+          <div>0%</div>
+          <div className="bg-white rounded-full h-2 w-32"/>
+          {/*<div className="bg-blue-400 bg-opacity-40 rounded-full h-2">*/}
+          {/*</div>*/}
+          <div className="text-xs bg-gradient-to-r from-[#0096FF80] via-[#0096FF] to-[#0096FF80] p-3 rounded-2xl">2/6 NFT + 100 XP</div>
+        </div>
+        {/*</div>*/}
       </div>
     </div>
   );
