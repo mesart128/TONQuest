@@ -9,8 +9,9 @@ from apps.ton_quest import models, schemas
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
 from apps.transaction.schemas import TaskResponse
-from database.engine import db
+from database.engine import db, engine
 from database.repository import NotFound
+from database import initial_data
 
 db: TonQuestSQLAlchemyRepo
 
@@ -21,6 +22,7 @@ web_app_auth_header = WebAppAuthHeader(name="Authorization", scheme_name="web-ap
 
 @ton_quest_router.get("/login")
 async def login(web_app_init_data: WebAppInitData = Security(web_app_auth_header)):
+    await initial_data.populate_database(engine, db)
     return web_app_init_data
 
 
@@ -99,7 +101,7 @@ async def claim_task(
     completed = await db.check_task_completed(user.id, task_id)
     if not completed:
         return {"error": "Task not completed"}
-    await db.claim_task(web_app_init_data.user.id, task_id)
+    await db.claim_task(user.id, task_id)
     return {"success": True}
 
 

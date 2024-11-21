@@ -217,8 +217,6 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         return user_task.completed
 
     async def claim_task(self, user_id: str, task_id: str) -> bool:
-        user = await self.get_user(user_id)
-        task = await self.get_task(task_id)
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)
         if user_task is None:
             raise NotFound("User task not found")
@@ -266,8 +264,12 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def complete_task(self, user_id: int, task_id: str) -> bool:
         # insert UserTask with completed=True
-        user_task = await self.create_user_task(user_id, task_id)
-        user_task.completed = True
+        try:
+            user_task = await self.get_user_task(user_id, task_id)
+            user_task.completed = True
+            await self.edit_one(UserTask, user_task.id, user_task.asdict())
+        except NotFound:
+            user_task = await self.create_user_task(user_id, task_id, completed=True)
         return True
 
     async def manual_complete_task(self, user_id: str, task_id: str) -> bool:
