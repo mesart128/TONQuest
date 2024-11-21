@@ -37,9 +37,9 @@ class Slide(BaseSqlModel):
     __tablename__ = "slides"
     task_id: Mapped[str] = mapped_column(ForeignKey("tasks.id"))
     task: Mapped["Task"] = relationship("Task", back_populates="slides")
-    title: Mapped[str] = mapped_column()
-    description: Mapped[str] = mapped_column()
-    image: Mapped[str] = mapped_column()
+    title: Mapped[str] = mapped_column(nullable=True)
+    description: Mapped[str] = mapped_column(nullable=True)
+    image: Mapped[str] = mapped_column(nullable=True)
     queue: Mapped[int] = mapped_column()
 
     def to_read_model(self):
@@ -160,17 +160,19 @@ class User(BaseSqlModel):
     )
     nfts: Mapped[list["NFT"]] = relationship("NFT", secondary="users_nfts", back_populates="users")
 
-
     completed_tasks: Mapped[list[UserTask]] = relationship(
-        "UserTask", primaryjoin="and_(User.id==UserTask.user_id, UserTask.completed==True)", viewonly=True
+        "UserTask", primaryjoin="and_(User.id==UserTask.user_id, UserTask.completed==True)",
+        viewonly=True,
     )
 
     completed_branches: Mapped[list[UserBranch]] = relationship(
-        "UserBranch", primaryjoin="and_(User.id==UserBranch.user_id, UserBranch.completed==True)", viewonly=True
+        "UserBranch", primaryjoin="and_(User.id==UserBranch.user_id, UserBranch.completed==True)",
+        viewonly=True,
     )
 
     claimed_pieces: Mapped[list[UserPiece]] = relationship(
-        "UserPiece", primaryjoin="and_(User.id==UserPiece.user_id, UserPiece.claimed==True)", viewonly=True
+        "UserPiece", primaryjoin="and_(User.id==UserPiece.user_id, UserPiece.claimed==True)",
+        viewonly=True,
     )
 
     def to_read_model(self):
@@ -181,12 +183,12 @@ class User(BaseSqlModel):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "image": self.image,
-            "wallet_address": self.wallet_address,
-            "completed_tasks": [task.task_id for task in self.completed_tasks],
-            "claimed_tasks": [task.task_id for task in self.completed_tasks if task.claimed],
-            "completed_branches": [branch.branch_id for branch in self.completed_branches],
-            "claimed_pieces": [piece.piece_id for piece in self.claimed_pieces],
-            "nfts": [nft.to_read_model() for nft in self.nfts],
+            # "wallet_address": self.wallet_address,
+            # "completed_tasks": [task.task_id for task in self.completed_tasks],
+            # "claimed_tasks": [task.task_id for task in self.completed_tasks if task.claimed],
+            # "completed_branches": [branch.branch_id for branch in self.completed_branches],
+            # "claimed_pieces": [piece.piece_id for piece in self.claimed_pieces],
+            # "nfts": [nft.to_read_model() for nft in self.nfts],
         }
 
 

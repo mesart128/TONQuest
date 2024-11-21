@@ -1,4 +1,5 @@
 import logging
+from random import random, randint
 from typing import Optional, Union
 
 from pytoniq_core import Address, MessageAny
@@ -62,7 +63,7 @@ class AccountService:
         if isinstance(account_address, str):
             account_address = Address(account_address)
         user_account = await self.ton_quest_repository.get_user_by(
-            wallet_address=account_address.to_raw()
+            wallet_address=account_address.to_str(False)
         )
         return user_account
 
@@ -74,26 +75,54 @@ class AccountService:
             body = out_msg.body.to_slice()
             op = body.load_uint(32)
             if op == OpCodes.dedust_swap:
-                try:
-                    message: DedustSwapEvent = (
-                        await self.transaction_service.parse_dedust_swap_event(out_msg)
-                    )
-                except Exception as e:
-                    logging.error(f"Error while parsing dedust message {e}", exc_info=True)
-                    return
-                logging.debug(f"Detected dedust message {message}")
-                tracked_account: User = await self.get_account(
-                    account_address=message.sender_address
+                message: DedustSwapEvent = (
+                    await self.transaction_service.parse_dedust_swap_event(out_msg)
                 )
-                if tracked_account:
-                    await ton_quest_manager.check_task(user_account=tracked_account, event_type=message)
-                    # TODO update tasks here
-                    logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
-        else:
-            logging.warning(
-                f"Detected external message from "
-                f"{out_msg.info.src.to_str()} with code another acc code"
+                # TODO Remove test
+                # user = User(
+                #     telegram_id=randint(1, 1000),
+                #     username=message.sender_address.to_str(),
+                #     first_name=message.sender_address.to_str(True),
+                #     last_name=message.sender_address.to_str(False),
+                #     image="web_app_init_data.user.photo_url",
+                #     wallet_address=message.sender_address.to_str(False),
+                # )
+                # tracked_account = await self.ton_quest_repository.create_user(user)
+                # await ton_quest_manager.check_task(user_account=tracked_account, event_type=message)
+                logging.debug(f"Detected dedust message from {message.sender_address}")
+            elif op == OpCodes.dedust_liquidity:
+                message = await self.transaction_service.parse_dedust_liquidity_event(out_msg)
+                logging.debug(f"Detected default message liquidity message"
+                              f" from {out_msg.info.src.to_str()}")
+            elif op == OpCodes.dedust_withdraw:
+                message = await self.transaction_service.parse_dedust_withdraw_event(out_msg)
+                logging.debug(f"Detected dedust_withdraw withdraw message"
+                              f" from {out_msg.info.src.to_str()}")
+            else:
+                logging.warning(f"Detected external message from {out_msg.info.src.to_str()} with code {op}")
+                return None
+            tracked_account: User = await self.get_account(
+                account_address=message.sender_address
             )
+            if tracked_account:
+                await ton_quest_manager.check_task(user_account=tracked_account, event_type=message)
+                logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
+            else:
+                # user = User(
+                #     telegram_id=randint(1, 1000),
+                #     username=message.sender_address.to_str(),
+                #     first_name=message.sender_address.to_str(True),
+                #     last_name=message.sender_address.to_str(False),
+                #     image="web_app_init_data.user.photo_url",
+                #     wallet_address=message.sender_address.to_str(False),
+                # )
+                # tracked_account = await self.ton_quest_repository.create_user(user)
+                # await ton_quest_manager.check_task(user_account=tracked_account, event_type=message)
+                return
+                # logging.warning(
+                #     f"Detected external message from "
+                #     f"{out_msg.info.src.to_str()} with code another acc code"
+                # )
 
     async def handle_transaction_event(self, raw_transaction: RawTransactionDTO) -> None:
         try:
