@@ -20,12 +20,10 @@ class BlockScanner:
         ton_rpc_client: TONAPIClientAsync,
         local_storage: LocalStorage,
         account_service: AccountService,
-        # producer: BaseProducer,
     ):
         self.ton_rpc_client = ton_rpc_client
         self.local_storage = local_storage
         self.account_service = account_service
-        # self.producer = producer
         self.shards_storage = {}
         self.blks_queue = asyncio.Queue()
 

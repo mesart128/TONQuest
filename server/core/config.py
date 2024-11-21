@@ -17,7 +17,6 @@ CONTEXT_ID = contextvars.ContextVar("context_id", default=str(uuid4()))
 class ServerConfig(BaseSettings):
     database_uri: str
     redis_url: Union[str, RedisDsn]
-    hot_wallet_mnemonic: str  # 24 words
     update_last_scanned_block: bool = False
     ton_rpc_url: Optional[str]
     rpc_api_keys: Optional[str]
@@ -34,10 +33,6 @@ class ServerConfig(BaseSettings):
         extra = "ignore"
         env_file = ".env"
         protected_namespaces = ("model_",)
-
-    @property
-    def hd_wallet_mnemonic_list(self):
-        return self.hot_wallet_mnemonic.split()
 
 
 class LoggerSettings(BaseSettings):
