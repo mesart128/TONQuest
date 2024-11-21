@@ -1,17 +1,20 @@
 import React from 'react';
 import questRecycle from '../../assets/quest-recycle.png';
 
-const QuestCard = () => {
+const QuestCard = ({ type, title, description, xpReward, isCompleteds }) => {
+  //TODO: 1. onclick на карточке
+  //TODO: 2. по онклик дергаем роутер (навигейт на пейджу баннера)
+
   return (
     <div className="max-w-sm mx-auto">
-      <div className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
-      border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]">
+      <div
+        className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
+      border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]"
+      >
         <div className="text-center mb-8 flex flex-col items-center justify-center gap-4">
-          <h2 className="text-4xl font-bold mb-2 opacity-50">DEX</h2>
-          <h1 className="text-3xl font-bold mb-4">Easy start</h1>
-          <p className="text-xl text-blue-100 opacity-75">
-            You will learn how to use decentralized exchanges tools
-          </p>
+          <h2 className="text-4xl font-bold mb-2 opacity-50">{type}</h2>
+          <h1 className="text-3xl font-bold mb-4">{title}</h1>
+          <p className="text-xl text-blue-100 opacity-75">{description}</p>
         </div>
 
         <div className="flex justify-center mb-8">
@@ -22,14 +25,15 @@ const QuestCard = () => {
           </div>
         </div>
 
-        <div
-            className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
+        <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
           {/*<div className="items-center justify-between text-sm mb-2 flex flex-row">*/}
           <div>0%</div>
-          <div className="bg-white rounded-full h-2 w-32"/>
+          <div className="bg-white rounded-full h-2 w-32" />
           {/*<div className="bg-blue-400 bg-opacity-40 rounded-full h-2">*/}
           {/*</div>*/}
-          <div className="text-xs bg-gradient-to-r from-[#0096FF80] via-[#0096FF] to-[#0096FF80] p-3 rounded-2xl">2/6 NFT + 100 XP</div>
+          <div className="text-xs bg-gradient-to-r from-[#0096FF80] via-[#0096FF] to-[#0096FF80] p-3 rounded-2xl">
+            2/6 NFT + {xpReward} XP
+          </div>
         </div>
         {/*</div>*/}
       </div>
