@@ -39,7 +39,7 @@ const QuestPage = () => {
   }
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
+    <div className="min-h-screen max-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
       <Navbar />
 
       <div className="w-full px-4 flex flex-col items-center justify-center mt-8">
@@ -47,7 +47,7 @@ const QuestPage = () => {
           <h2 className="text-2xl font-bold text-center mb-8">
             Welcome to Quest
           </h2>
-          <div className="quest-slider-container relative pb-12">
+          <div className="quest-slider-container relative ">
             <Swiper
               modules={[Pagination]}
               spaceBetween={20}
@@ -66,9 +66,10 @@ const QuestPage = () => {
                   <div className="w-full max-w-sm">
                     <QuestCard
                       type={card.head}
-                      title={card.map}
+                      title={card.title}
                       description={card.description}
-                      xpReward={50}
+                      xpReward={card.xp}
+                      imageUrl={card.image}
                       isCompleted={true}
                     />
                   </div>
@@ -76,10 +77,10 @@ const QuestPage = () => {
               ))}
             </Swiper>
             <div className="custom-pagination swiper-pagination"></div>
+            <BottomMenu isQuestPage={true} />
           </div>
         </section>
       </div>
-      <BottomMenu />
     </div>
   );
 };

@@ -2,11 +2,11 @@ import React from 'react';
 import questRecycle from '../../assets/quest-recycle.png';
 import { useNavigate } from 'react-router-dom';
 
-const QuestCard = ({ type, title, description, xpReward, isCompleteds }) => {
+const QuestCard = ({ type, title, description, xpReward, imageUrl }) => {
   const navigate = useNavigate();
 
   const cardSelectHandler = () => {
-    navigate('/banner-page');
+    navigate('/banner-page', { state: { imageUrl, title, description, type } });
   };
 
   return (
@@ -24,22 +24,24 @@ const QuestCard = ({ type, title, description, xpReward, isCompleteds }) => {
         <div className="flex justify-center mb-8">
           <div className="relative w-24 h-24">
             <div className="absolute inset-0 flex items-center justify-center">
-              <img className="max-w-lg" src={questRecycle} />
+              <img className="max-w-lg" src={imageUrl} />
             </div>
           </div>
         </div>
 
         <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
-          {/*<div className="items-center justify-between text-sm mb-2 flex flex-row">*/}
-          <div>0%</div>
-          <div className="bg-white rounded-full h-2 w-32" />
-          {/*<div className="bg-blue-400 bg-opacity-40 rounded-full h-2">*/}
-          {/*</div>*/}
-          <div className="text-xs bg-gradient-to-r from-[#0096FF80] via-[#0096FF] to-[#0096FF80] p-3 rounded-2xl">
-            2/6 NFT + {xpReward} XP
+          <div>45%</div>
+          {/* TODO: % calculation */}
+          <div className="relative bg-white rounded-full h-2 w-32">
+            <div
+              className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"
+              style={{ width: `${45}%` }}
+            />
+          </div>
+          <div className="text-xs bg-gradient-to-r from-[#0096FF80] via-[#0096FF] to-[#0096FF80] p-3 rounded-2xl text-center">
+            {xpReward} XP
           </div>
         </div>
-        {/*</div>*/}
       </div>
     </div>
   );

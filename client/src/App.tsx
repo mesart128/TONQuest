@@ -6,6 +6,7 @@ import BonusPage from './pages/BonusPage';
 import GreetingPage from './pages/GreetingPage';
 import BannerPage from './pages/BannerPage';
 import TaskPage from './pages/TasksPage';
+import ExpPage from './pages/ExpPage';
 
 function App() {
   // useEffect(() => {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/bonus" element={<BonusPage />} />
         <Route path="/banner-page" element={<BannerPage />} />
         <Route path="/tasks-page" element={<TaskPage />} />
+        <Route path="/exp" element={<ExpPage />} />
       </Routes>
     </Router>
   );
