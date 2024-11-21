@@ -14,11 +14,11 @@ async def complete_task(user_account: User, task: Task) -> bool:
     await db.complete_task(user_account.id, task.id)
 
 
-async def check_task(user_account: User, event_type: BaseModel) -> bool:
+async def check_task(user_account: User, event_type: str) -> bool:
     logging.debug(f"Checking task for user {user_account.wallet_address}")
-    task: Task = await db.get_task_by_task_type(task_type=event_type.event_type)
+    task: Task = await db.get_task_by_task_type(task_type=event_type)
     if task is None:
-        logging.warning(f"Task {event_type.event_type} not found. {user_account}")
+        logging.warning(f"Task {event_type} not found. {user_account}")
         return False
     branch_tasks = (await db.get_branch(task.branch_id)).tasks
     for branch_task in branch_tasks:

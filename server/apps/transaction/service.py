@@ -14,7 +14,7 @@ from tonsdk.utils import b64str_to_bytes, bytes_to_b64str
 
 from apps.currency.common.asset import Asset
 from apps.ton_quest.enums import TaskTypeEnum
-from apps.ton_quest.schemas import DedustSwapEvent, DedustDepositEvent, DedustWithdrawEvent
+from apps.ton_quest.schemas import DedustSwapEvent, DedustDepositEvent, DedustWithdrawEvent, TonstakersPayoutMintJettonsEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import (
     ParsedTransactionDTO,
@@ -234,4 +234,19 @@ class TransactionService:
         }
         logging.info(event)
         result = DedustWithdrawEvent(**event)
+        return result
+
+
+    @staticmethod
+    async def parse_tonstakers_payout_mint_jettons(out_msg: MessageAny) -> TonstakersPayoutMintJettonsEvent:
+        body = out_msg.body.to_slice()
+        event = {
+            "op_code": body.load_uint(32),
+            "query_id": body.load_uint(64),
+            "destination": body.load_address(),
+            "amount": body.load_coins(),
+            "event_type": TaskTypeEnum.tonstakers_stake.value,
+        }
+        logging.info(event)
+        result = TonstakersPayoutMintJettonsEvent(**event)
         return result

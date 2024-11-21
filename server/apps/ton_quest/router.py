@@ -138,10 +138,23 @@ async def complete_task(
     return {"success": True}
 
 
+def calculate_category_xp(category):
+    xp = 0
+    for branch in category.branches:
+        for task in branch.tasks:
+            xp += task.xp
+    return xp
+
+
 @ton_quest_router.get("/categories")
 async def get_categories() -> List[schemas.Category]:
     categories = await db.get_all_categories()
-    return [schemas.Category(**category.to_read_model()) for category in categories]
+    result_list = []
+    for category in categories:
+        dict_to_return = category.to_read_model()
+        dict_to_return["xp"] = calculate_category_xp(category)
+        result_list.append(dict_to_return)
+    return [schemas.Category(**category) for category in result_list]
 
 
 @ton_quest_router.get("/categories/{category_id}")

@@ -95,7 +95,9 @@ class Branch(BaseSqlModel):
         return {
             "id": self.id,
             "category_id": self.category_id,
+            "title": self.title,
             "tasks": [task.to_read_model() for task in self.tasks],
+            "pieces": [piece.to_read_model() for piece in self.pieces]
         }
 
 

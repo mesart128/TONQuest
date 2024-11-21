@@ -10,7 +10,7 @@ from apps.account.types import SystemAddress
 from apps.ton_quest import manager as ton_quest_manager
 from apps.ton_quest.models import User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
-from apps.ton_quest.schemas import DedustSwapEvent
+from apps.ton_quest.schemas import DedustSwapEvent, TonstakersPayoutMintJettonsEvent
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import RawMessageDTO, RawTransactionDTO
 from apps.transaction.service import TransactionService
@@ -24,10 +24,12 @@ class AccountService:
         self,
         transaction_service: TransactionService,
         ton_rpc_client: TONAPIClientAsync,
+        producer: HttpProducer,
         ton_quest_repository: TonQuestSQLAlchemyRepo,
     ):
         self.transaction_service = transaction_service
         self.ton_rpc_client = ton_rpc_client
+        self.producer = producer
         self.ton_quest_repository = ton_quest_repository
 
     # async def add_account(self, account_address: str) -> AccountSchema:
@@ -103,7 +105,7 @@ class AccountService:
                 account_address=message.sender_address
             )
             if tracked_account:
-                await ton_quest_manager.check_task(user_account=tracked_account, event_type=message)
+                await ton_quest_manager.check_task(user_account=tracked_account, event_type=message.event_type)
                 logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
             else:
                 # user = User(
@@ -121,6 +123,32 @@ class AccountService:
                 #     f"Detected external message from "
                 #     f"{out_msg.info.src.to_str()} with code another acc code"
                 # )
+        if out_msg.info.src.to_str(is_user_friendly=False) == "0:a45b17f28409229b78360e3290420f13e4fe20f90d7e2bf8c4ac6703259e22fa":
+            body = out_msg.body.to_slice()
+            op = body.load_uint(32)
+            # logging.debug(f"Detected external TonStakers message from {out_msg.info.src.to_str()}")
+            if op == OpCodes.tonstakers_payout_mint_jettons:
+                event_account_address = (
+                    await self.transaction_service.parse_tonstakers_payout_mint_jettons(out_msg)
+                ).destination
+                logging.debug(f"Detected tonstakers mint jetton for {event_account_address}")
+
+            elif op == OpCodes.tonstakers_pool_withdraw:
+                event_account_address = out_msg.info.dest
+                logging.debug(f"Detected tonstakers pool withdraw message for {event_account_address}")
+
+            if event_account_address:
+                tracked_account: User = await self.get_account(
+                    account_address=message.sender_address
+                )
+                if tracked_account:
+                    await ton_quest_manager.check_task(user_account=tracked_account, event_type=message.event_type)
+                    logging.info(f"Detected tonstakers message from {tracked_account.wallet_address}")
+
+
+
+                
+
 
     async def handle_transaction_event(self, raw_transaction: RawTransactionDTO) -> None:
         try:
