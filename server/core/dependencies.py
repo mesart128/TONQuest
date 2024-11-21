@@ -7,7 +7,6 @@ from apps.scanner.service import BlockScanner
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.transaction.service import TransactionService
 from core.config import ServerConfig
-from core.producer import HttpProducer
 from core.ton_provider import (
     TONAPIClientAsync,
 )
@@ -33,12 +32,7 @@ class CoreContainer(containers.DeclarativeContainer):
     )
 
     ton_rpc_client = providers.Factory(
-        TONAPIClientAsync, base_url=config.ton_rpc_url, key=config.rpc_api_key
-    )
-
-    producer = providers.Factory(
-        HttpProducer,
-        base_url=config.backend_url,
+        TONAPIClientAsync, base_url=config.ton_rpc_url, keys=config.rpc_api_keys_list
     )
 
     account_service = providers.Factory(
@@ -48,7 +42,6 @@ class CoreContainer(containers.DeclarativeContainer):
             ton_rpc_client=ton_rpc_client,
         ),
         ton_rpc_client=ton_rpc_client,
-        producer=producer,
         ton_quest_repository=db,
     )
 
