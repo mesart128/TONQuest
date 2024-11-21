@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 from pytoniq_core import Address, MessageAny
 
-from apps.account.account_codes import dedust_swap_pool_code_b64
+from apps.account.account_codes import dedust_swap_pool_code_b64, tonstakers_main_address
 from apps.account.schemas import AccountSchema
 from apps.account.types import SystemAddress
 from apps.ton_quest import manager as ton_quest_manager
@@ -123,7 +123,7 @@ class AccountService:
                 #     f"Detected external message from "
                 #     f"{out_msg.info.src.to_str()} with code another acc code"
                 # )
-        if out_msg.info.src.to_str(is_user_friendly=False) == "0:a45b17f28409229b78360e3290420f13e4fe20f90d7e2bf8c4ac6703259e22fa":
+        if out_msg.info.src.to_str(is_user_friendly=False) == tonstakers_main_address:
             body = out_msg.body.to_slice()
             op = body.load_uint(32)
             # logging.debug(f"Detected external TonStakers message from {out_msg.info.src.to_str()}")
