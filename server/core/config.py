@@ -16,7 +16,6 @@ CONTEXT_ID = contextvars.ContextVar("context_id", default=str(uuid4()))
 
 class ServerConfig(BaseSettings):
     database_uri: str
-    database_name: str  # for mongo
     redis_url: Union[str, RedisDsn]
     hot_wallet_mnemonic: str  # 24 words
     update_last_scanned_block: bool = False

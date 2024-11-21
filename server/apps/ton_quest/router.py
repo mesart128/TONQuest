@@ -10,6 +10,7 @@ from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
 from apps.transaction.schemas import TaskResponse
 from database.engine import db, engine
+from database.initial_data import populate_database
 from database.repository import NotFound
 from database import initial_data
 
@@ -239,4 +240,10 @@ async def claim_piece(
         return {"error": "Branch not completed"}
 
     await db.claim_piece(user.id, piece_id)
+    return {"success": True}
+
+
+@ton_quest_router.get("/reset_database")
+async def reset_database():
+    await populate_database(engine, db)
     return {"success": True}

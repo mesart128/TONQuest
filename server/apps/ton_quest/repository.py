@@ -106,7 +106,12 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def get_user_by(self, **kwargs) -> User | None:
         """Получить пользователя по ID."""
-        user = await self.find_one_by(User, **kwargs)
+        smtp = select(User).options(selectinload(User.completed_tasks),
+                                    selectinload(User.claimed_pieces),
+                                    selectinload(User.completed_branches),
+                                    selectinload(User.claimed_pieces),
+                                    selectinload(User.nfts)).filter_by(**kwargs)
+        user = await self._execute_and_fetch_one(smtp)
         return user
 
     async def create_user(self, user: User) -> User:
@@ -116,7 +121,7 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         dict_to_insert.pop("created_at")
         dict_to_insert.pop("updated_at")
         user_id = await self.add_one(User, dict_to_insert)  # Передача данных как словаря
-        user = await self.find_one(User, user_id)
+        user = await self.get_user_by(id=user_id)
         return user
 
     async def add_user_wallet_address(self, user_id: int, wallet_address: str) -> User:

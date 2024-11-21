@@ -159,7 +159,6 @@ async def populate_database(engine, repo):
     print("Database population completed.")
 
 
-# Запуск скрипта
 if __name__ == "__main__":
     engine = create_async_engine(DATABASE_URL, echo=True)
     SessionFactory = async_sessionmaker(engine)

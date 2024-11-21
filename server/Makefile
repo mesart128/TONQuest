@@ -20,3 +20,9 @@ run_server:
 
 migrate:
 	alembic upgrade head
+
+dup:
+	docker compose -f docker-compose_dev.yml up --build
+
+ddown:
+	docker compose -f docker-compose_dev.yml down

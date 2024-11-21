@@ -1,0 +1,68 @@
+version: '3.8'
+
+volumes:
+  redis-volume_dev:
+  pg-volume_dev:
+
+services:
+  python:
+    build:
+      context: .
+    volumes:
+      - ./logs:/usr/src/ton_quests/logs
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:8000/docs || exit 1
+      timeout: 100s
+    depends_on:
+      - postgres_quests_dev
+      - redis_quest
+    command: [ "sh", "deploy/entrypoints/run_python.sh" ]
+
+  postgres_quests_dev:
+    container_name: postgres_quests_dev
+    image: postgres:15.1-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pg-volume_dev:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+  ton_scanner:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/ton_quests/
+      - ./logs:/usr/src/ton_quests/logs
+    env_file:
+      - .env
+    depends_on:
+      - postgres_quests_dev
+      - redis_quest
+    command: [ "sh", "./deploy/entrypoints/run_scanner.sh" ]
+
+  redis_quest:
+    image: redis:6.2.6-alpine
+    container_name: redis_quest
+    restart: unless-stopped
+    ports:
+      - "6379:6379" # close or add password for dev
+#    environment:
+#      - REDIS_PASSWORD=${REDIS_PASSWORD}
+#    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-volume_dev:/data
+    env_file:
+      - .env
+
+
