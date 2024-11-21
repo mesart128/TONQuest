@@ -133,7 +133,8 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
     async def get_all_categories(self) -> List[Category]:
         """Получить список всех категорий."""
         stmt = select(Category).options(
-            selectinload(Category.branches).selectinload(Branch.tasks).selectinload(Task.slides)
+            selectinload(Category.branches).selectinload(Branch.tasks).selectinload(Task.slides),
+            selectinload(Category.branches).selectinload(Branch.pieces)
         )
         categories = await self._execute_and_fetch_all(stmt)
         return categories
@@ -153,7 +154,10 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def get_branch(self, branch_id: str) -> Branch:
         """Получить ветку по ID."""
-        branch = await self.find_one(Branch, branch_id)
+        # branch = await self.find_one(Branch, branch_id)
+        smtp = select(Branch).where(Branch.id == branch_id).options(selectinload(Branch.tasks),
+                                                                    selectinload(Branch.pieces))
+        branch = await self._execute_and_fetch_one(smtp)
         if branch is None:
             raise NotFound("Branch not found")
         return branch

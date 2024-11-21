@@ -39,12 +39,14 @@ class Task(pydantic.BaseModel):
     call_to_action: str
     slides: List[Slide]
 
+
 class Piece(pydantic.BaseModel):
     id: UUID
     nft_id: UUID
     image: str
-    branch_id: Optional[str]
+    branch_id: Optional[UUID]
     queue: Optional[int]
+
 
 class NFT(pydantic.BaseModel):
     id: UUID
@@ -56,15 +58,24 @@ class Branch(pydantic.BaseModel):
     id: UUID
     category_id: UUID
     tasks: List[Task]
+    pieces: List[Piece]
+
+
+class ShortBranch(pydantic.BaseModel):
+    id: UUID
+    title: str
 
 class Category(pydantic.BaseModel):
     id: UUID
+    xp: int
     head: str
     title: str
     description: str
     image: str
     subtitle: str
-    branches: List[Branch]
+    branches: List[ShortBranch]
+
+
 
 class SuccessResponse(pydantic.BaseModel):
     success: bool
