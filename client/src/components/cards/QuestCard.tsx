@@ -1,12 +1,16 @@
 import React from 'react';
 import questRecycle from '../../assets/quest-recycle.png';
+import { useNavigate } from 'react-router-dom';
 
 const QuestCard = ({ type, title, description, xpReward, isCompleteds }) => {
-  //TODO: 1. onclick на карточке
-  //TODO: 2. по онклик дергаем роутер (навигейт на пейджу баннера)
+  const navigate = useNavigate();
+
+  const cardSelectHandler = () => {
+    navigate('/banner-page');
+  };
 
   return (
-    <div className="max-w-sm mx-auto">
+    <div className="max-w-sm mx-auto" onClick={cardSelectHandler}>
       <div
         className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
       border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]"

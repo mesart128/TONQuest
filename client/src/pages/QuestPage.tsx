@@ -1,13 +1,15 @@
-import QuestCard from '../components/cards/QuestCard';
-import Navbar from '../components/Navbar';
-import BottomMenu from '../components/BottomMenu';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import React, { useState, useEffect } from 'react';
-import { getCategories } from '../api/Router';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+
+import QuestCard from '../components/cards/QuestCard';
+import Navbar from '../components/Navbar';
+import BottomMenu from '../components/BottomMenu';
+import { getCategories } from '../api/Router';
 
 const QuestPage = () => {
   const [cards, setCards] = useState([]);
@@ -18,7 +20,6 @@ const QuestPage = () => {
     const fetchCategories = async () => {
       try {
         const data = await getCategories();
-
         setCards(data);
       } catch (error) {
         setError('Failed to fetch categories');
@@ -26,49 +27,55 @@ const QuestPage = () => {
         setLoading(false);
       }
     };
-    // console.log(categories);
     fetchCategories();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Пока идет загрузка
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Если ошибка
+    return <div>{error}</div>;
   }
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center">
+    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
       <Navbar />
 
-      <div className="px-4 flex flex-col items-center justify-center max-w-md mt-8">
-        <section>
-          <h2 className="text-2xl font-bold mb-4 text-center mb-8">
+      <div className="w-full px-4 flex flex-col items-center justify-center mt-8">
+        <section className="w-full max-w-md">
+          <h2 className="text-2xl font-bold text-center mb-8">
             Welcome to Quest
           </h2>
-          <div className="flex justify-between gap-4 min-h-[500px]">
-          <Swiper
-              modules={[Navigation, Pagination]}
-              spaceBetween={30}
-              slidesPerView={1}
-              navigation
-              pagination={{ clickable: true }}
+          <div className="quest-slider-container relative pb-12">
+            <Swiper
+              modules={[Pagination]}
+              spaceBetween={20}
+              slidesPerView={1.2}
               centeredSlides={true}
-              className="w-full"
+              pagination={{
+                clickable: true,
+                bulletActiveClass: 'swiper-pagination-bullet-active',
+                bulletClass: 'swiper-pagination-bullet',
+                el: '.custom-pagination',
+              }}
+              className="quest-slider"
             >
               {cards.map((card) => (
                 <SwiperSlide key={card.id} className="flex justify-center">
-                  <QuestCard
-                    type={card.head}
-                    title={card.map}
-                    description={card.description}
-                    xpReward={50}
-                    isCompleted={true}
-                  />
+                  <div className="w-full max-w-sm">
+                    <QuestCard
+                      type={card.head}
+                      title={card.map}
+                      description={card.description}
+                      xpReward={50}
+                      isCompleted={true}
+                    />
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>
+            <div className="custom-pagination swiper-pagination"></div>
           </div>
         </section>
       </div>

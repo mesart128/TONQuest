@@ -5,32 +5,31 @@ import ConnectWalletBox from './ConnectWalletBox.tsx';
 import { getUser } from '../api/Router.js';
 
 const Navbar = () => {
-  const [user, setUser] = useState(null); // For storing the user data
-  const [loading, setLoading] = useState(true); // For loading state
-  const [error, setError] = useState(null); // For storing any error
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userData = await getUser(); // Fetch data from API
-        setUser(userData); // Update state with fetched data
-        setLoading(false); // Set loading to false after data is fetched
+        const userData = await getUser();
+        setUser(userData);
+        setLoading(false);
       } catch (err) {
-        setError(err); // Set error if something goes wrong
-        setLoading(false); // Set loading to false even if there is an error
+        setError(err);
+        setLoading(false);
       }
     };
 
-    fetchUserData(); // Call the fetch function
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+    fetchUserData();
+  }, []);
 
-  // Return JSX based on the current state (loading, error, or user data)
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>; // Show error message if there was an error
+    return <div>Error: {error.message}</div>;
   }
 
   return (
@@ -39,7 +38,6 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <button className="p-2 rounded-full hover:bg-primary/20 transition-all">
             <User className="text-white" size={20} />
-            {user.username}
           </button>
           <Experience xp={user.username} />
         </div>

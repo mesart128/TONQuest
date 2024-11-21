@@ -14,4 +14,14 @@ export default {
     },
   },
   plugins: [],
+  extend: {
+    css: {
+      '.swiper-pagination-bullet': {
+        '@apply w-2 h-2 bg-white/50 opacity-100': {},
+      },
+      '.swiper-pagination-bullet-active': {
+        '@apply bg-white': {},
+      },
+    },
+  },
 };
