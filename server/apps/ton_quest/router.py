@@ -6,6 +6,7 @@ from fastapi import APIRouter, Security
 from pytoniq_core import Address
 
 from apps.ton_quest import models, schemas
+from apps.ton_quest.enums import TaskTypeEnum
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
 from apps.transaction.schemas import TaskResponse
@@ -20,6 +21,13 @@ ton_quest_router = APIRouter()
 
 web_app_auth_header = WebAppAuthHeader(name="Authorization", scheme_name="web-app-auth")
 
+
+async def calculate_user_xp(user: models.User, db_: TonQuestSQLAlchemyRepo) -> int:
+    xp = 0
+    for task_id in user.completed_tasks:
+        task = await db_.get_task(task_id.task_id)
+        xp += task.xp
+    return xp
 
 @ton_quest_router.get("/login")
 async def login(web_app_init_data: WebAppInitData = Security(web_app_auth_header)):
@@ -40,12 +48,14 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
             image=web_app_init_data.user.photo_url,
         )
         user = await db.create_user(user)
-    return schemas.User(**user.to_read_model())
+    response_dict = user.to_read_model()
+    response_dict["xp"] = await calculate_user_xp(user, db)
+    return schemas.User(**response_dict)
 
 @ton_quest_router.get("/users/address/{address}")
 async def set_user_address(
     address: str, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
-) -> schemas.User:
+) -> schemas.User | dict:
     user = await db.get_user(web_app_init_data.user.id)
     if user.wallet_address is not None:
         return {"error": "User already has address"}
@@ -53,10 +63,13 @@ async def set_user_address(
         address = Address(address).to_str(False)
     except ValueError:
         return {"error": "Invalid wallet address"}
-    user = await db.add_user_wallet_address(web_app_init_data.user.id, address)
-    # await scanner_producer.add_user_to_track(user.address)
-    # await db.complete_task(user.address, None)
-    return schemas.User(**user.to_read_model())
+    user_ = await db.add_user_wallet_address(user.id, address)
+    wallet_task = await db.get_task_by_task_type(TaskTypeEnum.connect_wallet)
+    await db.complete_task(user_.id, wallet_task.id)
+    updated_user = await db.get_user_by(id=user_.id)
+    response = updated_user.to_read_model()
+    response["xp"] = await calculate_user_xp(updated_user, db)
+    return schemas.User(**response)
 
 
 @ton_quest_router.get(

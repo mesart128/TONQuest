@@ -9,6 +9,9 @@ class StrEnum(str, Enum):
 
 
 class TaskTypeEnum(StrEnum):
+
+    connect_wallet = "connect_wallet"
+
     dedust_swap = "dedust_swap"
     dedust_liquidity = "dedust_liquidity"
     dedust_withdraw = "dedust_withdraw"

@@ -17,7 +17,20 @@ async def populate_database(engine, repo):
         await conn.run_sync(Base.metadata.drop_all)  # Создание таблиц, если они отсутствуют
         await conn.run_sync(Base.metadata.create_all)  # Создание таблиц, если они отсутствуют
     # return
-    # Категория
+    #
+    connect_wallet_task = {
+        "title": "Connect your wallet",
+        "xp": 20,
+        "queue": 0,
+        "task_type": TaskTypeEnum.connect_wallet,
+        "action_url": "https://tonos-se.org/",
+        "call_to_action": "You have connected your wallet. Great job! "
+                          "You've been rewarded by piece of NFT. Keep it up!",
+        "branch_id": None,
+    }
+
+    connect_wallet_task_id = await repo.add_one(Task, connect_wallet_task)
+
     # DEX
     dex_category_data = {
         "head": "DEX",
@@ -416,6 +429,8 @@ async def populate_database(engine, repo):
         await repo.add_one(Piece, piece)
 
     print("Database population completed.")
+    print(f"Connect wallet task id: {connect_wallet_task_id}")
+
 
 
 if __name__ == "__main__":

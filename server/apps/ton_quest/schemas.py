@@ -7,6 +7,7 @@ from pytoniq_core import Address
 
 class User(pydantic.BaseModel):
     id: UUID
+    xp: int
     telegram_id: int
     username: str
     first_name: str
@@ -76,15 +77,17 @@ class Category(pydantic.BaseModel):
     branches: List[ShortBranch]
 
 
-
 class SuccessResponse(pydantic.BaseModel):
     success: bool
+
 
 class ErrorResponse(pydantic.BaseModel):
     error: str
 
+
 class IsCompletedResponse(pydantic.BaseModel):
     completed: bool
+
 
 class DedustSwapEvent(pydantic.BaseModel):
     event_type: str
