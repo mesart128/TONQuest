@@ -18,6 +18,10 @@ class OpCodes(IntEnum):
     dedust_liquidity = 0xb544f4a4
     dedust_withdraw = 0x3aa870a6
 
+    # TonStakers
+    tonstakers_payout_mint_jettons = 0x1674b0a0
+    tonstakers_pool_withdraw = 0x319b0cdc
+
     @classmethod
     def dedust_code_list(cls):
         return [cls.dedust_swap, cls.dedust_liquidity, cls.dedust_withdraw]

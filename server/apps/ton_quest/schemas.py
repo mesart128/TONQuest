@@ -114,3 +114,13 @@ class DedustWithdrawEvent(pydantic.BaseModel):
         arbitrary_types_allowed = True
 
 
+class TonstakersPayoutMintJettonsEvent(pydantic.BaseModel):
+    event_type: str
+    op_code: int
+    query_id: int
+    destination: Address
+    amount: int
+
+    class Config:
+        arbitrary_types_allowed = True
+        
