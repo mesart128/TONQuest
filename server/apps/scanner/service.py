@@ -267,7 +267,7 @@ class BlockScanner:
             tx: Transaction
             await self.scan_transaction(tx, block)
 
-        logging.debug(
-            f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
-            f" in {(datetime.now() - time_start).seconds} microseconds"
-        )
+        # logging.debug(
+        #     f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
+        #     f" in {(datetime.now() - time_start).seconds} microseconds"
+        # )
