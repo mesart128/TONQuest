@@ -34,7 +34,7 @@ const QuestCard = ({ type, title, description, xpReward, imageUrl }) => {
         <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
           <div>45%</div>
           {/* TODO: % calculation */}
-          <div className="relative bg-white rounded-full h-2 w-32">
+          <div className="relative bg-white rounded-full h-2 w-32 flex-1">
             <div
               className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"
               style={{ width: `${45}%` }}
