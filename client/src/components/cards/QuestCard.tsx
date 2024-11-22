@@ -10,9 +10,9 @@ const QuestCard = ({ type, title, description, xpReward, imageUrl }) => {
   };
 
   return (
-    <div className="max-w-sm mx-auto" onClick={cardSelectHandler}>
+    <div className="max-w-sm mx-auto flex mb-16" onClick={cardSelectHandler}>
       <div
-        className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
+        className="rounded-3xl flex flex-col justify-around  p-6 text-white
       border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]"
       >
         <div className="text-center mb-8 flex flex-col items-center justify-center space-y-4">
