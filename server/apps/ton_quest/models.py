@@ -55,7 +55,7 @@ class Slide(BaseSqlModel):
 
 class Task(BaseSqlModel):
     __tablename__ = "tasks"
-    branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"))
+    branch_id: Mapped[str] = mapped_column(ForeignKey("branches.id"), nullable=True)
     branch: Mapped["Branch"] = relationship("Branch", back_populates="tasks")
     title: Mapped[str] = mapped_column()
     xp: Mapped[int] = mapped_column()

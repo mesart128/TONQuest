@@ -38,18 +38,18 @@ services:
     env_file:
       - .env
 
-  ton_scanner:
-    build:
-      context: .
-    volumes:
-      - .:/usr/src/ton_quests/
-      - ./logs:/usr/src/ton_quests/logs
-    env_file:
-      - .env
-    depends_on:
-      - postgres_quests_dev
-      - redis_quest
-    command: [ "sh", "./deploy/entrypoints/run_scanner.sh" ]
+#  ton_scanner:
+#    build:
+#      context: .
+#    volumes:
+#      - .:/usr/src/ton_quests/
+#      - ./logs:/usr/src/ton_quests/logs
+#    env_file:
+#      - .env
+#    depends_on:
+#      - postgres_quests_dev
+#      - redis_quest
+#    command: [ "sh", "./deploy/entrypoints/run_scanner.sh" ]
 
   redis_quest:
     image: redis:6.2.6-alpine

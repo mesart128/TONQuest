@@ -17,7 +17,35 @@ async def populate_database(engine, repo):
         await conn.run_sync(Base.metadata.drop_all)  # Создание таблиц, если они отсутствуют
         await conn.run_sync(Base.metadata.create_all)  # Создание таблиц, если они отсутствуют
     # return
-    # Категория
+    #
+    category_connect_wallet_data = {
+        "title": "Connect Wallet",
+        "head": "Getting Started",
+        "description": "Learn how to connect your wallet to the TON ecosystem",
+        "image": "https://kauri.io/images/1x1.png",
+        "subtitle": "This branch introduces users to the TON ecosystem by explaining how to connect their wallet.",
+    }
+    connect_wallet_category_id = await repo.add_one(Category, category_connect_wallet_data)
+
+    connect_wallet_branch_data = {
+        "title": "Connect Wallet",
+        "category_id": connect_wallet_category_id,
+    }
+    connect_wallet_branch_id = await repo.add_one(Branch, connect_wallet_branch_data)
+
+    connect_wallet_task = {
+        "title": "Connect your wallet",
+        "xp": 20,
+        "queue": 0,
+        "task_type": TaskTypeEnum.connect_wallet,
+        "action_url": "https://tonos-se.org/",
+        "call_to_action": "You have connected your wallet. Great job! "
+                          "You've been rewarded by piece of NFT. Keep it up!",
+        "branch_id": connect_wallet_branch_id,
+    }
+
+    connect_wallet_task_id = await repo.add_one(Task, connect_wallet_task)
+
     # DEX
     dex_category_data = {
         "head": "DEX",
@@ -408,14 +436,17 @@ async def populate_database(engine, repo):
     test_nft_id = await repo.add_one(NFT, test_nft_data)
 
     pieces = [
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece1.png", 'branch_id': dedust_branch_id, 'queue': 1},
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece2.png", 'branch_id': evaa_branch_id, 'queue': 2},
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece2.png", 'branch_id': staking_branch_id, 'queue': 3},
+        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece1.png", 'branch_id': connect_wallet_branch_id, 'queue': 1},
+        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece1.png", 'branch_id': dedust_branch_id, 'queue': 2},
+        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece2.png", 'branch_id': evaa_branch_id, 'queue': 3},
+        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece2.png", 'branch_id': staking_branch_id, 'queue': 4},
     ]
     for piece in pieces:
         await repo.add_one(Piece, piece)
 
     print("Database population completed.")
+    print(f"Connect wallet task id: {connect_wallet_task_id}")
+
 
 
 if __name__ == "__main__":

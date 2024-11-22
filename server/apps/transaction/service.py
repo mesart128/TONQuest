@@ -14,7 +14,13 @@ from tonsdk.utils import b64str_to_bytes, bytes_to_b64str
 
 from apps.currency.common.asset import Asset
 from apps.ton_quest.enums import TaskTypeEnum
-from apps.ton_quest.schemas import DedustSwapEvent, DedustDepositEvent, DedustWithdrawEvent, TonstakersPayoutMintJettonsEvent
+from apps.ton_quest.schemas import (
+    DedustDepositEvent,
+    DedustSwapEvent,
+    DedustWithdrawEvent,
+    TonstakersPayoutMintJettonsEvent,
+    JettonTransferEvent,
+)
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import (
     ParsedTransactionDTO,
@@ -183,6 +189,27 @@ class TransactionService:
             "fwd_fee": fwd_fee,
         }
         return result
+    
+    @staticmethod
+    async def parse_jetton_transfer_event(out_msg: MessageAny) -> JettonTransferEvent:
+        body = out_msg.body.to_slice()
+        op = body.load_uint(32)
+        if op != OpCodes.jetton_transfer:
+            raise ValueError(f"Wrong op code. Expected {OpCodes.jetton_transfer}. Got {op}")
+        event = {
+            "event_type": "jetton_transfer",
+            "op_code": op,
+            "query_id": body.load_uint(64),
+            "amount": body.load_coins(),
+            "destination": body.load_address(),
+            "response_destination": body.load_address(),
+            "custom_payload": body.load_ref() if body.load_bit() else None,
+            "forward_ton_amount": body.load_coins(),
+            "forward_payload": body.load_ref() if body.load_bit() else None,
+        }
+        logging.info(event)
+        result = JettonTransferEvent(**event)
+        return result        
 
     @staticmethod
     async def parse_dedust_swap_event(out_msg: MessageAny) -> DedustSwapEvent:

@@ -76,9 +76,9 @@ class BaseSQLAlchemyRepo:
 
 
 class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
-    async def get_task_by_task_type(self, task_type: str) -> Task | None:
+    async def get_tasks_by_task_type(self, task_type: str) -> List[Task] | None:
         stmt = select(Task).where(Task.task_type == task_type)
-        task = await self._execute_and_fetch_one(stmt)
+        task = await self._execute_and_fetch_all(stmt)
         return task
 
     async def get_nft(self, nft_id: str) -> NFT:
@@ -124,10 +124,11 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         user = await self.get_user_by(id=user_id)
         return user
 
-    async def add_user_wallet_address(self, user_id: int, wallet_address: str) -> User:
-        user = await self.get_user(user_id)
+    async def add_user_wallet_address(self, user_id: str, wallet_address: str) -> User:
+        user = await self.get_user_by(id=user_id)
         user.wallet_address = wallet_address
-        await self.edit_one(User, user_id, user.asdict())
+        user_id = await self.edit_one(User, user_id, user.asdict())
+        user = await self.get_user_by(id=user_id)
         return user
 
     async def get_all_categories(self) -> List[Category]:
@@ -203,7 +204,9 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
 
     async def get_task(self, task_id: str) -> Task:
         """Получить задачу по ID."""
-        task = await self.find_one(Task, task_id)
+        # task = await self.find_one(Task, task_id)
+        smtp = select(Task).where(Task.id == task_id).options(selectinload(Task.slides))
+        task = await self._execute_and_fetch_one(smtp)
         if task is None:
             raise NotFound("Task not found")
         return task
@@ -219,6 +222,13 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         if user_task is None:
             raise NotFound("User task not found")
         return user_task
+
+    async def get_user_tasks(self, user_id: str, **kwargs) -> List[UserTask]:
+        smtp = select(UserTask).options(
+            selectinload(UserTask.task)
+        ).where(UserTask.user_id == user_id).filter_by(**kwargs)
+        user_tasks = await self._execute_and_fetch_all(smtp)
+        return user_tasks
 
     async def check_task_completed(self, user_id: str, task_id: str) -> bool:
         user_task = await self.find_one_by(UserTask, user_id=user_id, task_id=task_id)

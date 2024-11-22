@@ -2,11 +2,12 @@ from typing import List, Optional
 from uuid import UUID
 
 import pydantic
-from pytoniq_core import Address
+from pytoniq_core import Address, Cell
 
 
 class User(pydantic.BaseModel):
     id: UUID
+    xp: int
     telegram_id: int
     username: str
     first_name: str
@@ -76,15 +77,17 @@ class Category(pydantic.BaseModel):
     branches: List[ShortBranch]
 
 
-
 class SuccessResponse(pydantic.BaseModel):
     success: bool
+
 
 class ErrorResponse(pydantic.BaseModel):
     error: str
 
+
 class IsCompletedResponse(pydantic.BaseModel):
     completed: bool
+
 
 class DedustSwapEvent(pydantic.BaseModel):
     event_type: str
@@ -135,3 +138,16 @@ class TonstakersPayoutMintJettonsEvent(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
         
+class JettonTransferEvent(pydantic.BaseModel):
+    event_type: str
+    op_code: int
+    query_id: int
+    amount: int
+    destination: Address
+    response_destination: Address
+    custom_payload: Optional[Cell] = None
+    forward_ton_amount: int
+    forward_payload: Optional[Cell] = None
+
+    class Config:
+        arbitrary_types_allowed = True

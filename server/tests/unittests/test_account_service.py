@@ -49,7 +49,6 @@ async def test_add_parse_dedust_message(database_engine, mocker):
     account_service = AccountService(
         transaction_service=transaction_service,
         ton_rpc_client=ton_rpc_client,
-        producer=AsyncMock(),
         ton_quest_repository=ton_quest_repo
     )
     ton_rpc_client.get_address_information = AsyncMock(return_value=MagicMock(code=dedust_swap_pool_code_b64))
