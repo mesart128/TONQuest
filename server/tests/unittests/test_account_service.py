@@ -58,7 +58,7 @@ async def test_add_parse_dedust_message(database_engine, mocker):
     )
 
     for msg in transaction.out_msgs:
-        await account_service.handle_external_out_msg(msg)
+        await account_service.handle_out_msg(msg)
 
     # await account_service.handle_external_out_msg(raw_parsed_transaction)
 

@@ -20,7 +20,9 @@ class OpCodes(IntEnum):
 
     # TonStakers
     tonstakers_payout_mint_jettons = 0x1674b0a0
-    tonstakers_pool_withdraw = 0x319b0cdc
+    tonstakers_pool_withdraw = 0x0a77535c  # Tonstake Pool Withdrawal
+
+
 
     # Evaa
     evaa_borrow = 0x0000211a

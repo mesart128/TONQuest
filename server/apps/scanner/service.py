@@ -3,7 +3,7 @@ import logging
 import typing
 from datetime import datetime
 
-from pytoniq_core import Address, MessageAny, Transaction
+from pytoniq_core import Transaction
 from pytoniq_core.tl import BlockIdExt
 
 from apps.account.service import AccountService
@@ -161,7 +161,7 @@ class BlockScanner:
             self.shards_storage[self.get_shard_id(shard)] = shard.seqno
         while True:
             try:
-                logging.debug(f"Scanning masterchain block {master_blk.seqno}")
+                # logging.debug(f"Scanning masterchain block {master_blk.seqno}")
                 await self.blks_queue.put(master_blk)
                 shards = await self.ton_rpc_client.get_all_shards_info(master_blk)
                 shard_tasks = [self.get_not_seen_shards(shard) for shard in shards]
@@ -248,22 +248,11 @@ class BlockScanner:
                 tx, block, masterchain_seqno=mc_seqno
             )
         )
-        logging.debug(f"Scanning transaction: {parsed_transaction=}")
         return parsed_transaction
 
-    async def handle_out_msgs(self, out_msgs: typing.List[MessageAny]) -> None:
-        for out_msg in out_msgs:
-            if out_msg.info.dest is None:
-                # case External out message: swap logs
-                await self.account_service.handle_external_out_msg(out_msg)
-
     async def scan_transaction(self, tx: Transaction, block: BlockIdExt):
-        system_account = await self.account_service.get_account(Address(f"0:{tx.account_addr_hex}"))
-        if system_account is not None:
-            raw_transaction_dto = await self.blockchain_tx_to_raw_transaction(tx, block)
-            logging.debug(f"Transaction {raw_transaction_dto} is system account")
-            await self.account_service.handle_transaction_on_account(raw_transaction_dto)
-        await self.handle_out_msgs(out_msgs=tx.out_msgs)
+        for msg in tx.out_msgs:
+            await self.account_service.handle_out_msg(tx, msg)
 
     async def handle_block(self, block: BlockIdExt, manual_scan: bool = False):
         if block.workchain == -1:  # skip masterchain blocks
@@ -278,7 +267,7 @@ class BlockScanner:
             tx: Transaction
             await self.scan_transaction(tx, block)
 
-        # logging.debug(
-        #     f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
-        #     f" in {(datetime.now() - time_start).microseconds} microseconds"
-        # )
+        logging.debug(
+            f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
+            f" in {(datetime.now() - time_start).seconds} microseconds"
+        )
