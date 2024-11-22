@@ -24,12 +24,10 @@ class AccountService:
         self,
         transaction_service: TransactionService,
         ton_rpc_client: TONAPIClientAsync,
-        producer: HttpProducer,
         ton_quest_repository: TonQuestSQLAlchemyRepo,
     ):
         self.transaction_service = transaction_service
         self.ton_rpc_client = ton_rpc_client
-        self.producer = producer
         self.ton_quest_repository = ton_quest_repository
 
     # async def add_account(self, account_address: str) -> AccountSchema:
