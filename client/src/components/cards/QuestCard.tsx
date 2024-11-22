@@ -15,9 +15,11 @@ const QuestCard = ({ type, title, description, xpReward, imageUrl }) => {
         className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
       border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]"
       >
-        <div className="text-center mb-8 flex flex-col items-center justify-center gap-4">
-          <h2 className="text-4xl font-bold mb-2 opacity-50">{type}</h2>
-          <h1 className="text-3xl font-bold mb-4">{title}</h1>
+        <div className="text-center mb-8 flex flex-col items-center justify-center space-y-4">
+          <div className="space-y-1">
+            <h2 className="text-4xl font-bold opacity-50">{type}</h2>
+            <h1 className="text-3xl font-bold">{title}</h1>
+          </div>
           <p className="text-xl text-blue-100 opacity-75">{description}</p>
         </div>
 
