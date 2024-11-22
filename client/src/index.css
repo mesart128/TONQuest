@@ -2,10 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  margin: 0;
+  /* height: 100%; */
+  /* overflow: hidden; */
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+
+  /* height: 100%; */
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -71,14 +80,15 @@ button:focus-visible {
   }
 }
 
-custom-pagination .swiper-pagination-bullet {
+.custom-pagination .swiper-pagination-bullet {
   background-color: white;
   width: 12px;
   height: 12px;
-  opacity: 50%;
+  opacity: 40%;
   transition: background-color 0.3s ease;
 }
 
 .custom-pagination .swiper-pagination-bullet-active {
   background-color: white;
+  opacity: 1;
 }
