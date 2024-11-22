@@ -21,3 +21,4 @@ class TaskTypeEnum(StrEnum):
 
     evaa_supply = "evaa_supply"
     evaa_borrow = "evaa_borrow"
+    evaa_repay = "evaa_repay"
