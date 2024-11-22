@@ -1,24 +1,41 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from uuid import UUID
 
-from aiogram.utils.web_app import WebAppInitData
-from fastapi import APIRouter, Security
+from aiogram.utils.web_app import (
+    WebAppInitData,
+    parse_webapp_init_data,
+)
+from fastapi import APIRouter, HTTPException, Request, Security
 from pytoniq_core import Address
 
 from apps.ton_quest import models, schemas
-from apps.ton_quest.enums import TaskTypeEnum
+from apps.ton_quest.enums import TaskStatusEnum, TaskTypeEnum
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
+from database import initial_data
 from database.engine import db, engine
 from database.initial_data import populate_database
 from database.repository import NotFound
-from database import initial_data
 
 db: TonQuestSQLAlchemyRepo
 
-ton_quest_router = APIRouter()
 
-web_app_auth_header = WebAppAuthHeader(name="Authorization", scheme_name="web-app-auth")
+class CustomWebAppAuthHeader(WebAppAuthHeader):
+    async def __call__(self, request: Request) -> Optional[WebAppInitData]:
+        init_data = request.headers.get(self.model.name)
+        if not init_data:
+            if self.auto_error:
+                raise HTTPException(status_code=401, detail="Unauthorized")
+            else:
+                return None
+
+        parsed_init_data = parse_webapp_init_data(init_data)
+        return parsed_init_data
+
+
+web_app_auth_header = CustomWebAppAuthHeader(name="Authorization", scheme_name="web-app-auth")
+
+ton_quest_router = APIRouter()
 
 
 async def calculate_user_xp(user: models.User, db_: TonQuestSQLAlchemyRepo) -> int:
@@ -28,6 +45,7 @@ async def calculate_user_xp(user: models.User, db_: TonQuestSQLAlchemyRepo) -> i
         xp += task.xp
     return xp
 
+
 @ton_quest_router.get("/login")
 async def login(web_app_init_data: WebAppInitData = Security(web_app_auth_header)):
     await initial_data.populate_database(engine, db)
@@ -35,7 +53,9 @@ async def login(web_app_init_data: WebAppInitData = Security(web_app_auth_header
 
 
 @ton_quest_router.get("/users")
-async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> schemas.User:
+async def get_user(
+    web_app_init_data: WebAppInitData = Security(web_app_auth_header),
+) -> schemas.User:
     try:
         user = await db.get_user(web_app_init_data.user.id)
     except NotFound:
@@ -50,6 +70,7 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
     response_dict = user.to_read_model()
     response_dict["xp"] = await calculate_user_xp(user, db)
     return schemas.User(**response_dict)
+
 
 # @ton_quest_router.get("/users/{address}/")
 # async def get_completed_user(address: str) -> List[schemas.Task]:
@@ -85,7 +106,7 @@ async def set_user_address(
     "/tasks/{task_id}",
 )
 async def get_task(task_id: UUID) -> schemas.Task:
-    task = await db.get_task_with_slides(task_id)
+    task = await db.get_task_with_slides(str(task_id))
     return schemas.Task(**task.to_read_model())
 
 
@@ -141,7 +162,7 @@ async def complete_task(
         task = await db.get_task(task_id)
     except NotFound:
         return {"error": "Task not found"}
-    
+
     branch_tasks = (await db.get_branch(task.branch_id)).tasks
     for branch_task in branch_tasks:
         if branch_task.queue < task.queue:
@@ -186,9 +207,29 @@ async def get_category(category_id: UUID) -> schemas.Category:
 
 
 @ton_quest_router.get("/branches/{branch_id}")
-async def get_branch(branch_id: UUID) -> schemas.Branch:
-    branch = await db.get_branch(branch_id)
-    return schemas.Branch(**branch.to_read_model())
+async def get_branch(
+    branch_id: UUID, web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> schemas.UserBranch:
+    user = await db.get_user(web_app_init_data.user.id)
+    branch = await db.get_branch(str(branch_id))
+    branch.tasks.sort(key=lambda task_: task_.queue)
+    active_task_found = False
+    tasks_with_status = []
+    completed_tasks_ids = [task.task_id for task in user.completed_tasks]
+    for task in branch.tasks:
+        if task.id in completed_tasks_ids:
+            status = TaskStatusEnum.completed
+        elif not active_task_found:
+            status = TaskStatusEnum.active
+            active_task_found = True
+        else:
+            status = TaskStatusEnum.blocked
+        task_read_model = task.to_read_model()
+        task_read_model["status"] = status
+        tasks_with_status.append(task_read_model)
+    branch_read_model = branch.to_read_model()
+    branch_read_model["tasks"] = tasks_with_status
+    return schemas.UserBranch(**branch_read_model)
 
 
 @ton_quest_router.get("/branches/{branch_id}/check")
@@ -242,6 +283,7 @@ async def complete_branch(
 async def get_nfts() -> List[schemas.NFT]:
     nfts = await db.get_nfts()
     return [schemas.NFT(**nft.to_read_model()) for nft in nfts]
+
 
 @ton_quest_router.get("/nfts/{ntf_id}")
 async def get_nft(ntf_id: UUID) -> schemas.NFT:

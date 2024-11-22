@@ -9,7 +9,6 @@ class StrEnum(str, Enum):
 
 
 class TaskTypeEnum(StrEnum):
-
     connect_wallet = "connect_wallet"
 
     dedust_swap = "dedust_swap"
@@ -22,3 +21,7 @@ class TaskTypeEnum(StrEnum):
     evaa_supply = "evaa_supply"
     evaa_borrow = "evaa_borrow"
     evaa_repay = "evaa_repay"
+
+
+class TaskStatusEnum(StrEnum):
+    active, blocked, completed = "active", "blocked", "completed"

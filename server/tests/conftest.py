@@ -9,9 +9,7 @@ from pytest_postgresql.janitor import DatabaseJanitor
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from core.logger import setup_logging
 
 setup_logging()
@@ -28,7 +26,9 @@ def anyio_backend() -> str:
     """
     return "asyncio"
 
+
 test_db = factories.postgresql_proc(port=None, dbname="test_db")
+
 
 @pytest_asyncio.fixture(scope="function", autouse=True)
 async def database_engine(test_db, event_loop):

@@ -14,19 +14,17 @@ class OpCodes(IntEnum):
     default_message = 0x00000000
 
     # TonCrypto
-    dedust_swap = 0x9c610de3
-    dedust_liquidity = 0xb544f4a4
-    dedust_withdraw = 0x3aa870a6
+    dedust_swap = 0x9C610DE3
+    dedust_liquidity = 0xB544F4A4
+    dedust_withdraw = 0x3AA870A6
 
     # TonStakers
-    tonstakers_payout_mint_jettons = 0x1674b0a0
-    tonstakers_pool_withdraw = 0x0a77535c  # Tonstake Pool Withdrawal
-
-
+    tonstakers_payout_mint_jettons = 0x1674B0A0
+    tonstakers_pool_withdraw = 0x0A77535C  # Tonstake Pool Withdrawal
 
     # Evaa
-    evaa_borrow = 0x0000211a
-    evaa_supply = 0x0000011a
+    evaa_borrow = 0x0000211A
+    evaa_supply = 0x0000011A
 
     @classmethod
     def dedust_code_list(cls):

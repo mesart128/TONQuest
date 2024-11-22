@@ -4,6 +4,8 @@ from uuid import UUID
 import pydantic
 from pytoniq_core import Address, Cell
 
+from apps.ton_quest.enums import TaskStatusEnum
+
 
 class User(pydantic.BaseModel):
     id: UUID
@@ -29,6 +31,7 @@ class Slide(pydantic.BaseModel):
     image: str
     queue: int
 
+
 class Task(pydantic.BaseModel):
     id: UUID
     branch_id: UUID
@@ -39,6 +42,19 @@ class Task(pydantic.BaseModel):
     action_url: str
     call_to_action: str
     slides: List[Slide]
+
+
+class UserTask(pydantic.BaseModel):
+    id: UUID
+    branch_id: UUID
+    title: str
+    xp: int
+    queue: int
+    task_type: str
+    action_url: str
+    call_to_action: str
+    slides: List[Slide]
+    status: TaskStatusEnum
 
 
 class Piece(pydantic.BaseModel):
@@ -55,6 +71,7 @@ class NFT(pydantic.BaseModel):
     contract_address: str
     pieces: List[Piece]
 
+
 class Branch(pydantic.BaseModel):
     id: UUID
     category_id: UUID
@@ -62,9 +79,17 @@ class Branch(pydantic.BaseModel):
     pieces: List[Piece]
 
 
+class UserBranch(pydantic.BaseModel):
+    id: UUID
+    category_id: UUID
+    tasks: List[UserTask]
+    pieces: List[Piece]
+
+
 class ShortBranch(pydantic.BaseModel):
     id: UUID
     title: str
+
 
 class Category(pydantic.BaseModel):
     id: UUID
@@ -100,6 +125,7 @@ class DedustSwapEvent(pydantic.BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
 
 class DedustDepositEvent(pydantic.BaseModel):
     event_type: str
@@ -137,7 +163,8 @@ class TonstakersPayoutMintJettonsEvent(pydantic.BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
-        
+
+
 class JettonTransferEvent(pydantic.BaseModel):
     event_type: str
     op_code: int

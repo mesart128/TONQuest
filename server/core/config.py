@@ -1,6 +1,6 @@
 import contextvars
 import pathlib
-from typing import Literal, Optional, Union, List
+from typing import List, Literal, Optional, Union
 from uuid import uuid4
 
 from pydantic import RedisDsn
@@ -21,12 +21,11 @@ class ServerConfig(BaseSettings):
     ton_rpc_url: Optional[str]
     rpc_api_keys: Optional[str]
 
-
     @property
     def rpc_api_keys_list(self):
-
-        rpc_api_keys_list: List[str] = [key.strip() for key in self.rpc_api_keys.split(",") if
-                                        key.strip()]
+        rpc_api_keys_list: List[str] = [
+            key.strip() for key in self.rpc_api_keys.split(",") if key.strip()
+        ]
         return rpc_api_keys_list
 
     class Config:
