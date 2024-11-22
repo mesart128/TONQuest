@@ -18,8 +18,8 @@ from apps.ton_quest.schemas import (
     DedustDepositEvent,
     DedustSwapEvent,
     DedustWithdrawEvent,
-    TonstakersPayoutMintJettonsEvent,
     JettonTransferEvent,
+    TonstakersPayoutMintJettonsEvent,
 )
 from apps.transaction.enums import MessageTypeEnum, OpCodes
 from apps.transaction.schemas import (
@@ -189,7 +189,7 @@ class TransactionService:
             "fwd_fee": fwd_fee,
         }
         return result
-    
+
     @staticmethod
     async def parse_jetton_transfer_event(out_msg: MessageAny) -> JettonTransferEvent:
         body = out_msg.body.to_slice()
@@ -209,7 +209,7 @@ class TransactionService:
         }
         logging.info(event)
         result = JettonTransferEvent(**event)
-        return result        
+        return result
 
     @staticmethod
     async def parse_dedust_swap_event(out_msg: MessageAny) -> DedustSwapEvent:
@@ -263,9 +263,10 @@ class TransactionService:
         result = DedustWithdrawEvent(**event)
         return result
 
-
     @staticmethod
-    async def parse_tonstakers_payout_mint_jettons(out_msg: MessageAny) -> TonstakersPayoutMintJettonsEvent:
+    async def parse_tonstakers_payout_mint_jettons(
+        out_msg: MessageAny,
+    ) -> TonstakersPayoutMintJettonsEvent:
         body = out_msg.body.to_slice()
         event = {
             "op_code": body.load_uint(32),

@@ -5,7 +5,7 @@ import sys
 
 from dotenv import find_dotenv, load_dotenv
 from redis.asyncio import Redis
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from apps.account.service import AccountService
 from apps.scanner.service import BlockScanner
@@ -18,10 +18,6 @@ from database.local_storage import RedisStorage
 load_dotenv(find_dotenv())
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from core.dependencies import (  # noqa: E402
-    CoreContainer,
-    initialize_container,
-)
 from core.logger import setup_logging  # noqa: E402
 
 setup_logging()
@@ -33,7 +29,9 @@ async def runner(restart: bool = False):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
         db = TonQuestSQLAlchemyRepo(async_session)
         local_storage = RedisStorage(Redis, connect_url=base_config.redis_url)
-        ton_rpc_client = TONAPIClientAsync(base_url=base_config.ton_rpc_url, keys=base_config.rpc_api_keys_list)
+        ton_rpc_client = TONAPIClientAsync(
+            base_url=base_config.ton_rpc_url, keys=base_config.rpc_api_keys_list
+        )
         account_service = AccountService(
             transaction_service=TransactionService(
                 ton_rpc_client=ton_rpc_client,
@@ -41,7 +39,8 @@ async def runner(restart: bool = False):
             ton_rpc_client=ton_rpc_client,
             ton_quest_repository=db,
         )
-        scanner_service = BlockScanner(local_storage=local_storage,
+        scanner_service = BlockScanner(
+            local_storage=local_storage,
             ton_rpc_client=ton_rpc_client,
             account_service=account_service,
         )

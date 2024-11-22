@@ -97,7 +97,7 @@ class Branch(BaseSqlModel):
             "category_id": self.category_id,
             "title": self.title,
             "tasks": [task.to_read_model() for task in self.tasks],
-            "pieces": [piece.to_read_model() for piece in self.pieces]
+            "pieces": [piece.to_read_model() for piece in self.pieces],
         }
 
 
@@ -163,17 +163,20 @@ class User(BaseSqlModel):
     nfts: Mapped[list["NFT"]] = relationship("NFT", secondary="users_nfts", back_populates="users")
 
     completed_tasks: Mapped[list[UserTask]] = relationship(
-        "UserTask", primaryjoin="and_(User.id==UserTask.user_id, UserTask.completed==True)",
+        "UserTask",
+        primaryjoin="and_(User.id==UserTask.user_id, UserTask.completed==True)",
         viewonly=True,
     )
 
     completed_branches: Mapped[list[UserBranch]] = relationship(
-        "UserBranch", primaryjoin="and_(User.id==UserBranch.user_id, UserBranch.completed==True)",
+        "UserBranch",
+        primaryjoin="and_(User.id==UserBranch.user_id, UserBranch.completed==True)",
         viewonly=True,
     )
 
     claimed_pieces: Mapped[list[UserPiece]] = relationship(
-        "UserPiece", primaryjoin="and_(User.id==UserPiece.user_id, UserPiece.claimed==True)",
+        "UserPiece",
+        primaryjoin="and_(User.id==UserPiece.user_id, UserPiece.claimed==True)",
         viewonly=True,
     )
 

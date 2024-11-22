@@ -48,11 +48,11 @@ def valid_path_for_logging(url: URL) -> str:
 async def catch_exceptions_middleware(request: Request, call_next):
     try:
         return await call_next(request)
-    except NotFound:
+    except NotFound as e:
         return JsonException(
             status_code=404,
             error_name="NOT_FOUND",
-            error_description="Not found",
+            error_description=str(e),
         ).response()
     except HTTPException as exc:
         logging.info(f"{type(exc)}")

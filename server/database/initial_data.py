@@ -40,7 +40,7 @@ async def populate_database(engine, repo):
         "task_type": TaskTypeEnum.connect_wallet,
         "action_url": "https://tonos-se.org/",
         "call_to_action": "You have connected your wallet. Great job! "
-                          "You've been rewarded by piece of NFT. Keep it up!",
+        "You've been rewarded by piece of NFT. Keep it up!",
         "branch_id": connect_wallet_branch_id,
     }
 
@@ -288,7 +288,6 @@ async def populate_database(engine, repo):
     for slide in slides_third_task:
         await repo.add_one(Slide, slide)
 
-
     # TONSTAKERS
     staking_category_data = {
         "head": "Staking",
@@ -436,10 +435,30 @@ async def populate_database(engine, repo):
     test_nft_id = await repo.add_one(NFT, test_nft_data)
 
     pieces = [
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece1.png", 'branch_id': connect_wallet_branch_id, 'queue': 1},
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece1.png", 'branch_id': dedust_branch_id, 'queue': 2},
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece2.png", 'branch_id': evaa_branch_id, 'queue': 3},
-        {"nft_id": test_nft_id, "image": "https://kauri.io/images/piece2.png", 'branch_id': staking_branch_id, 'queue': 4},
+        {
+            "nft_id": test_nft_id,
+            "image": "https://kauri.io/images/piece1.png",
+            "branch_id": connect_wallet_branch_id,
+            "queue": 1,
+        },
+        {
+            "nft_id": test_nft_id,
+            "image": "https://kauri.io/images/piece1.png",
+            "branch_id": dedust_branch_id,
+            "queue": 2,
+        },
+        {
+            "nft_id": test_nft_id,
+            "image": "https://kauri.io/images/piece2.png",
+            "branch_id": evaa_branch_id,
+            "queue": 3,
+        },
+        {
+            "nft_id": test_nft_id,
+            "image": "https://kauri.io/images/piece2.png",
+            "branch_id": staking_branch_id,
+            "queue": 4,
+        },
     ]
     for piece in pieces:
         await repo.add_one(Piece, piece)
@@ -448,12 +467,8 @@ async def populate_database(engine, repo):
     print(f"Connect wallet task id: {connect_wallet_task_id}")
 
 
-
 if __name__ == "__main__":
     engine = create_async_engine(DATABASE_URL, echo=True)
     SessionFactory = async_sessionmaker(engine)
     repo = TonQuestSQLAlchemyRepo(SessionFactory)
-    asyncio.run(populate_database(
-        engine=engine,
-        repo=repo
-    ))
+    asyncio.run(populate_database(engine=engine, repo=repo))

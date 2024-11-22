@@ -5,7 +5,6 @@ import logging
 import typing
 import uuid
 from abc import ABC, abstractmethod
-import random
 
 import aiohttp
 from aiohttp import ContentTypeError
@@ -72,6 +71,7 @@ class AccountUninitializedError(HandleResponseError):
 
 class RateLimitError(HandleResponseError):
     retry_count = 20
+
     def __init__(self, message: str):
         self.message = message
         super().__init__(message)
@@ -163,7 +163,11 @@ class TonClient(ABC):
 
 
 class TONAPIClientAsync(TonClient):
-    def __init__(self, base_url: typing.Optional[str], keys: typing.List[str], ):
+    def __init__(
+        self,
+        base_url: typing.Optional[str],
+        keys: typing.List[str],
+    ):
         self.base_url = base_url
         logging.debug(f"TON API client initialized with base URL: {self.base_url}")
         self.api_keys = keys
@@ -424,8 +428,9 @@ class TONAPIClientAsync(TonClient):
                 self.switch_key()
                 await asyncio.sleep(0.5)
             except HandleResponseError as e:
-                logging.debug(f"Method {method} failed with error: {e}."
-                              f"url: {url}, params: {params}")
+                logging.debug(
+                    f"Method {method} failed with error: {e}." f"url: {url}, params: {params}"
+                )
         raise HandleResponseError("All API keys have been exhausted.")
 
     async def json_rpc_request(self, method: str, params: dict) -> dict:
@@ -441,7 +446,7 @@ class TONAPIClientAsync(TonClient):
         except ContentTypeError as e:
             logging.error(f"Error while handling response: {e}. {response=}")
             raise HandleResponseError(f"Error while handling response: {e}, {response=}") from e
-        if result.get('code') == 429:
+        if result.get("code") == 429:
             raise RateLimitError(f"{result=}")
 
         if result["ok"] is False:
