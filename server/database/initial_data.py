@@ -257,7 +257,7 @@ async def populate_database(engine, repo):
         "title": "Repay Loans on EVAA",
         "xp": 300,
         "queue": 3,
-        "task_type": TaskTypeEnum.evaa_repay,
+        "task_type": TaskTypeEnum.evaa_borrow,
         "action_url": "https://evaa.finance/repay",
         "call_to_action": "You have successfully repaid your loan and reclaimed your collateral. Excellent work!",
     }
