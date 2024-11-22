@@ -47,7 +47,7 @@ const QuestPage = () => {
           <h2 className="text-2xl font-bold text-center mb-8">
             Welcome to Quest
           </h2>
-          <div className="quest-slider-container relative ">
+          <div className="quest-slider-container relative">
             <Swiper
               modules={[Pagination]}
               spaceBetween={20}
@@ -77,10 +77,10 @@ const QuestPage = () => {
               ))}
             </Swiper>
             <div className="custom-pagination swiper-pagination"></div>
-            <BottomMenu isQuestPage={true} />
           </div>
         </section>
       </div>
+      <BottomMenu isQuestPage={true} />
     </div>
   );
 };
