@@ -21,7 +21,9 @@ const TopContextMenu = ({ info, title, type }) => {
   return (
     <div className="flex justify-around w-full">
       <button onClick={backButtonHandler}>Back</button>
-      <div className="flex items-center">{title} ({type}) </div>
+      <div className="flex items-center">
+        {title} ({type}){' '}
+      </div>
       {info ? (
         <div className="relative">
           <span

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 import QuestCard from '../components/cards/QuestCard';
@@ -39,10 +38,9 @@ const QuestPage = () => {
   }
 
   return (
-    <div className="min-h-screen max-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
+    <div className="h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
       <Navbar />
-
-      <div className="w-full px-4 flex flex-col items-center justify-center mt-8">
+      <div className="flex-grow flex flex-col items-center justify-center mt-2 w-full">
         <section className="w-full max-w-md">
           <h2 className="text-2xl font-bold text-center mb-8">
             Welcome to Quest
@@ -71,6 +69,7 @@ const QuestPage = () => {
                       xpReward={card.xp}
                       imageUrl={card.image}
                       isCompleted={true}
+                      branches={card.branches}
                     />
                   </div>
                 </SwiperSlide>
