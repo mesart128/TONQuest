@@ -36,7 +36,6 @@ const GreetingPage = () => {
           cryptocurrencies? It's easier than ever with our app! Complete tasks,
           earn points and become a real expert in the field of blockchain.
         </p>
-        <GradientButton children="Continue" onClick={handleContinue} />
 
       </div>
       <GradientButton children="Continue" onClick={handleContinue} />

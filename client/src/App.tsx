@@ -7,6 +7,7 @@ import GreetingPage from './pages/GreetingPage';
 import BannerPage from './pages/BannerPage';
 import TaskPage from './pages/TasksPage';
 import ExpPage from './pages/ExpPage';
+import { TonConnectUIProvider } from '@tonconnect/ui-react';
 
 function App() {
   // useEffect(() => {
@@ -16,6 +17,7 @@ function App() {
   // }, []);
 
   return (
+    <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/isamarcev/CryptoWallet/refs/heads/TEMPORARY/web3_wallet_logo.json">
     <Router>
       <Routes>
         <Route path="/" element={<GreetingPage />} />
@@ -27,6 +29,7 @@ function App() {
         <Route path="/exp" element={<ExpPage />} />
       </Routes>
     </Router>
+     </TonConnectUIProvider>
   );
 }
 
