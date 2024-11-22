@@ -76,9 +76,9 @@ class BaseSQLAlchemyRepo:
 
 
 class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
-    async def get_task_by_task_type(self, task_type: str) -> Task | None:
+    async def get_tasks_by_task_type(self, task_type: str) -> List[Task] | None:
         stmt = select(Task).where(Task.task_type == task_type)
-        task = await self._execute_and_fetch_one(stmt)
+        task = await self._execute_and_fetch_all(stmt)
         return task
 
     async def get_nft(self, nft_id: str) -> NFT:

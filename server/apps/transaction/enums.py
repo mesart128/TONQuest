@@ -3,7 +3,7 @@ from enum import Enum, IntEnum
 
 class OpCodes(IntEnum):
     # JETTON messages
-    # transfer = 0xF8A7EA5
+    jetton_transfer = 0xF8A7EA5
     # internal_transfer = 0x178D4519
     # transfer_notification = 0x7362D09C
     # excesses = 0xD53276DB
@@ -21,6 +21,10 @@ class OpCodes(IntEnum):
     # TonStakers
     tonstakers_payout_mint_jettons = 0x1674b0a0
     tonstakers_pool_withdraw = 0x319b0cdc
+
+    # Evaa
+    evaa_borrow = 0x0000211a
+    evaa_supply = 0x0000011a
 
     @classmethod
     def dedust_code_list(cls):

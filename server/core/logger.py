@@ -3,7 +3,7 @@ import os
 import typing
 
 import yaml
-from gunicorn import glogging
+# from gunicorn import glogging
 
 # from gunicorn import glogging
 from pythonjsonlogger import jsonlogger
@@ -75,6 +75,6 @@ def setup_logging(
         logging.addLevelName(level.value, level.name)
 
 
-class GunicornLogger(glogging.Logger):
-    def setup(self, cfg):
-        setup_logging(logger_settings=LoggerSettings())
+# class GunicornLogger(glogging.Logger):
+#     def setup(self, cfg):
+#         setup_logging(logger_settings=LoggerSettings())
