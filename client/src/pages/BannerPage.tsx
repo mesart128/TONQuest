@@ -12,8 +12,10 @@ const BannerPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { imageUrl, description, title, type, branches } = location?.state;
+
   const nextButtonHandler = () => {
-    navigate('/tasks-page');
+    navigate('/tasks-page', { state: { branches } });
   };
 
   return (

@@ -7,22 +7,28 @@ const QuestCard = ({
   description,
   xpReward,
   imageUrl,
+  branches,
 }) => {
   const navigate = useNavigate();
 
   const cardSelectHandler = () => {
+    navigate('/banner-page', {
+      state: { imageUrl, title, description, type, branches },
+    });
     navigate('/banner-page');
   };
 
   return (
-    <div className="max-w-sm mx-auto" onClick={cardSelectHandler}>
+    <div className="max-w-sm mx-auto flex mb-16" onClick={cardSelectHandler}>
       <div
-        className="rounded-3xl flex flex-col justify-around gap-16 p-6 text-white
+        className="rounded-3xl flex flex-col justify-around  p-6 text-white
       border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]"
       >
-        <div className="text-center mb-8 flex flex-col items-center justify-center gap-4">
-          <h2 className="text-4xl font-bold mb-2 opacity-50">{type}</h2>
-          <h1 className="text-3xl font-bold mb-4">{title}</h1>
+        <div className="text-center mb-8 flex flex-col items-center justify-center space-y-4">
+          <div className="space-y-1">
+            <h2 className="text-4xl font-bold opacity-50">{type}</h2>
+            <h1 className="text-3xl font-bold">{title}</h1>
+          </div>
           <p className="text-xl text-blue-100 opacity-75">{description}</p>
         </div>
 
@@ -40,7 +46,7 @@ const QuestCard = ({
         <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
           <div>45%</div>
           {/* TODO: % calculation */}
-          <div className="relative bg-white rounded-full h-2 w-32">
+          <div className="relative bg-white rounded-full h-2 w-32 flex-1">
             <div
               className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"
               style={{ width: `${45}%` }}

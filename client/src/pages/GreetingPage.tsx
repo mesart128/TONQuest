@@ -25,8 +25,8 @@ const GreetingPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center px-6">
-      <div className="mt-12 text-2xl font-bold text-[#0096FF]">TONQuest</div>
+    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center px-16 py-8">
+      <div className="text-2xl font-extrabold text-[#0096FF]">TONQuest</div>
 
       <div className="flex-1 flex flex-col items-center justify-center text-center max-w-md -mt-20 min-h-[500px]">
         <img src={logo} />
@@ -37,9 +37,9 @@ const GreetingPage = () => {
           earn points and become a real expert in the field of blockchain.
         </p>
         <GradientButton children="Continue" onClick={handleContinue} />
-      </div>
 
-      <div className="h-16" />
+      </div>
+      <GradientButton children="Continue" onClick={handleContinue} />
     </div>
   );
 };
