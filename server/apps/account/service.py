@@ -74,6 +74,19 @@ class AccountService:
                 await ton_quest_manager.check_task(user_account=tracked_account,
                                                    event_type=event_type)
                 logging.info(f"Detected {event_type} message from {tracked_account.wallet_address}")
+            else:
+                # user = User(
+                #     telegram_id=randint(1, 1000),
+                #     username=event_account_address.to_str(),
+                #     first_name=event_account_address.to_str(True),
+                #     last_name=event_account_address.to_str(False),
+                #     image="web_app_init_data.user.photo_url",
+                #     wallet_address=event_account_address.to_str(False),
+                # )
+                # tracked_account = await self.ton_quest_repository.create_user(user)
+                # await ton_quest_manager.check_task(user_account=tracked_account,
+                #                                    event_type=event_type)
+                return
 
     async def handle_tonstakers_event_flow(self, out_msg: MessageAny) -> None:
             body = out_msg.body.to_slice()
@@ -99,6 +112,18 @@ class AccountService:
                     await ton_quest_manager.check_task(user_account=tracked_account,
                                                        event_type=event_type)
                     logging.info(f"Detected tonstakers message from {tracked_account.wallet_address}")
+                else:
+                    # user = User(
+                    #     telegram_id=randint(1, 1000),
+                    #     username=event_account_address.to_str(),
+                    #     first_name=event_account_address.to_str(True),
+                    #     last_name=event_account_address.to_str(False),
+                    #     image="web_app_init_data.user.photo_url",
+                    #     wallet_address=event_account_address.to_str(False),
+                    # )
+                    # tracked_account = await self.ton_quest_repository.create_user(user)
+                    # await ton_quest_manager.check_task(user_account=tracked_account, event_type=event_type)
+                    return None
 
     async def handle_dedust_event_flow(self, out_msg: MessageAny) -> None:
         body = out_msg.body.to_slice()

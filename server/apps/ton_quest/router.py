@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import List, Union
 from uuid import UUID
 
 from aiogram.utils.web_app import WebAppInitData
@@ -9,7 +9,6 @@ from apps.ton_quest import models, schemas
 from apps.ton_quest.enums import TaskTypeEnum
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
-from apps.transaction.schemas import TaskResponse
 from database.engine import db, engine
 from database.initial_data import populate_database
 from database.repository import NotFound
@@ -51,6 +50,16 @@ async def get_user(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
     response_dict = user.to_read_model()
     response_dict["xp"] = await calculate_user_xp(user, db)
     return schemas.User(**response_dict)
+
+# @ton_quest_router.get("/users/{address}/")
+# async def get_completed_user(address: str) -> List[schemas.Task]:
+#     try:
+#         user = await db.get_user_by(wallet_address=Address(address).to_str(False))
+#     except NotFound:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     result = [(await db.get_task(task.task_id)).to_read_model() for task in user.completed_tasks]
+#     return result
+
 
 @ton_quest_router.get("/users/address/{address}")
 async def set_user_address(
