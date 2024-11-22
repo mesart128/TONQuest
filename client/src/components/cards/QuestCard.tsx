@@ -1,12 +1,17 @@
 import React from 'react';
-import questRecycle from '../../assets/quest-recycle.png';
 import { useNavigate } from 'react-router-dom';
 
-const QuestCard = ({ type, title, description, xpReward, imageUrl }) => {
+const QuestCard = ({
+  type,
+  title,
+  description,
+  xpReward,
+  imageUrl,
+}) => {
   const navigate = useNavigate();
 
   const cardSelectHandler = () => {
-    navigate('/banner-page', { state: { imageUrl, title, description, type } });
+    navigate('/banner-page');
   };
 
   return (
@@ -24,7 +29,10 @@ const QuestCard = ({ type, title, description, xpReward, imageUrl }) => {
         <div className="flex justify-center mb-8">
           <div className="relative w-24 h-24">
             <div className="absolute inset-0 flex items-center justify-center">
-              <img className="max-w-lg" src={imageUrl} />
+              <img
+                className="w-full max-h-48 object-cover rounded"
+                src={imageUrl}
+              />
             </div>
           </div>
         </div>
