@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 from pytoniq_core import Address, MessageAny
 
-from apps.account.account_codes import dedust_swap_pool_code_b64
+from apps.account.account_codes import dedust_swap_pool_code_b64, tonstakers_main_address, evaa_main_address
 from apps.account.schemas import AccountSchema
 from apps.account.types import SystemAddress
 from apps.ton_quest import manager as ton_quest_manager
@@ -123,7 +123,7 @@ class AccountService:
                 #     f"Detected external message from "
                 #     f"{out_msg.info.src.to_str()} with code another acc code"
                 # )
-        if out_msg.info.src.to_str(is_user_friendly=False) == "0:a45b17f28409229b78360e3290420f13e4fe20f90d7e2bf8c4ac6703259e22fa":
+        elif out_msg.info.src.to_str(is_user_friendly=False) == tonstakers_main_address:
             body = out_msg.body.to_slice()
             op = body.load_uint(32)
             # logging.debug(f"Detected external TonStakers message from {out_msg.info.src.to_str()}")
@@ -131,19 +131,58 @@ class AccountService:
                 event_account_address = (
                     await self.transaction_service.parse_tonstakers_payout_mint_jettons(out_msg)
                 ).destination
+                event_type = "tonstakers_stake"
                 logging.debug(f"Detected tonstakers mint jetton for {event_account_address}")
 
             elif op == OpCodes.tonstakers_pool_withdraw:
                 event_account_address = out_msg.info.dest
+                event_type = "tonstakers_unstake"
                 logging.debug(f"Detected tonstakers pool withdraw message for {event_account_address}")
 
             if event_account_address:
                 tracked_account: User = await self.get_account(
-                    account_address=message.sender_address
+                    account_address=event_account_address
                 )
                 if tracked_account:
-                    await ton_quest_manager.check_task(user_account=tracked_account, event_type=message.event_type)
+                    await ton_quest_manager.check_task(user_account=tracked_account, event_type=event_type)
                     logging.info(f"Detected tonstakers message from {tracked_account.wallet_address}")
+
+        elif out_msg.info.src.to_str(is_user_friendly=False) == evaa_main_address:
+            body = out_msg.body.to_slice()
+            op = body.load_uint(32)
+
+            if op == OpCodes.evaa_borrow:
+                event_account_address = out_msg.info.dest
+                event_type = "evaa_borrow"
+                logging.debug(f"Detected $TON evaa borrow message for {event_account_address}")
+
+            elif op == OpCodes.default_message:
+                if body.load_string() == 'EVAA supply.':
+                    event_account_address = out_msg.info.dest
+                    event_type = "evaa_supply"
+                    logging.debug(f"Detected $TON evaa supply message for {event_account_address}")
+
+            elif op == OpCodes.jetton_transfer:
+                jetton_transfer_event = await self.transaction_service.parse_jetton_transfer_event(out_msg)
+                if jetton_transfer_event.forward_payload:
+                    forward_payload = jetton_transfer_event.forward_payload.begin_parse()
+                    if forward_payload.load_uint(32) == OpCodes.evaa_borrow:
+                        event_account_address = out_msg.info.dest
+                        event_type = "evaa_borrow"
+                        logging.debug(f"Detected jetton evaa borrow message for {event_account_address}")
+
+            if event_account_address:
+                tracked_account: User = await self.get_account(
+                    account_address=event_account_address
+                )
+                if tracked_account:
+                    await ton_quest_manager.check_task(user_account=tracked_account, event_type=event_type)
+                    logging.info(f"Detected {event_type} message from {tracked_account.wallet_address}")
+
+
+
+
+                
 
 
 
