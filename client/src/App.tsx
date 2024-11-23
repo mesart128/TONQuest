@@ -8,6 +8,7 @@ import BannerPage from './pages/BannerPage';
 import TaskPage from './pages/TasksPage';
 import ExpPage from './pages/ExpPage';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import SliderPage from './pages/SliderPage';
 
 function App() {
   // useEffect(() => {
@@ -18,18 +19,19 @@ function App() {
 
   return (
     <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/isamarcev/CryptoWallet/refs/heads/TEMPORARY/web3_wallet_logo.json">
-    <Router>
-      <Routes>
-        <Route path="/" element={<GreetingPage />} />
-        <Route path="/quest" element={<QuestPage />} />
-        <Route path="/nft" element={<NFTPage />} />
-        <Route path="/bonus" element={<BonusPage />} />
-        <Route path="/banner-page" element={<BannerPage />} />
-        <Route path="/tasks-page" element={<TaskPage />} />
-        <Route path="/exp" element={<ExpPage />} />
-      </Routes>
-    </Router>
-     </TonConnectUIProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<GreetingPage />} />
+          <Route path="/quest" element={<QuestPage />} />
+          <Route path="/nft" element={<NFTPage />} />
+          <Route path="/bonus" element={<BonusPage />} />
+          <Route path="/banner-page" element={<BannerPage />} />
+          <Route path="/tasks-page" element={<TaskPage />} />
+          <Route path="/exp" element={<ExpPage />} />
+          <Route path="/task_slider" element={<SliderPage />} />
+        </Routes>
+      </Router>
+    </TonConnectUIProvider>
   );
 }
 

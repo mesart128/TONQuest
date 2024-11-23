@@ -15,8 +15,6 @@ const QuestCard = ({
     navigate('/banner-page', {
       state: { imageUrl, title, description, type, branches },
     });
-
-    navigate('/banner-page');
   };
 
   return (

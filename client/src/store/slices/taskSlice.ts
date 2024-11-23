@@ -1,21 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getTask, claimTask, completeTask } from '../../api/Router';
 
-export const fetchTask = createAsyncThunk('task/fetchTask', async (taskId, { rejectWithValue }) => {
-  try {
-    return await getTask(taskId);
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
+export const fetchTask = createAsyncThunk(
+  'task/fetchTask',
+  async (taskId, { rejectWithValue }) => {
+    try {
+      return await getTask(taskId);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-export const claimTaskById = createAsyncThunk('task/claimTask', async (taskId, { rejectWithValue }) => {
-  try {
-    return await claimTask(taskId);
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
+export const claimTaskById = createAsyncThunk(
+  'task/claimTask',
+  async (taskId, { rejectWithValue }) => {
+    try {
+      return await claimTask(taskId);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const taskSlice = createSlice({
   name: 'task',

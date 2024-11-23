@@ -9,7 +9,7 @@ export const fetchCategories = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const fetchCategoryById = createAsyncThunk(
@@ -20,7 +20,7 @@ export const fetchCategoryById = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const categorySlice = createSlice({
@@ -43,7 +43,6 @@ const categorySlice = createSlice({
         state.error = null;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        console.log('Fetched categories:', action.payload);
         state.status = 'succeeded';
         state.list = action.payload;
       })
