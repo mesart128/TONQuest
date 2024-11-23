@@ -20,6 +20,8 @@ class ServerConfig(BaseSettings):
     update_last_scanned_block: bool = False
     ton_rpc_url: Optional[str]
     rpc_api_keys: Optional[str]
+    preview_url: Optional[str] = "https://google.com"
+    debug: bool = True
 
     @property
     def rpc_api_keys_list(self):
