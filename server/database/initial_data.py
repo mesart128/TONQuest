@@ -55,7 +55,7 @@ async def populate_database(engine, repo):
         "title": "Connect Wallet",
         "head": "Getting Started",
         "description": "Learn how to connect your wallet to the TON ecosystem",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/INTRO.png"),
         "subtitle": "This branch introduces users to the TON ecosystem by explaining how to connect their wallet.",
     }
     connect_wallet_category_id = await repo.add_one(Category, category_connect_wallet_data)
