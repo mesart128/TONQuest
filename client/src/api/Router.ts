@@ -97,7 +97,7 @@ export const completeTask = async (taskId) => {
 
 export const checkTask = async (taskId) => {
   try {
-    const response = await api.get(`/tasks/${taskId}/check`);
+    const response = await api.get(`/task/${taskId}/check`);
     return response.data;
   } catch (error) {
     console.error('Failed to check task:', error);
@@ -149,7 +149,7 @@ export const getBranchById = async (branchId) => {
   }
 };
 
-export const checkBranch= async (branchId) => {
+export const checkBranch = async (branchId) => {
   try {
     const response = await api.get(`/branches/${branchId}/check`);
     return response.data;

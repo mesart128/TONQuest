@@ -9,8 +9,8 @@ const Navbar = ({user}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUser);
-  }, [dispatch, user]);
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   return (
     <nav className="h-16 flex justify-between items-center w-full">

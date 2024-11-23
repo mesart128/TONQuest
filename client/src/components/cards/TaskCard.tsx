@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import GradientButton from '../buttons/GradientButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { claimTaskById } from '../../store/slices/taskSlice';
-import { completeTaskById } from '../../store/slices/taskSlice';
 import { toast } from 'react-toastify';
 import Modal from '../Modal';
 import { completeBranchById } from '../../store/slices/branchSlice';
@@ -22,15 +21,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
 
-  console.log('Active Task:', activeTask);
-  console.log('Task ID:', activeTask?.id);
-  console.log(
-    'Task Completed:',
-    branch.tasks.some((task) => task.id === activeTask?.id),
-  );
-  console.log('Branch:', branch);
-
-  useEffect(() => {}, []);
+  useEffect(() => {},[]);
 
   const checkIsCompleted = async () => {
     try {
@@ -40,6 +31,8 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
         toast.error("No active task found.");
         return;
       }
+
+      console.log(taskId);
 
       const taskCompletionCheck = await dispatch(checkTaskById(taskId)).unwrap();
       if (!taskCompletionCheck?.completed) {
@@ -72,7 +65,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
     }
 
     toast.success("Congratulations! The task and branch are fully completed.");
-    // window.location.reload();
+    window.location.reload();
 
     } catch (error) {
       toast.error(error);

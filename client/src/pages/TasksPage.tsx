@@ -14,6 +14,8 @@ const TasksPage = () => {
     (state) => state.branch,
   );
 
+  const isBranchCompleted = !branch.tasks.some((el) => el.status === 'active' );
+
   const { imageUrl, description, title, type, branches } = useSelector(
     (state) => state.selectedCard,
   );
@@ -54,12 +56,23 @@ const TasksPage = () => {
       </div>
 
       <footer className="p-4 w-full max-w-3xl">
-        <button
-          onClick={onSliderHandler}
-          className="bg-blue-500 hover:bg-blue-600 text-white w-full rounded-md py-2"
+        
+          {isBranchCompleted ? (
+            <button
+          className="bg-gray-500 disabled text-white w-full rounded-md py-2 mb-2"
         >
           Start the task
         </button>
+          ) : (
+            <button
+            onClick={onSliderHandler}
+          className="bg-blue-500 hover:bg-blue-600 text-white w-full rounded-md py-2 mb-2"
+        >
+          Start the task
+        </button>
+          )
+}
+        
       </footer>
     </div>
   );
