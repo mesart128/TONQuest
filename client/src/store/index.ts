@@ -32,6 +32,8 @@ const rootReducer = combineReducers({
   branch: branchReducer,
   selectedCard: selectedCardReducer,
   piece: pieceReducer,
+  nft: nftReducer,
+
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
