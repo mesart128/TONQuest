@@ -83,7 +83,7 @@ class UserBranch(pydantic.BaseModel):
     id: UUID
     category_id: UUID
     tasks: List[UserTask]
-    pieces: List[Piece]
+    pieces: Piece
 
 
 class ShortBranch(pydantic.BaseModel):

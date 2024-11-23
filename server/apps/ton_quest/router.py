@@ -253,6 +253,9 @@ async def get_branch(
         tasks_with_status.append(task_read_model)
     branch_read_model = branch.to_read_model()
     branch_read_model["tasks"] = tasks_with_status
+    pieces = branch_read_model["pieces"]
+    if pieces:
+        branch_read_model["pieces"] = pieces[0]
     return schemas.UserBranch(**branch_read_model)
 
 
