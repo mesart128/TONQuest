@@ -16,7 +16,7 @@ export const fetchNft = createAsyncThunk(
 
 const initialState = {
   cards: [],
-  nft: [],
+  nft: {},
 };
 
 const nftCardSlice = createSlice({
@@ -30,9 +30,9 @@ const nftCardSlice = createSlice({
   },
     extraReducers: (builder) => {
     builder
-      .addCase(fetchNft.pending, (state) => {
-        state.cards = a;
-        state.error = null;
+      .addCase(fetchNft.fulfilled, (state, action) => {
+        state.cards = action.payload.cards;
+        state.nft = action.payload.nft[0];
       });
   },
 

@@ -109,7 +109,6 @@ export const getCategories = async () => {
 export const getNft = async () => {
     try {
         const response = await api.get('/nft');
-        console.log(response);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch NFT:', error);
