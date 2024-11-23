@@ -5,24 +5,43 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchBranchById } from '../store/slices/branchSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setSelectedCard } from '../store/slices/selectedCardSlice';
+import { useTonConnectModal, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
+import { setUserAddress } from '../api/Router';
 
 const TasksPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { state, open, close } = useTonConnectModal();
+  const rawAddress = useTonAddress(false);
+  const user = useSelector((state) => state.user.user);
   const { branch, status, error, activeTask } = useSelector(
     (state) => state.branch,
   );
+  console.log(activeTask);
 
-  const isBranchCompleted = !branch.tasks.some((el) => el.status === 'active' );
+  const isBranchCompleted = !branch?.tasks.some((el) => el.status === 'active' );
 
   const { imageUrl, description, title, type, branches } = useSelector(
     (state) => state.selectedCard,
   );
 
-  const onSliderHandler = () => {
-    navigate('/task_slider');
+  const onSliderHandler = async () => {
+    if (user?.wallet_address)  {
+      navigate('/task_slider');
+    }
+    else {
+      console.log('no wallet');
+      if (rawAddress) {
+        console.log('address connected');
+        await setUserAddress(rawAddress);
+      }
+      else {
+        console.log('address not connected');
+        open();
+      }
+    }
   };
+  
 
   useEffect(() => {
     const branchId = branches[0]?.id;
@@ -31,6 +50,13 @@ const TasksPage = () => {
       dispatch(fetchBranchById(branchId));
     }
   }, [title, type, branches, dispatch]);
+
+  useEffect(() => {
+    if (rawAddress) {
+      console.log(rawAddress);
+    }
+  }
+  , [rawAddress]);
 
   if (error) {
     return <div>{error}</div>;
