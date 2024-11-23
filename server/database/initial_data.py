@@ -12,7 +12,6 @@ import os
 
 
 static_root_path = os.path.join(os.path.dirname(__file__), "../static")
-print(static_root_path)
 
 def get_base_64_str(filename):
     """
@@ -55,7 +54,7 @@ async def populate_database(engine, repo):
         "title": "Connect Wallet",
         "head": "Getting Started",
         "description": "Learn how to connect your wallet to the TON ecosystem",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/INTRO.png"),
         "subtitle": "This branch introduces users to the TON ecosystem by explaining how to connect their wallet.",
     }
     connect_wallet_category_id = await repo.add_one(Category, category_connect_wallet_data)
@@ -84,7 +83,7 @@ async def populate_database(engine, repo):
         "head": "DEX",
         "title": "Easy start",
         "description": "You will learn how to use decentralized exchange tools",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/DEX.png"),
         "subtitle": "This branch focuses on introducing users"
         " to Dedust through hands-on tasks, with interactive and easy-to-understand explanations.",
     }
@@ -101,7 +100,7 @@ async def populate_database(engine, repo):
         "xp": 100,
         "queue": 1,
         "task_type": TaskTypeEnum.dedust_swap,
-        "action_url": "https://dedust.io/register",
+        "action_url": "https://dedust.io/swap",
         "call_to_action": "You have learned how to change one token for another, keep it up!",
     }
     dedust_first_task_id = await repo.add_one(Task, dedust_first_task_data)
@@ -203,7 +202,7 @@ async def populate_database(engine, repo):
         "head": "Lending & Borrowing",
         "title": "Intro to EVAA",
         "description": "You will learn how to use EVAA lending and borrowing tools in the TON ecosystem.",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/CREDIT_LOANS.png"),
         "subtitle": (
             "This branch introduces users to the mechanisms of borrowing and lending on TON "
             "using EVAA with hands-on tasks and simple, interactive explanations."
@@ -333,7 +332,7 @@ async def populate_database(engine, repo):
         "head": "Staking",
         "title": "Passive Income",
         "description": "Learn how to stake TON for passive income and maximize your returns.",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/STAKING.png"),
         "subtitle": (
             "This branch introduces users to the staking process, comparing staking pools, "
             "and managing their staked assets for maximum efficiency."
@@ -469,7 +468,7 @@ async def populate_database(engine, repo):
 
     # NFT и части
     test_nft_data = {
-        "image": "https://kauri.io/images/nft.png",
+        "image": get_base_64_str('nft/NFT.webp'),
         "contract_address": "0xabcdef123456789",
     }
     test_nft_id = await repo.add_one(NFT, test_nft_data)

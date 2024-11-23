@@ -168,6 +168,12 @@ class User(BaseSqlModel):
         viewonly=True,
     )
 
+    claimed_tasks: Mapped[list[UserTask]] = relationship(
+        "UserTask",
+        primaryjoin="and_(User.id==UserTask.user_id, UserTask.claimed==True)",
+        viewonly=True,
+    )
+
     completed_branches: Mapped[list[UserBranch]] = relationship(
         "UserBranch",
         primaryjoin="and_(User.id==UserBranch.user_id, UserBranch.completed==True)",
@@ -190,7 +196,7 @@ class User(BaseSqlModel):
             "image": self.image,
             "wallet_address": self.wallet_address,
             "completed_tasks": [task.task_id for task in self.completed_tasks],
-            "claimed_tasks": [task.task_id for task in self.completed_tasks if task.claimed],
+            "claimed_tasks": [task.task_id for task in self.claimed_tasks],
             "completed_branches": [branch.branch_id for branch in self.completed_branches],
             "claimed_pieces": [piece.piece_id for piece in self.claimed_pieces],
             "nfts": [nft.to_read_model() for nft in self.nfts],
@@ -231,7 +237,7 @@ class NFT(BaseSqlModel):
     def to_read_model(self):
         return {
             "id": self.id,
-            "image": self.image,
             "contract_address": self.contract_address,
             "pieces": [piece.to_read_model() for piece in self.pieces],
+            "image": self.image,
         }
