@@ -98,6 +98,7 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
             select(User)
             .options(
                 selectinload(User.completed_tasks),
+                selectinload(User.claimed_tasks),
                 selectinload(User.claimed_pieces),
                 selectinload(User.completed_branches),
                 selectinload(User.claimed_pieces),
@@ -116,6 +117,7 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
             select(User)
             .options(
                 selectinload(User.completed_tasks),
+                selectinload(User.claimed_tasks),
                 selectinload(User.claimed_pieces),
                 selectinload(User.completed_branches),
                 selectinload(User.claimed_pieces),

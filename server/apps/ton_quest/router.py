@@ -215,10 +215,10 @@ async def get_branch(
     branch.tasks.sort(key=lambda task_: task_.queue)
     active_task_found = False
     tasks_with_status = []
-    completed_tasks_ids = [task.task_id for task in user.completed_tasks]
+    claimed_tasks_ids = [task.task_id for task in user.claimed_tasks]
     for task in branch.tasks:
-        if task.id in completed_tasks_ids:
-            status = TaskStatusEnum.completed
+        if task.id in claimed_tasks_ids:
+            status = TaskStatusEnum.claimed
         elif not active_task_found:
             status = TaskStatusEnum.active
             active_task_found = True

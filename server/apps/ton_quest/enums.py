@@ -24,4 +24,4 @@ class TaskTypeEnum(StrEnum):
 
 
 class TaskStatusEnum(StrEnum):
-    active, blocked, completed = "active", "blocked", "completed"
+    active, blocked, completed, claimed = "active", "blocked", "completed", "claimed"
