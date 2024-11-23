@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import BottomMenu from '../components/BottomMenu';
 import spiral from '../assets/spiral-min.png';
+import nft from '../assets/nft.png';
 
 const BonusPage = () => {
   return (
@@ -25,6 +26,24 @@ const BonusPage = () => {
               <button className="rounded-xl hover:bg-primary/20 transition-all flex-grow-0">
                 <h3 className="text-white text-sm font-semibold">My history</h3>
               </button>
+            </div>
+            <div className="border border-zinc-400 py-4 px-6 rounded-2xl mt-12 flex flex-row justify-between">
+              <div>
+                <h3 className="text-3xl font-bold">Coming soon</h3>
+                <ul className="max-w-md space-y-1 text-white/80 list-disc list-inside mt-4">
+                  <li>Exchange PTS for TON</li>
+                  <li>Rare NFTs</li>
+                  <li>Integrations with other services</li>
+                </ul>
+                <p className="text-white/80 mt-2">Follow for updates...</p>
+              </div>
+              <div className="flex items-center justify-center">
+                <img
+                  className="w-full object-cover rounded h-[125px] rotate-12"
+                  src={nft}
+                  alt="nft"
+                />
+              </div>
             </div>
           </section>
         </div>
