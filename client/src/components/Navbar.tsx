@@ -12,6 +12,13 @@ const Navbar = ({user}) => {
     dispatch(fetchUser());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (user?.xp) {
+      dispatch(fetchUser());
+    }
+  }, [user?.xp, dispatch]);
+
+
   return (
     <nav className="h-16 flex justify-between items-center w-full">
       <div className="flex justify-between gap-4 w-full">

@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { setSelectedCard } from '../store/slices/selectedCardSlice';
 import { useTonConnectModal, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
 import { setUserAddress } from '../api/Router';
+import { checkBranchById } from '../store/slices/branchSlice';
+import { getTask } from '../api/Router';
 
 const TasksPage = () => {
   const dispatch = useDispatch();
@@ -44,8 +46,7 @@ const TasksPage = () => {
   
 
   useEffect(() => {
-    const branchId = branches[0]?.id;
-
+    const branchId = branches?.[0]?.id;
     if (branchId) {
       dispatch(fetchBranchById(branchId));
     }
@@ -62,6 +63,20 @@ const TasksPage = () => {
     return <div>{error}</div>;
   }
 
+  const refreshAllTasks = async () => {
+    try {
+      if (!branch?.id) return;
+      
+      const branchCheck = await dispatch(checkBranchById(branch.id)).unwrap();
+      
+      if (branchCheck) {
+        await dispatch(checkBranchById(branch.id));
+      }
+    } catch (error) {
+      console.error('Error refreshing tasks:', error);
+    }
+  };
+  
   return (
     <div className="h-screen flex flex-col bg-gradient-to-b from-black via-[#00a1ff] to-black items-center min-w-[432px]">
       <TopContextMenu info={true} title={title} type={type} />
@@ -77,6 +92,7 @@ const TasksPage = () => {
             status={task.status}
             actionURL={task.action_url}
             callToAction={task.call_to_action}
+            onTaskComplete={refreshAllTasks}
           />
         ))}
       </div>
