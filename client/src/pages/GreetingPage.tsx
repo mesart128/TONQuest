@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchUser, updateUserAddress } from '../store/slices/userSlice';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const GreetingPage = () => {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ const GreetingPage = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  if (status === 'loading') return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   const handleContinue = () => {
@@ -26,6 +26,9 @@ const GreetingPage = () => {
 
   return (
     <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center px-16 py-8">
+      {status === 'loading' && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <ClipLoader color="#36d7b7" size={50} />
+      </div>}
       <div className="text-2xl font-extrabold text-[#0096FF]">TONQuest</div>
 
       <div className="flex-1 flex flex-col items-center justify-center text-center max-w-md -mt-20 min-h-[500px]">
@@ -39,7 +42,7 @@ const GreetingPage = () => {
           earn points and become a real expert in the field of blockchain.
         </p>
       </div>
-      <GradientButton children="Continue" onClick={handleContinue} />
+      <GradientButton blocked={false} children="Continue" onClick={handleContinue} />
     </div>
   );
 };

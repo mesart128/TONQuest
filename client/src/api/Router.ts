@@ -95,6 +95,16 @@ export const completeTask = async (taskId) => {
   }
 };
 
+export const checkTask = async (taskId) => {
+  try {
+    const response = await api.get(`/task/${taskId}/check`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to check task:', error);
+    throw error;
+  }
+};
+
 // 7. **Get Categories**
 export const getCategories = async () => {
   try {
@@ -105,6 +115,16 @@ export const getCategories = async () => {
     throw error;
   }
 };
+
+export const getNft = async () => {
+    try {
+        const response = await api.get('/nft');
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch NFT:', error);
+        throw error;
+    }
+}
 
 // 8. **Get Category by ID**
 export const getCategoryById = async (categoryId) => {
@@ -139,6 +159,16 @@ export const getBranchById = async (branchId) => {
   }
 };
 
+export const checkBranch = async (branchId) => {
+  try {
+    const response = await api.get(`/branches/${branchId}/check`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to check branch:', error);
+    throw error;
+  }
+};
+
 // 11. **Complete Branch**
 export const completeBranch = async (branchId) => {
   try {
@@ -146,6 +176,17 @@ export const completeBranch = async (branchId) => {
     return response.data;
   } catch (error) {
     console.error('Failed to complete branch:', error);
+    throw error;
+  }
+};
+
+//Claim peace
+export const claimPiece = async (pieceId) => {
+  try {
+    const response = await api.get(`/pieces/${pieceId}/claim`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to claim piece:', error);
     throw error;
   }
 };
