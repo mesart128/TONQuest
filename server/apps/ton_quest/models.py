@@ -237,7 +237,7 @@ class NFT(BaseSqlModel):
     def to_read_model(self):
         return {
             "id": self.id,
-            "image": self.image,
             "contract_address": self.contract_address,
             "pieces": [piece.to_read_model() for piece in self.pieces],
+            "image": self.image,
         }

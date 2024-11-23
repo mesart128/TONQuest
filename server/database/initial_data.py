@@ -12,7 +12,6 @@ import os
 
 
 static_root_path = os.path.join(os.path.dirname(__file__), "../static")
-print(static_root_path)
 
 def get_base_64_str(filename):
     """
@@ -469,7 +468,7 @@ async def populate_database(engine, repo):
 
     # NFT и части
     test_nft_data = {
-        "image": "https://kauri.io/images/nft.png",
+        "image": get_base_64_str('nft/NFT.webp'),
         "contract_address": "0xabcdef123456789",
     }
     test_nft_id = await repo.add_one(NFT, test_nft_data)

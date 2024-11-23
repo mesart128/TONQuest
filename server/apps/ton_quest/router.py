@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional, Union
 from uuid import UUID
 
@@ -10,6 +11,7 @@ from pytoniq_core import Address
 
 from apps.ton_quest import models, schemas
 from apps.ton_quest.enums import TaskStatusEnum, TaskTypeEnum
+from apps.ton_quest.models import Branch, Piece
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
 from database import initial_data
@@ -68,6 +70,7 @@ async def get_user(
         )
         user = await db.create_user(user)
     response_dict = user.to_read_model()
+    response_dict['wallet_address'] = Address(response_dict['wallet_address']).to_str() if response_dict['wallet_address'] else None
     response_dict["xp"] = await calculate_user_xp(user, db)
     return schemas.User(**response_dict)
 
@@ -94,10 +97,12 @@ async def set_user_address(
     except ValueError:
         return {"error": "Invalid wallet address"}
     user_ = await db.add_user_wallet_address(user.id, address)
-    wallet_task = await db.get_task_by_task_type(TaskTypeEnum.connect_wallet)
-    await db.complete_task(user_.id, wallet_task.id)
+    wallet_task = await db.get_tasks_by_task_type(TaskTypeEnum.connect_wallet)
+    for task in wallet_task:
+        await db.create_user_task(user_.id, task.id, completed=True)
     updated_user = await db.get_user_by(id=user_.id)
     response = updated_user.to_read_model()
+    response['wallet_address'] = Address(response['wallet_address']).to_str()
     response["xp"] = await calculate_user_xp(updated_user, db)
     return schemas.User(**response)
 
@@ -271,20 +276,44 @@ async def complete_branch(
         if user_branch.completed:
             return {"error": "Branch already completed"}
     except NotFound:
+        logging.error(f"User {user.id} not found in branch {branch_id}")
         user_branch = await db.create_user_branch(user.id, branch_id)
+        logging.debug(f"User {user.id} added to branch {branch_id}")
 
     for task in branch.tasks:
         completed = await db.check_task_completed(user.id, task.id)
         if not completed:
             return {"error": "Not all tasks in branch completed"}
-    await db.complete_branch(user.id, branch_id)
+    updated_branch = await db.complete_branch(user.id, branch_id)
+    logging.debug(f"Branch {branch_id} completed. {updated_branch}")
     return {"success": True}
 
 
-@ton_quest_router.get("/nfts")
-async def get_nfts() -> List[schemas.NFT]:
+@ton_quest_router.get("/nft")
+async def get_nfts(web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> dict:
     nfts = await db.get_nfts()
-    return [schemas.NFT(**nft.to_read_model()) for nft in nfts]
+    if not nfts:
+        raise HTTPException(status_code=404, detail="NFTs not found")
+    first_nft = nfts[0]
+    pieces = first_nft.pieces
+    user = await db.get_user(web_app_init_data.user.id)
+    tasks = []
+    for piece in pieces:
+        piece: Piece
+        result = {}
+        branch: Branch = await db.get_branch(piece.branch_id)
+        result["card"] = {
+            "title": branch.title,
+            # "is_completed": await db.check_branch_completed(user.id, branch.id),
+            "received": branch.id in [branch.branch_id for branch in user.completed_branches],
+            "subtasks": [
+                {"subtaskId": task.queue, "isCompleted": await db.check_task_completed(user.id, task.id)} for task in branch.tasks
+            ]
+        }
+        tasks.append(result)
+    return {"nft": [nft.to_read_model() for nft in nfts], "cards": tasks}
+
+    # return schemas.NFT(**first_nft.to_read_model())
 
 
 @ton_quest_router.get("/nfts/{ntf_id}")

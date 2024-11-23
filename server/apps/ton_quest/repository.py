@@ -190,13 +190,17 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         task = await self.find_one_by(Task, **kwargs)
         return task
 
-    async def complete_branch(self, user_id: int, branch_id: str):
-        user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=True)
-        dict_to_insert = user_branch.asdict()
-        dict_to_insert.pop("id")
-        dict_to_insert.pop("created_at")
-        dict_to_insert.pop("updated_at")
-        await self.add_one(UserBranch, dict_to_insert)
+    async def complete_branch(self, user_id: int, branch_id: str) -> UserBranch:
+        # user_branch = UserBranch(user_id=user_id, branch_id=branch_id, completed=True)
+        # dict_to_insert = user_branch.asdict()
+        # dict_to_insert.pop("id")
+        # dict_to_insert.pop("created_at")
+        # dict_to_insert.pop("updated_at")
+        # await self.add_one(UserBranch, dict_to_insert)
+        smtp = update(UserBranch).where(UserBranch.user_id == user_id).where(UserBranch.branch_id == branch_id)
+        await self._execute_and_commit(smtp.values(completed=True))
+        result = await self.find_one_by(UserBranch, user_id=user_id, branch_id=branch_id)
+        return result
 
     async def check_branch_completed(self, user_id: int, branch_id: str) -> bool:
         user_branch = await self.find_one_by(UserBranch, user_id=user_id, branch_id=branch_id)
