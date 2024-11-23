@@ -9,6 +9,7 @@ import TopContextMenu from '../components/TopContextMenu';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import GradientButton from '../components/buttons/GradientButton';
 
 const BannerPage = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const BannerPage = () => {
       <TopContextMenu title={title} type={type} />
 
       <div className="flex flex-col items-center justify-center gap-12 mt-16">
-        <img className="max-w-lg" src={`data:image/png;base64,${imageUrl}`} />
+        <img className="max-w-xs" src={`data:image/png;base64,${imageUrl}`} />
         <h1 className="text-3xl font-bold mb-4">
           {title} ({type})
         </h1>
@@ -35,7 +36,7 @@ const BannerPage = () => {
         </p>
       </div>
       <div className="mt-auto mb-14">
-        <button onClick={nextButtonHandler}>Next</button>
+        <GradientButton children="Next" onClick={nextButtonHandler} />
       </div>
     </div>
   );

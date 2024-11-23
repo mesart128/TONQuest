@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSelectedCard } from '../../store/slices/selectedCardSlice';
+import { useSelector } from 'react-redux';
 
 const QuestCard = ({
   type,
@@ -10,6 +11,7 @@ const QuestCard = ({
   xpReward,
   imageUrl,
   branches,
+  percentage
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,6 +30,8 @@ const QuestCard = ({
 
     navigate('/banner-page');
   };
+
+  const { branch, error, activeTask } = useSelector((state) => state.branch);
 
   return (
     <div className="max-w-sm mx-auto flex mb-16" onClick={cardSelectHandler}>
@@ -55,12 +59,12 @@ const QuestCard = ({
         </div>
 
         <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
-          <div>45%</div>
+          <div>{percentage}%</div>
           {/* TODO: % calculation */}
           <div className="relative bg-white rounded-full h-2 w-32 flex-1">
             <div
               className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"
-              style={{ width: `${45}%` }}
+              style={{ width: `${percentage}%` }}
             />
           </div>
           <div className="text-xs bg-gradient-to-r from-[#0096FF80] via-[#0096FF] to-[#0096FF80] p-3 rounded-2xl text-center">

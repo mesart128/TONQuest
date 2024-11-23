@@ -9,6 +9,8 @@ import TaskPage from './pages/TasksPage';
 import ExpPage from './pages/ExpPage';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import SliderPage from './pages/SliderPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   // useEffect(() => {
@@ -19,6 +21,20 @@ function App() {
   document.body.classList.add('bg-black');
   return (
     <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/isamarcev/CryptoWallet/refs/heads/TEMPORARY/web3_wallet_logo.json">
+      <ToastContainer
+        className="toast-position"
+        position="top-center"
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        theme="dark"
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Router>
         <Routes>
           <Route path="/" element={<GreetingPage />} />
