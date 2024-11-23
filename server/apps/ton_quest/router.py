@@ -196,14 +196,31 @@ def calculate_category_xp(category):
     return xp
 
 
+def calculate_completion_percentage(category, completed_tasks):
+    total_tasks = sum(len(branch.tasks) for branch in category.branches)
+    if total_tasks == 0:
+        return 0  # Avoid division by zero if no tasks exist
+    completed_tasks_ids = [task.task_id for task in completed_tasks]
+    completed_in_category = sum(1 for branch in category.branches
+                                for task in branch.tasks
+                                if task.id in completed_tasks_ids)
+    return int((completed_in_category / total_tasks) * 100)
+
 @ton_quest_router.get("/categories")
-async def get_categories() -> List[schemas.Category]:
+async def get_categories(web_app_init_data: WebAppInitData = Security(web_app_auth_header)) -> List[schemas.Category]:
+    user = await db.get_user(web_app_init_data.user.id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
     categories = await db.get_all_categories()
     result_list = []
     for category in categories:
         dict_to_return = category.to_read_model()
         dict_to_return["xp"] = calculate_category_xp(category)
+        dict_to_return['percentage'] = calculate_completion_percentage(category,
+                                                                       user.completed_tasks)
         result_list.append(dict_to_return)
+
     return [schemas.Category(**category) for category in result_list]
 
 

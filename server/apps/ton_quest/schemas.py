@@ -93,6 +93,7 @@ class ShortBranch(pydantic.BaseModel):
 
 class Category(pydantic.BaseModel):
     id: UUID
+    percentage: int
     xp: int
     head: str
     title: str
