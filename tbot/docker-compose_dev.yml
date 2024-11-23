@@ -1,0 +1,18 @@
+version: '3.8'
+
+volumes:
+    redis_data:
+
+services:
+  python:
+    build:
+      context: .
+    volumes:
+      - ./logs:/usr/src/the_times/logs
+    command: python bot.py
+    networks:
+      - the_needify_bot
+
+networks:
+    the_needify_bot:
+      name: needify_bot

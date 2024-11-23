@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "the times bot"
+version = "0.1.0"
+description = ""
+authors = ["Ihor Samartsev <isamarcev1994@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pymongo = "^4.6.3"
+redis = "^5.0.4"
+aioredis = "^2.0.1"
+babel = "^2.14.0"
+motor = "^3.4.0"
+pydantic-settings = "^2.2.1"
+pydantic = "^2.7.1"
+aiogram = "^3.5.0"
+telegram = "^0.0.1"
+pyyaml = "^6.0.1"
+colorlog = "^6.8.2"
+python-json-logger = "^2.0.7"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+ruff = "^0.4.7"
+
+[tool.ruff]
+exclude = [
+    "__pypackages__",
+    "migrations/versions/",
+    "src/apps/utils/database.py",
+]
+line-length = 100
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
+fixable = ["ALL"]
+
+ignore = [
+    "B008",
+    "UP035",
+    "SIM105",
+    "SIM118",
+    "SIM117",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"./migrations/versions/*.py" = [
+    "UP035",
+    "UP007",
+    "I001"
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
