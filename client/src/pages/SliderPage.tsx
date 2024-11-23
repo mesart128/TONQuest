@@ -18,6 +18,7 @@ const SliderPage = () => {
   const tasks = useSelector((state) => state.task.tasks);
   const slides = tasks?.[activeTask?.id]?.slides;
   const xp = tasks?.[activeTask?.id]?.xp;
+  const actionURL = tasks?.[activeTask?.id]?.action_url;
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -29,7 +30,11 @@ const SliderPage = () => {
 
   const onCloseHandler = () => {
     navigate('/tasks-page');
-  }
+  };
+
+  const goToHandler = () => {
+    navigate();
+  };
 
   return (
     <div className="h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
@@ -40,7 +45,7 @@ const SliderPage = () => {
             clickable: true,
             type: 'bullets',
             bulletActiveClass: 'swiper-pagination-bullet-active bg-blue-500',
-            bulletClass: 'swiper-pagination-bullet bg-gray-400 mx-1'
+            bulletClass: 'swiper-pagination-bullet bg-gray-400 mx-1',
           }}
           spaceBetween={30}
           slidesPerView={1}
@@ -55,7 +60,10 @@ const SliderPage = () => {
                   <div className="bg-blue-600 text-white px-4 py-2 rounded-full">
                     +{xp} XP
                   </div>
-                  <button onClick={onCloseHandler} className="bg-gray-800 text-white px-4 py-2 rounded-lg">
+                  <button
+                    onClick={onCloseHandler}
+                    className="bg-gray-800 text-white px-4 py-2 rounded-lg"
+                  >
                     Close
                   </button>
                 </div>
@@ -73,16 +81,22 @@ const SliderPage = () => {
                     src={`data:image/png;base64,${slide.image}`}
                     alt={slide.title}
                     style={{
-                        maxHeight: '400px',
-                        maxWidth: '100%',
-                        objectFit: 'contain',
-                      }}
+                      maxHeight: '400px',
+                      maxWidth: '100%',
+                      objectFit: 'contain',
+                    }}
                     className="m-auto"
                   />
                 </div>
 
-            <GradientButton children='Connect Wallet'/>
-
+                {activeIndex === slides.length - 1 && (
+                  <a href={actionURL} target="_blank">
+                    <GradientButton
+                      children="Go to service"
+                      onClick={goToHandler}
+                    />
+                  </a>
+                )}
               </div>
             </SwiperSlide>
           ))}

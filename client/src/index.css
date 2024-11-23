@@ -102,3 +102,7 @@ button:focus-visible {
 .pagination-custom-task-slider .swiper-pagination-bullet-active {
   background: #fff;
 }
+
+.toast-position {
+  left: 14rem !important;
+}

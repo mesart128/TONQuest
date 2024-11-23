@@ -1,7 +1,83 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import GradientButton from '../buttons/GradientButton';
+import { useSelector, useDispatch } from 'react-redux';
+import { claimTaskById } from '../../store/slices/taskSlice';
+import { completeTaskById } from '../../store/slices/taskSlice';
+import { toast } from 'react-toastify';
+import Modal from '../Modal';
+import { completeBranchById } from '../../store/slices/branchSlice';
+import { claimPieceById } from '../../store/slices/pieceSlice';
+import { checkTaskById } from '../../store/slices/taskSlice';
+import { checkBranchById } from '../../store/slices/branchSlice';
 
 const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
+  const dispatch = useDispatch();
+
+  const { branch, error, activeTask } = useSelector((state) => state.branch);
+
+  const { imageUrl, description, type, branches } = useSelector(
+    (state) => state.selectedCard,
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+
+  console.log('Active Task:', activeTask);
+  console.log('Task ID:', activeTask?.id);
+  console.log(
+    'Task Completed:',
+    branch.tasks.some((task) => task.id === activeTask?.id),
+  );
+  console.log('Branch:', branch);
+
   useEffect(() => {}, []);
+
+  const checkIsCompleted = async () => {
+    try {
+      const taskId = activeTask?.id;
+
+      if (!taskId) {
+        toast.error("No active task found.");
+        return;
+      }
+
+      const taskCompletionCheck = await dispatch(checkTaskById(taskId)).unwrap();
+      if (!taskCompletionCheck?.completed) {
+      toast.error("Error checking task.");
+      return;
+    }
+
+    const taskClaimProceed = await dispatch(claimTaskById(taskId)).unwrap();
+    if (!taskClaimProceed?.success) {
+      toast.error("Error claiming task.");
+      return;
+    }
+
+    const branchCompletionCheck = await dispatch(checkBranchById(branch.id)).unwrap();
+    if (!branchCompletionCheck?.completed) {
+      toast.error("Error checking branch.");
+      return;
+    }
+
+    const branchCompletionProceed = await dispatch(completeBranchById(branch.id)).unwrap();
+    if (!branchCompletionProceed.success) {
+      toast.error("Branch is not completed.");
+      return;
+    }
+
+    const peaceClaimProceed = await dispatch(claimPieceById(branch.pieces[0].id)).unwrap();
+    if (!peaceClaimProceed?.success) {
+      toast.error("Failed to claim the peace.");
+      return;
+    }
+
+    toast.success("Congratulations! The task and branch are fully completed.");
+    // window.location.reload();
+
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   return (
     <div className="w-full max-w-md">
@@ -44,16 +120,11 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
             </span>
           </div>
           <h3 className="text-lg font-bold mb-4">{title}</h3>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-md py-2 px-4">
-            <a
-              href={actionURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="no-underline text-inherit"
-            >
-              Check the execution
-            </a>
-          </button>
+          <GradientButton
+            blocked={false}
+            children="Check the execution"
+            onClick={checkIsCompleted}
+          />
         </div>
       ) : status === 'claimed' ? (
         <div className="bg-gray-500 from-[#003E6B] via-[#004F8C] to-[#003E6B] text-white p-4 rounded-lg mb-4 shadow-lg">
@@ -64,12 +135,28 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
             </span>
           </div>
           <h3 className="text-lg font-bold mb-4">{title}</h3>
-          <button className="disabled:bg-gray-500 text-white rounded-md py-2 px-4">
-            Check the execution
-          </button>
+          <GradientButton
+            blocked={true}
+            children="Check the execution"
+            onClick={checkIsCompleted}
+          />
         </div>
       ) : (
         <></>
+      )}
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <h2 className="text-xl font-bold">{modalContent}</h2>
+          <p>
+            You have learned how to change one token to another, keep it up!
+          </p>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4"
+          >
+            Ready to move on
+          </button>
+        </Modal>
       )}
     </div>
   );

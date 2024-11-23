@@ -6,7 +6,7 @@ const ConnectWalletBox = () => {
   const { state, open, close } = useTonConnectModal();
 
   return (
-    <div className="bg-gradient-to-r from-[#9333EA] via-[#3B82F6] to-[#16A34A] rounded-xl my-0.5 px-0.5 flex items-center justify-between">
+    <div className="bg-gradient-to-r from-[#9333EA] via-[#3B82F6] to-[#16A34A] rounded-xl px-0.5 py-0.5 flex items-center justify-between mt-4 flex-grow-0 self-center">
       <button
         onClick={open}
         className="py-1 px-2 rounded-xl hover:bg-primary/20 transition-all flex items-center flex-row"

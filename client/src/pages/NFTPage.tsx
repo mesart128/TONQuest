@@ -22,7 +22,7 @@ const NFTPage = () => {
     { taskId: 0, isCompleted: true },
     { taskId: 1, isCompleted: false },
     { taskId: 2, isCompleted: false },
-    { taskId: 3, isCompleted: true },
+    { taskId: 3, isCompleted: false },
     { taskId: 4, isCompleted: false },
     { taskId: 5, isCompleted: false },
   ];

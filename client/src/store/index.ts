@@ -4,15 +4,29 @@ import taskReducer from './slices/taskSlice';
 import categoryReducer from './slices/categorySlice';
 import branchReducer from './slices/branchSlice';
 import selectedCardReducer from './slices/selectedCardSlice';
+import pieceReducer from './slices/pieceSlice';
+import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer } from 'redux-persist';
+import { combineReducers } from 'redux';
 
-const store = configureStore({
-  reducer: {
-    user: userReducer,
-    task: taskReducer,
-    category: categoryReducer,
-    branch: branchReducer,
-    selectedCard: selectedCardReducer,
-  },
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  task: taskReducer,
+  category: categoryReducer,
+  branch: branchReducer,
+  selectedCard: selectedCardReducer,
+  piece: pieceReducer,
 });
 
-export default store;
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+});
+
+export const persistor = persistStore(store);

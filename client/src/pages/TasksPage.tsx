@@ -7,8 +7,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { setSelectedCard } from '../store/slices/selectedCardSlice';
 
 const TasksPage = () => {
-  // const location = useLocation();
-  // const branchId = location?.state?.branches?.[0]?.id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
