@@ -1,22 +1,147 @@
 import React from 'react';
 import BottomMenu from '../components/BottomMenu';
 import Navbar from '../components/Navbar';
+import nftMonkey from '../assets/monkey.webp';
+import { Lock, LockOpen } from 'lucide-react';
+import Carousel from '../components/Carousel';
+import one from '../assets/one.png';
+import target from '../assets/target.png';
+
+export type Card = {
+  title: string;
+  subtitle: string;
+  image: string;
+  alt: string;
+  status: string;
+  isCompleted: boolean;
+  subtasks: { subtaskId: number; isCompleted: boolean }[];
+};
 
 const NFTPage = () => {
+  const tasks = [
+    { taskId: 0, isCompleted: true },
+    { taskId: 1, isCompleted: false },
+    { taskId: 2, isCompleted: false },
+    { taskId: 3, isCompleted: true },
+    { taskId: 4, isCompleted: false },
+    { taskId: 5, isCompleted: false },
+  ];
+
+  const cards: Card[] = [
+    {
+      title: 'Connect a wallet',
+      subtitle: 'Connect a wallet',
+      status: 'Received',
+      image: target,
+      alt: 'target',
+      isCompleted: true,
+      subtasks: [{ subtaskId: 0, isCompleted: true }],
+    },
+    {
+      title: 'Easy start (DEX)',
+      subtitle: '3 tasks in the DEX branch',
+      status: 'Received',
+      image: target,
+      alt: 'target',
+      isCompleted: true,
+      subtasks: [
+        { subtaskId: 0, isCompleted: true },
+        { subtaskId: 1, isCompleted: true },
+        { subtaskId: 1, isCompleted: true },
+      ],
+    },
+    {
+      title: 'test_2',
+      subtitle: 'subtitle',
+      status: 'status',
+      image: one,
+      alt: 'number one',
+      isCompleted: false,
+      subtasks: [
+        { subtaskId: 0, isCompleted: false },
+        { subtaskId: 2, isCompleted: false },
+        { subtaskId: 3, isCompleted: false },
+      ],
+    },
+    {
+      title: 'test_3',
+      subtitle: 'subtitle',
+      status: 'status',
+      image: one,
+      alt: 'number one',
+      isCompleted: false,
+      subtasks: [
+        { subtaskId: 0, isCompleted: false },
+        { subtaskId: 2, isCompleted: false },
+        { subtaskId: 3, isCompleted: false },
+      ],
+    },
+    {
+      title: 'test_4',
+      subtitle: 'subtitle',
+      status: 'status',
+      image: one,
+      alt: 'number one',
+      isCompleted: false,
+      subtasks: [
+        { subtaskId: 0, isCompleted: false },
+        { subtaskId: 2, isCompleted: false },
+        { subtaskId: 3, isCompleted: false },
+      ],
+    },
+    {
+      title: 'test_5',
+      subtitle: 'subtitle',
+      status: 'status',
+      image: one,
+      alt: 'number one',
+      isCompleted: false,
+      subtasks: [
+        { subtaskId: 0, isCompleted: false },
+        { subtaskId: 2, isCompleted: false },
+        { subtaskId: 3, isCompleted: false },
+      ],
+    },
+  ];
+
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#C3FF00] to-black flex flex-col items-center min-w-[432px] w-full">
-      <div className="flex-1 flex flex-col px-4 mx-auto w-full">
+    <div className="h-screen relative bg-gradient-to-b from-black via-[#C3FF00] to-black flex flex-col items-center min-w-[432px] w-full overflow-y-auto">
+      <div className="flex flex-col px-4 mx-auto w-full max-w-screen-md overflow-y-auto">
         <Navbar />
-        <div className="flex flex-col flex-1 mt-8">
-          <section className="max-w-md flex flex-col flex-1">
-            {/* TODO: probably easier to display an image for now, implementing the unlocking logic will take time */}
-            <div className="w-[80%] mx-auto h-[500px] border border-solid border-gray-200 opacity-30 bg-gray-100 rounded-3xl"></div>
+        <div className="flex-1 mt-8 overflow-y-auto">
+          <section className="max-w-md flex flex-col">
+            <div className="flex items-center justify-center relative rounded-3xl">
+              <div className="h-[600px] w-[400px] rounded-3xl absolute inset-0 mx-auto grid grid-cols-2 overflow-hidden shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+                {tasks.map((item) => {
+                  if (item.isCompleted) {
+                    return (
+                      <div className="h-[200px] w-[200px] flex flex-col justify-center items-center">
+                        <p className="font-medium">{item.taskId + 1} part</p>
+                        <LockOpen className="h-4 w-4" />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="h-[200px] w-[200px] flex flex-col justify-center items-center bg-black/50 backdrop-blur-md">
+                        <p className="font-medium">{item.taskId + 1} part</p>
+                        <Lock className="h-4 w-4" />
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+              <img
+                src={nftMonkey}
+                className="object-cover rounded-3xl h-[600px] w-[400px]"
+              />
+            </div>
             <h2 className="text-3xl font-bold mt-8 text-center text-white">
               NFT in pieces
             </h2>
             <p className="text-center text-white leading-5 mt-2 shadow-black">
               Complete the tasks below and assemble the NFT piece by piece
             </p>
+            <Carousel items={cards} />
           </section>
         </div>
         <BottomMenu />
