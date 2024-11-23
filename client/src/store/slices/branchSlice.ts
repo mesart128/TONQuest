@@ -46,6 +46,7 @@ const branchSlice = createSlice({
     error: null,
     currentSlideIndex: 0,
     isBranchChecked: false,
+    branchCompleted: false,
   },
   reducers: {
     clearBranchState(state) {
@@ -60,6 +61,9 @@ const branchSlice = createSlice({
     },
     setCurrentSlide: (state, action) => {
       state.currentSlideIndex = action.payload;
+    },
+    setBranchCompleted(state, action) {
+        state.branchCompleted = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -107,6 +111,6 @@ const branchSlice = createSlice({
   },
 });
 
-export const { clearBranchState, setActiveTask, setCurrentSlide } =
+export const { clearBranchState, setActiveTask, setCurrentSlide, setBranchCompleted } =
   branchSlice.actions;
 export default branchSlice.reducer;

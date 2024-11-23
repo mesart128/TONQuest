@@ -7,6 +7,7 @@ import GreetingPage from './pages/GreetingPage';
 import BannerPage from './pages/BannerPage';
 import TaskPage from './pages/TasksPage';
 import ExpPage from './pages/ExpPage';
+import Congratulations from './pages/Congratulations';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import SliderPage from './pages/SliderPage';
 import { ToastContainer } from 'react-toastify';
@@ -45,6 +46,7 @@ function App() {
           <Route path="/tasks-page" element={<TaskPage />} />
           <Route path="/exp" element={<ExpPage />} />
           <Route path="/task_slider" element={<SliderPage />} />
+          <Route path="/congratulations" element={<Congratulations />} />
         </Routes>
       </Router>
     </TonConnectUIProvider>
