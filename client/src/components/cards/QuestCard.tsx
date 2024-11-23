@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setSelectedCard } from '../../store/slices/selectedCardSlice';
 
 const QuestCard = ({
   type,
@@ -10,11 +12,21 @@ const QuestCard = ({
   branches,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const cardSelectHandler = () => {
-    navigate('/banner-page', {
-      state: { imageUrl, title, description, type, branches },
-    });
+    dispatch(
+      setSelectedCard({
+        type,
+        title,
+        description,
+        xpReward,
+        imageUrl,
+        branches,
+      }),
+    );
+
+    navigate('/banner-page');
   };
 
   return (
@@ -36,7 +48,7 @@ const QuestCard = ({
             <div className="absolute inset-0 flex items-center justify-center">
               <img
                 className="w-full max-h-48 object-cover rounded"
-                src={imageUrl}
+                src={`data:image/png;base64,${imageUrl}`}
               />
             </div>
           </div>

@@ -92,3 +92,13 @@ button:focus-visible {
   background-color: white;
   opacity: 1;
 }
+
+.pagination-custom-task-slider .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.5);
+  width: 8px;
+  height: 8px;
+}
+
+.pagination-custom-task-slider .swiper-pagination-bullet-active {
+  background: #fff;
+}

@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 
 const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
-  
-  useEffect(() => {
-  }, [])
+  useEffect(() => {}, []);
 
   return (
     <div className="w-full max-w-md">
@@ -49,7 +47,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction }) => {
           <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-md py-2 px-4">
             <a
               href={actionURL}
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               className="no-underline text-inherit"
             >

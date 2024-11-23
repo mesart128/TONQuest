@@ -22,7 +22,7 @@ const Navbar = () => {
           <button className="p-2 rounded-full hover:bg-primary/20 transition-all">
             <User className="text-white" size={20} />
           </button>
-          <Experience xp={user.xp} />
+          {user && <Experience xp={user.xp} />}
         </div>
         <ConnectWalletBox />
       </div>

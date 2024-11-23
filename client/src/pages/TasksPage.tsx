@@ -3,24 +3,34 @@ import TaskCard from '../components/cards/TaskCard';
 import TopContextMenu from '../components/TopContextMenu';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBranchById } from '../store/slices/branchSlice';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { setSelectedCard } from '../store/slices/selectedCardSlice';
 
 const TasksPage = () => {
-  const location = useLocation();
-  const branchId = location?.state?.branches?.[0]?.id;
+  // const location = useLocation();
+  // const branchId = location?.state?.branches?.[0]?.id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { branch, status, error } = useSelector((state) => state.branch);
+  const { branch, status, error, activeTask } = useSelector(
+    (state) => state.branch,
+  );
 
-  useEffect(() => {
-    dispatch(fetchBranchById(branchId));
-  }, [branchId, dispatch]);
+  const { imageUrl, description, title, type, branches } = useSelector(
+    (state) => state.selectedCard,
+  );
 
   const onSliderHandler = () => {
     navigate('/task_slider');
-  }
+  };
+
+  useEffect(() => {
+    const branchId = branches[0]?.id;
+
+    if (branchId) {
+      dispatch(fetchBranchById(branchId));
+    }
+  }, [title, type, branches, dispatch]);
 
   if (error) {
     return <div>{error}</div>;
@@ -28,7 +38,7 @@ const TasksPage = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-b from-black via-[#00a1ff] to-black items-center min-w-[432px]">
-      <TopContextMenu info={true} />
+      <TopContextMenu info={true} title={title} type={type} />
       <h2 className="text-center text-2xl font-bold mt-2">Tasks</h2>
 
       <div className="flex-grow overflow-y-auto w-full max-w-3xl px-4">
@@ -46,7 +56,10 @@ const TasksPage = () => {
       </div>
 
       <footer className="p-4 w-full max-w-3xl">
-        <button onClick={onSliderHandler} className="bg-blue-500 hover:bg-blue-600 text-white w-full rounded-md py-2">
+        <button
+          onClick={onSliderHandler}
+          className="bg-blue-500 hover:bg-blue-600 text-white w-full rounded-md py-2"
+        >
           Start the task
         </button>
       </footer>

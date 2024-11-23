@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const TopContextMenu = ({ info, title, type }) => {
+const TopContextMenu = ({ info, title, type, step }) => {
   const navigate = useNavigate();
 
   const [isVisible, setIsVisible] = useState(false);
@@ -20,10 +20,14 @@ const TopContextMenu = ({ info, title, type }) => {
 
   return (
     <div className="flex justify-around w-full">
-      <button onClick={backButtonHandler}>Back</button>
-      <div className="flex items-center">
-        {title} ({type}){' '}
-      </div>
+      {info && (
+        <>
+          <button onClick={backButtonHandler}>Back</button>
+          <div className="flex items-center">
+            {title} ({type}){' '}
+          </div>
+        </>
+      )}
       {info ? (
         <div className="relative">
           <span
@@ -37,6 +41,7 @@ const TopContextMenu = ({ info, title, type }) => {
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
             </div>
           )}
+          {step && <span className="text-white text-lg">Step {step}</span>}
         </div>
       ) : (
         <button onClick={closeButtonHandler}>Close</button>

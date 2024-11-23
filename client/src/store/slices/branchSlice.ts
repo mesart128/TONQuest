@@ -18,7 +18,9 @@ const branchSlice = createSlice({
     branch: null,
     tasks: [],
     status: 'idle',
+    activeTask: null,
     error: null,
+    currentSlideIndex: 0,
   },
   reducers: {
     clearBranchState(state) {
@@ -26,6 +28,12 @@ const branchSlice = createSlice({
       state.tasks = [];
       state.status = 'idle';
       state.error = null;
+    },
+    setActiveTask: (state, action) => {
+      state.activeTask = action.payload;
+    },
+    setCurrentSlide: (state, action) => {
+      state.currentSlideIndex = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -38,6 +46,9 @@ const branchSlice = createSlice({
         state.status = 'succeeded';
         state.branch = action.payload;
         state.tasks = action.payload.tasks || [];
+        state.activeTask = action.payload.tasks?.find(
+          (task) => task.status === 'active',
+        );
       })
       .addCase(fetchBranchById.rejected, (state, action) => {
         state.status = 'failed';
@@ -46,5 +57,6 @@ const branchSlice = createSlice({
   },
 });
 
-export const { clearBranchState } = branchSlice.actions;
+export const { clearBranchState, setActiveTask, setCurrentSlide } =
+  branchSlice.actions;
 export default branchSlice.reducer;

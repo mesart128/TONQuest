@@ -6,16 +6,19 @@
 //state под выполнение таски, чтоб получить урлу под выполнение таски
 
 import TopContextMenu from '../components/TopContextMenu';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const BannerPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const { imageUrl, description, title, type, branches } = location?.state;
+  const { imageUrl, description, title, type, branches } = useSelector(
+    (state) => state.selectedCard,
+  );
 
   const nextButtonHandler = () => {
-    navigate('/tasks-page', { state: { branches } });
+    navigate('/tasks-page');
   };
 
   return (
@@ -23,7 +26,7 @@ const BannerPage = () => {
       <TopContextMenu title={title} type={type} />
 
       <div className="flex flex-col items-center justify-center gap-12 mt-16">
-        <img className="max-w-lg" src={imageUrl} />
+        <img className="max-w-lg" src={`data:image/png;base64,${imageUrl}`} />
         <h1 className="text-3xl font-bold mb-4">
           {title} ({type})
         </h1>
