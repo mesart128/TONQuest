@@ -107,6 +107,8 @@ async def set_user_address(
 )
 async def get_task(task_id: UUID) -> schemas.Task:
     task = await db.get_task_with_slides(str(task_id))
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
     return schemas.Task(**task.to_read_model())
 
 

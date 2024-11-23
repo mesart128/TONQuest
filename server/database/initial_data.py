@@ -7,6 +7,39 @@ from apps.ton_quest.models import NFT, Branch, Category, Piece, Slide, Task, Use
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo  # Замените на реальный путь
 from database.base import Base
 
+import base64
+import os
+
+
+static_root_path = os.path.join(os.path.dirname(__file__), "../static")
+print(static_root_path)
+
+def get_base_64_str(filename):
+    """
+    Функция для получения Base64 строки из файла.
+
+    :param filename: Путь к файлу или его название
+    :return: Base64 строка, либо пустая строка в случае ошибки
+    """
+    filename = os.path.join(static_root_path, filename)
+    try:
+        # Проверяем, существует ли файл
+        if not os.path.isfile(filename):
+            raise FileNotFoundError(f"Файл {filename} не найден.")
+
+        # Открываем файл и читаем его содержимое в бинарном виде
+        with open(filename, "rb") as file:
+            file_data = file.read()
+
+        # Преобразуем данные файла в строку Base64
+        encoded_str = base64.b64encode(file_data).decode('utf-8')
+        return encoded_str
+    except Exception as e:
+        # В случае ошибки возвращаем пустую строку
+        print(f"Ошибка при чтении файла {filename}: {e}")
+        return ""
+
+
 DATABASE_URL = (
     "postgresql+asyncpg://creator:creator@localhost/tonquest"  # Укажите свои данные подключения
 )
@@ -78,23 +111,30 @@ async def populate_database(engine, repo):
             "task_id": dedust_first_task_id,
             "title": "Task description",
             "description": "Token swaps allow you to exchange one asset for another. For example, you can swap TON for USDT to secure your assets' value or use the tokens in other DeFi operations.",
-            "image": "https://kauri.io/images/slide1.png",
+            "image": get_base_64_str("Frame 2087326246.png"),
             "queue": 1,
         },
         {
             "task_id": dedust_first_task_id,
             "title": "Fiat Analogy",
             "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
-            "image": "https://kauri.io/images/slide2.png",
+            "image": get_base_64_str("Frame 2087326241.png"),
             "queue": 2,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Fiat Analogy",
+            "title": "Connect wallet",
             "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
-            "image": "https://kauri.io/images/slide2.png",
-            "queue": 2,
+            "image": get_base_64_str("Frame 2087326241 (1).png"),
+            "queue": 3,
         },
+        {
+            "task_id": dedust_first_task_id,
+            "title": "Connect wallet",
+            "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
+            "image": get_base_64_str("Frame 2087326241 (2).png"),
+            "queue": 4,
+        }
     ]
     for slide in slides_first_task:
         await repo.add_one(Slide, slide)

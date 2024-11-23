@@ -1,0 +1,45 @@
+version: 1
+disable_existing_loggers: true
+
+formatters:
+  simple:
+    class: src.core.logger_settings.CustomColoredFormatter
+    format: "%(log_color)s[%(asctime)s] - [%(levelname)8s] - [%(name)7s] - [%(short_context_id)s] - %(message)s"
+  file:
+    class: src.core.logger_settings.CustomFormatter
+    format: "[%(asctime)s] - [%(levelname)8s] - [%(name)7s] - [%(context_id)s] - %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simple
+    stream: ext://sys.stdout
+  debug:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: file
+    filename: "{logdir}/debug.log"
+    encoding: utf8
+  error:
+    class: logging.FileHandler
+    level: ERROR
+    formatter: file
+    filename: "{logdir}/error.log"
+    encoding: utf8
+  error_console:
+    class: logging.StreamHandler
+    level: ERROR
+    formatter: simple
+    stream: ext://sys.stdout
+
+loggers:
+  aiogram:
+    level: DEBUG
+    handlers: [console, debug, error_console]
+    propagate: no
+  root:
+    level: DEBUG
+    handlers: [console, debug, error_console]
+    propagate: no
+
