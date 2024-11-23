@@ -84,7 +84,7 @@ async def populate_database(engine, repo):
         "head": "DEX",
         "title": "Easy start",
         "description": "You will learn how to use decentralized exchange tools",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/DEX.png"),
         "subtitle": "This branch focuses on introducing users"
         " to Dedust through hands-on tasks, with interactive and easy-to-understand explanations.",
     }
@@ -203,7 +203,7 @@ async def populate_database(engine, repo):
         "head": "Lending & Borrowing",
         "title": "Intro to EVAA",
         "description": "You will learn how to use EVAA lending and borrowing tools in the TON ecosystem.",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/CREDIT_LOANS.png"),
         "subtitle": (
             "This branch introduces users to the mechanisms of borrowing and lending on TON "
             "using EVAA with hands-on tasks and simple, interactive explanations."
@@ -333,7 +333,7 @@ async def populate_database(engine, repo):
         "head": "Staking",
         "title": "Passive Income",
         "description": "Learn how to stake TON for passive income and maximize your returns.",
-        "image": "https://kauri.io/images/1x1.png",
+        "image": get_base_64_str(f"category/STAKING.png"),
         "subtitle": (
             "This branch introduces users to the staking process, comparing staking pools, "
             "and managing their staked assets for maximum efficiency."
