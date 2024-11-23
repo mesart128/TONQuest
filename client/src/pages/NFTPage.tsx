@@ -3,9 +3,11 @@ import BottomMenu from '../components/BottomMenu';
 import Navbar from '../components/Navbar';
 import nftMonkey from '../assets/monkey.webp';
 import { Lock, LockOpen } from 'lucide-react';
+
 import Carousel from '../components/Carousel';
 import one from '../assets/one.png';
 import target from '../assets/target.png';
+import {useDispatch, useSelector} from "react-redux";
 
 export type Card = {
   title: string;
@@ -18,6 +20,9 @@ export type Card = {
 };
 
 const NFTPage = () => {
+  const dispatch = useDispatch();
+  const branches = useSelector((state) => state.category.list);
+
   const tasks = [
     { taskId: 0, isCompleted: true },
     { taskId: 1, isCompleted: false },
