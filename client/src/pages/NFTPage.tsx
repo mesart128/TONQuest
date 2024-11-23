@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import BottomMenu from '../components/BottomMenu';
 import Navbar from '../components/Navbar';
 import nftMonkey from '../assets/monkey.webp';
@@ -8,6 +8,7 @@ import Carousel from '../components/Carousel';
 import one from '../assets/one.png';
 import target from '../assets/target.png';
 import {useDispatch, useSelector} from "react-redux";
+import {fetchNft} from "../store/slices/nftSlice.ts";
 
 export type Card = {
   title: string;
@@ -21,11 +22,15 @@ export type Card = {
 
 const NFTPage = () => {
   const dispatch = useDispatch();
-  const branches = useSelector((state) => state.category.list);
+  const branches = useSelector((state) => state.nft);
+  useEffect(() => {
+    dispatch(fetchNft());
+  }, [dispatch]);
 
+  console.log(branches);
   const tasks = [
     { taskId: 0, isCompleted: true },
-    { taskId: 1, isCompleted: false },
+    { taskId: 1, isCompleted: true },
     { taskId: 2, isCompleted: false },
     { taskId: 3, isCompleted: true },
     { taskId: 4, isCompleted: false },

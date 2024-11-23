@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCategories, getCategoryById } from '../../api/Router';
+import {getCategories, getCategoryById, getNft} from '../../api/Router';
 
 export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
@@ -11,6 +11,7 @@ export const fetchCategories = createAsyncThunk(
     }
   },
 );
+
 
 export const fetchCategoryById = createAsyncThunk(
   'categories/fetchCategoryById',
