@@ -273,6 +273,21 @@ async def check_branch(
     except NotFound:
         return {"error": "Branch not found"}
 
+    try:
+        user_branch = await db.get_user_branch(user.id, branch_id)
+        if user_branch.completed:
+            return {"error": "Branch already completed"}
+    except NotFound:
+        logging.error(f"User {user.id} not found in branch {branch_id}")
+        user_branch = await db.create_user_branch(user.id, branch_id)
+        logging.debug(f"User {user.id} added to branch {branch_id}")
+
+    for task in branch.tasks:
+        completed = await db.check_task_completed(user.id, task.id)
+        if not completed:
+            return {"error": "Not all tasks in branch completed"}
+    updated_branch = await db.complete_branch(user.id, branch_id)
+    logging.debug(f"Branch {branch_id} completed. {updated_branch}")
     completed = await db.check_branch_completed(user.id, branch_id)
     return {"completed": completed}
 
