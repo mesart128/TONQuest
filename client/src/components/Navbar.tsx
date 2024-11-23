@@ -16,7 +16,7 @@ const Navbar = () => {
   }, [dispatch]);
 
   return (
-    <nav className="bg-primary/10 px-4 py-3 flex justify-between items-center w-full">
+    <nav className="h-16 flex justify-between items-center w-full">
       <div className="flex justify-between gap-4 w-full">
         <div className="flex items-center gap-3">
           <button className="p-2 rounded-full hover:bg-primary/20 transition-all">
