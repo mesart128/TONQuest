@@ -28,7 +28,7 @@ const Navbar = ({user}) => {
           </button>
           {user && <Experience xp={user.xp} />}
         </div>
-        <ConnectWalletBox />
+        {user && <ConnectWalletBox wallet_address={user.wallet_address}/>}
       </div>
     </nav>
   );

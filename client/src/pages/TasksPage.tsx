@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchBranchById } from '../store/slices/branchSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setSelectedCard } from '../store/slices/selectedCardSlice';
+import { useTonConnectModal, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
+import { setUserAddress } from '../api/Router';
 import { checkBranchById } from '../store/slices/branchSlice';
 import { getTask } from '../api/Router';
 import { setBranchCompleted } from '../store/slices/branchSlice';
@@ -19,14 +21,37 @@ const TasksPage = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [totalXP, setTotalXP] = useState(0);
   const branchCompleted = useSelector((state) => state.branch.branchCompleted);
+  const { state, open, close } = useTonConnectModal();
+  const rawAddress = useTonAddress(false);
+  const user = useSelector((state) => state.user.user);
+  const { branch, status, error, activeTask } = useSelector(
+    (state) => state.branch,
+  );
+  console.log(activeTask);
 
-  const isBranchCompleted = branch?.tasks?.every(
-    (task) => task.status === 'claimed' || task.completed
+  const isBranchCompleted = !branch?.tasks.some((el) => el.status === 'active' );
+
+  const { imageUrl, description, title, type, branches } = useSelector(
+    (state) => state.selectedCard,
   );
 
-  const onSliderHandler = () => {
-    navigate('/task_slider');
+  const onSliderHandler = async () => {
+    if (user?.wallet_address)  {
+      navigate('/task_slider');
+    }
+    else {
+      console.log('no wallet');
+      if (rawAddress) {
+        console.log('address connected');
+        await setUserAddress(rawAddress);
+      }
+      else {
+        console.log('address not connected');
+        open();
+      }
+    }
   };
+  
 
   useEffect(() => {
     const fetchBranch = async () => {
@@ -37,6 +62,17 @@ const TasksPage = () => {
     };
     fetchBranch();
   }, [branches, dispatch]);
+
+  useEffect(() => {
+    if (rawAddress) {
+      console.log(rawAddress);
+    }
+  }
+  , [rawAddress]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   const refreshAllTasks = async () => {
     if (isRefreshing) return;
