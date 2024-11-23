@@ -43,6 +43,16 @@ class Task(pydantic.BaseModel):
     call_to_action: str
     slides: List[Slide]
 
+class ShortTask(pydantic.BaseModel):
+    id: UUID
+    branch_id: UUID
+    title: str
+    xp: int
+    queue: int
+    task_type: str
+    action_url: str
+    call_to_action: str
+
 
 class UserTask(pydantic.BaseModel):
     id: UUID
@@ -89,6 +99,7 @@ class UserBranch(pydantic.BaseModel):
 class ShortBranch(pydantic.BaseModel):
     id: UUID
     title: str
+    tasks: List[ShortTask]
 
 
 class Category(pydantic.BaseModel):
