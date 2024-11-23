@@ -16,7 +16,7 @@ function App() {
   //     tg.ready();
   //     tg.expand();
   // }, []);
-
+  document.body.classList.add('bg-black');
   return (
     <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/isamarcev/CryptoWallet/refs/heads/TEMPORARY/web3_wallet_logo.json">
       <Router>

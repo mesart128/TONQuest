@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import BottomMenu from '../components/BottomMenu';
 import spiral from '../assets/spiral-min.png';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { fetchUser } from '../store/slices/userSlice';
 
 const BonusPage = () => {
+  const dispatch = useDispatch();
+
+  const { user, status, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#B428B4] to-black flex flex-col items-center min-w-[432px] w-full">
-      <div className="flex-1 flex flex-col px-4 mx-auto w-full">
+    <div className="min-h-screen relative flex flex-col items-center min-w-[432px] w-full">
+      <div className="bg-[#B428B4] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[250px]"></div>
+      <div className="flex-1 flex flex-col px-4 mx-auto w-full z-10">
         <Navbar />
         <div className="flex flex-col flex-1 mt-8">
           <section className="max-w-md flex flex-col flex-1">
@@ -14,7 +26,7 @@ const BonusPage = () => {
               <img className="w-full object-cover rounded" src={spiral} />
             </div>
             <h2 className="text-5xl font-bold text-center tracking-tight text-white">
-              1200 XP
+              {user.xp} XP
             </h2>
             <p className="text-center text-white/80 leading-5 mt-2">
               Complete quests and earn experience points, which can later be
