@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "tonquest"
+version = "0.1.0"
+description = ""
+authors = ["Ihor Samartsev <isamarcev1994@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+dependency-injector = "^4.43.0"
+fastapi = "^0.115.5"
+pydantic = "^2.9.2"
+pymongo = "^4.9"
+pytoniq = "^0.1.40"
+uvicorn = "^0.32.0"
+motor = "^3.6.0"
+aiohttp = "^3.10"
+pydantic-settings = "^2.6.1"
+redis = "^5.2.0"
+pyyaml = "^6.0.2"
+gunicorn = "^23.0.0"
+python-json-logger = "^2.0.7"
+tonsdk = "^1.0.15"
+toml = "^0.10.2"
+sqlalchemy = "^2.0.36"
+alembic = "^1.14.0"
+aiogram = "3.14.0"
+waitress = "3.0.2"
+asyncpg = "^0.30.0"
+greenlet = "^3.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
