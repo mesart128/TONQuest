@@ -23,7 +23,7 @@ const BannerPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
+    <div className="min-h-screen relative flex flex-col items-center w-full bg-gradient-to-b from-black via-[#00a1ff] to-black">
       <TopContextMenu title={title} type={type} />
 
       <div className="flex flex-col items-center justify-center gap-12 mt-16">

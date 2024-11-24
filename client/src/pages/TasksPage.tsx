@@ -78,7 +78,7 @@ const TasksPage = () => {
   };
   
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-b from-black via-[#00a1ff] to-black items-center min-w-[432px]">
+    <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col bg-gradient-to-b from-black via-[#00a1ff] to-black items-center">
       <TopContextMenu info={true} title={title} type={type} />
       <h2 className="text-center text-2xl font-bold mt-2">Tasks</h2>
 

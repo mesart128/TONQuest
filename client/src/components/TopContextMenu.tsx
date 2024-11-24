@@ -19,7 +19,7 @@ const TopContextMenu = ({ info, title, type, step }) => {
   };
 
   return (
-    <div className="flex justify-around w-full">
+    <div className="flex justify-around w-screen">
       {info && (
         <>
           <button onClick={backButtonHandler}>Back</button>

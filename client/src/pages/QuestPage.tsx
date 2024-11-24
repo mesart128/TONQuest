@@ -23,22 +23,23 @@ const QuestPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
+    <div className="h-screen flex flex-col items-center bg-gradient-to-b from-black via-[#00a1ff] to-black">
       {!cards && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
       <ClipLoader color="#36d7b7" size={50} />
       </div>}
-      <div className="flex-1 flex flex-col px-4 mx-auto">
+      <div className="flex-1 flex flex-col mx-auto">
         <Navbar user={user}/>
-        <div className="flex flex-col flex-1 justify-center">
-          <h2 className="text-2xl font-bold text-center mb-8">
+        <h2 className="text-2xl font-bold text-center mt-5 mr-8">
             Welcome to Quest
           </h2>
-          <section className="max-w-md">
+        <div className="flex flex-col flex-1 justify-center mb-10">
+          
+          <section className="max-w-md m-auto	pl-3">
             <div className="quest-slider-container relative">
               <Swiper
                 modules={[Pagination]}
                 spaceBetween={20}
-                slidesPerView={1.2}
+                slidesPerView={1}
                 centeredSlides={true}
                 pagination={{
                   clickable: true,

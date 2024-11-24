@@ -15,7 +15,7 @@ const BottomMenu = () => {
   const location = useLocation();
 
   return (
-    <div className="flex justify-between py-4">
+    <div className="flex justify-between py-4 px-4 w-screen">
       {menuItems?.map(({ path, imgSrc, alt }) => {
         const isCurrentPage = location.pathname === path;
 

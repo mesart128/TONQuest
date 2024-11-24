@@ -141,13 +141,13 @@ const NFTPage = () => {
   // ];
 
   return (
-    <div className="h-screen relative flex flex-col items-center min-w-[432px] w-full overflow-y-auto">
+    <div className="h-screen flex flex-col items-center overflow-y-auto">
       <div className="bg-[#C3FF00] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[500px]"></div>
-      <div className="flex flex-col px-4 mx-auto w-full max-w-screen-md overflow-y-auto z-10">
+      <div className="flex flex-col overflow-y-auto z-10">
         <Navbar />
         <div className="flex-1 mt-8 overflow-y-auto">
           <section className="max-w-md flex flex-col">
-            <div className="flex items-center justify-center relative rounded-3xl">
+            <div className="flex items-center justify-center relative rounded-3xl mr-8">
               <div className="h-[400px] w-[400px] rounded-3xl absolute inset-0 mx-auto grid grid-cols-2 overflow-hidden shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
                 {tasks.map((item) => {
                   if (item.isCompleted) {

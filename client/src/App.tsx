@@ -11,7 +11,7 @@ import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import SliderPage from './pages/SliderPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React from 'react'
+import React from 'react';
 
 function App() {
 
