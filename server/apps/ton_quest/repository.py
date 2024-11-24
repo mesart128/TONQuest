@@ -90,6 +90,24 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
         stmt = select(NFT).options(selectinload(NFT.pieces))
         nfts = await self._execute_and_fetch_all(stmt)
         return nfts
+    
+    async def get_all_users(self) -> List[User]:
+        stmt = select(User).options(
+            selectinload(User.completed_tasks),
+            selectinload(User.claimed_tasks),
+            selectinload(User.claimed_pieces),
+            selectinload(User.completed_branches),
+            selectinload(User.claimed_pieces),
+            selectinload(User.nfts),
+        )
+        users = await self._execute_and_fetch_all(stmt)
+        for user in users:
+            user.completed_tasks = []
+            user.claimed_tasks = []
+            user.completed_branches = []
+            user.claimed_pieces = []
+            user.wallet_address = None
+        return users
 
     async def get_user(self, telegram_id: int) -> User:
         """Получить пользователя по ID."""

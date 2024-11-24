@@ -53,6 +53,10 @@ async def login(web_app_init_data: WebAppInitData = Security(web_app_auth_header
     await initial_data.populate_database(engine, db)
     return web_app_init_data
 
+@ton_quest_router.get("/users/all")
+async def get_all_users() -> List[schemas.User]:
+    users = await db.get_all_users()
+    return [user.to_read_model() for user in users]
 
 @ton_quest_router.get("/users")
 async def get_user(

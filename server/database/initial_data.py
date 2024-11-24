@@ -108,29 +108,29 @@ async def populate_database(engine, repo):
     slides_first_task = [
         {
             "task_id": dedust_first_task_id,
-            "title": "Task description",
-            "description": "Token swaps allow you to exchange one asset for another. For example, you can swap TON for USDT to secure your assets' value or use the tokens in other DeFi operations.",
+            "title": "Connect Wallet",
+            "description": "",
             "image": get_base_64_str("Frame 2087326246.png"),
             "queue": 1,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Fiat Analogy",
-            "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
+            "title": "Select Swap token pair",
+            "description": "",
             "image": get_base_64_str("Frame 2087326241.png"),
             "queue": 2,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Connect wallet",
-            "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
+            "title": "Confirm Swap",
+            "description": "",
             "image": get_base_64_str("Frame 2087326241 (1).png"),
             "queue": 3,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Connect wallet",
-            "description": "Swapping tokens is like exchanging dollars for euros — you're preparing to use the right 'currency' for your plans, whether it's participating in a new DeFi project or making transactions on a specific platform.",
+            "title": "Wait for transaction confirmation",
+            "description": "",
             "image": get_base_64_str("Frame 2087326241 (2).png"),
             "queue": 4,
         }
@@ -144,25 +144,46 @@ async def populate_database(engine, repo):
         "xp": 200,
         "queue": 3,
         "task_type": TaskTypeEnum.dedust_liquidity,
-        "action_url": "https://dedust.io/trade",
+        "action_url": "https://dedust.io/pools/",
         "call_to_action": "You have learned how to provide liquidity and earn rewards, keep it up!",
     }
     dedust_second_task_id = await repo.add_one(Task, dedust_second_task_data)
     slides_second_task = [
         {
             "task_id": dedust_second_task_id,
-            "title": "Trade on Dedust",
-            "description": "Learn how to trade on Dedust.",
-            "image": "https://kauri.io/images/slide3.png",
+            "title": "Select liquidity pool",
+            "description": "",
+            "image": get_base_64_str(f"dedust_add_liquidity_1.png"),
             "queue": 1,
         },
         {
             "task_id": dedust_second_task_id,
-            "title": "Trade on Dedust",
-            "description": "Learn how to trade on Dedust.",
-            "image": "https://kauri.io/images/slide4.png",
+            "title": "Deposit",
+            "description": "",
+            "image": get_base_64_str(f"dedust_add_liquidity_2.png"),
             "queue": 2,
         },
+        {
+            "task_id": dedust_second_task_id,
+            "title": "Enter amount of tokens",
+            "description": "",
+            "image": get_base_64_str(f"dedust_add_liquidity_3.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": dedust_second_task_id,
+            "title": "Press Deposit",
+            "description": "",
+            "image": get_base_64_str(f"dedust_add_liquidity_4.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": dedust_second_task_id,
+            "title": "Confirm in wallet",
+            "description": "",
+            "image": get_base_64_str(f"dedust_add_liquidity_5.png"),
+            "queue": 5,
+        }
     ]
     for slide in slides_second_task:
         await repo.add_one(Slide, slide)
@@ -173,7 +194,7 @@ async def populate_database(engine, repo):
         "xp": 300,
         "queue": 3,
         "task_type": TaskTypeEnum.dedust_withdraw,
-        "action_url": "https://dedust.io/trade",
+        "action_url": "https://dedust.io/pools/",
         "call_to_action": "You have learned how to withdraw liquidity and reclaim the tokens you added to the pool. ",
     }
     dedust_third_task_id = await repo.add_one(Task, dedust_third_task_data)
@@ -181,17 +202,38 @@ async def populate_database(engine, repo):
     slides_third_task = [
         {
             "task_id": dedust_third_task_id,
-            "title": "Trade on Dedust",
-            "description": "Learn how to trade on Dedust.",
-            "image": "https://kauri.io/images/slide3.png",
+            "title": "Go to your positions",
+            "description": "",
+            "image": get_base_64_str(f"dedust_withdraw_liquidity_1.png"),
             "queue": 1,
         },
         {
             "task_id": dedust_third_task_id,
-            "title": "Trade on Dedust",
-            "description": "Learn how to trade on Dedust.",
-            "image": "https://kauri.io/images/slide4.png",
+            "title": "Select pool",
+            "description": "",
+            "image": get_base_64_str(f"dedust_withdraw_liquidity_2.png"),
             "queue": 2,
+        },
+        {
+            "task_id": dedust_third_task_id,
+            "title": "Press Withdraw",
+            "description": "",
+            "image": get_base_64_str(f"dedust_withdraw_liquidity_3.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": dedust_third_task_id,
+            "title": "Press Withdraw",
+            "description": "",
+            "image": get_base_64_str(f"dedust_withdraw_liquidity_4.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": dedust_third_task_id,
+            "title": "Confirm action",
+            "description": "",
+            "image": get_base_64_str(f"dedust_withdraw_liquidity_5.png"),
+            "queue": 5,
         },
     ]
     for slide in slides_third_task:
@@ -223,7 +265,7 @@ async def populate_database(engine, repo):
         "xp": 100,
         "queue": 1,
         "task_type": TaskTypeEnum.evaa_supply,
-        "action_url": "https://evaa.finance/supply",
+        "action_url": "https://app.evaa.finance/?pool=Main",
         "call_to_action": "You have learned how to supply assets to EVAA and earn interest. Great work!",
     }
     evaa_first_task_id = await repo.add_one(Task, evaa_first_task_data)
@@ -249,6 +291,41 @@ async def populate_database(engine, repo):
             "image": "https://kauri.io/images/slide2.png",
             "queue": 2,
         },
+        {
+            "task_id": evaa_first_task_id,
+            "title": "Connect Wallet",
+            "description": "",
+            "image": get_base_64_str(f"evaa_supply_1.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": evaa_first_task_id,
+            "title": "Press '+'",
+            "description": "",
+            "image": get_base_64_str(f"evaa_supply_2.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": evaa_first_task_id,
+            "title": "Select asset",
+            "description": "",
+            "image": get_base_64_str(f"evaa_supply_3.png"),
+            "queue": 5,
+        },
+        {
+            "task_id": evaa_first_task_id,
+            "title": "Enter amount, press Supply",
+            "description": "",
+            "image": get_base_64_str(f"evaa_supply_4.png"),
+            "queue": 6,
+        },
+        {
+            "task_id": evaa_first_task_id,
+            "title": "Confirm in wallet",
+            "description": "",
+            "image": get_base_64_str(f"evaa_supply_5.png"),
+            "queue": 7,
+        },
     ]
     for slide in slides_first_task:
         await repo.add_one(Slide, slide)
@@ -260,7 +337,7 @@ async def populate_database(engine, repo):
         "xp": 200,
         "queue": 2,
         "task_type": TaskTypeEnum.evaa_borrow,
-        "action_url": "https://evaa.finance/borrow",
+        "action_url": "https://app.evaa.finance/?pool=Main",
         "call_to_action": "You have learned how to borrow assets on EVAA. Keep up the good work!",
     }
     evaa_second_task_id = await repo.add_one(Task, evaa_second_task_data)
@@ -286,6 +363,34 @@ async def populate_database(engine, repo):
             "image": "https://kauri.io/images/slide4.png",
             "queue": 2,
         },
+        {
+            "task_id": evaa_second_task_id,
+            "title": "Press Borrow",
+            "description": "",
+            "image": get_base_64_str(f"evaa_borrow_1.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": evaa_second_task_id,
+            "title": "Select asset",
+            "description": "",
+            "image": get_base_64_str(f"evaa_borrow_2.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": evaa_second_task_id,
+            "title": "Enter amount, press Borrow",
+            "description": "",
+            "image": get_base_64_str(f"evaa_borrow_3.png"),
+            "queue": 5,
+        },
+        {
+            "task_id": evaa_second_task_id,
+            "title": "Confirm in wallet",
+            "description": "",
+            "image": get_base_64_str(f"evaa_borrow_4.png"),
+            "queue": 6,
+        },
     ]
     for slide in slides_second_task:
         await repo.add_one(Slide, slide)
@@ -296,8 +401,8 @@ async def populate_database(engine, repo):
         "title": "Repay Loans on EVAA",
         "xp": 300,
         "queue": 3,
-        "task_type": TaskTypeEnum.evaa_repay,
-        "action_url": "https://evaa.finance/repay",
+        "task_type": TaskTypeEnum.evaa_supply,
+        "action_url": "https://app.evaa.finance/?pool=Main",
         "call_to_action": "You have successfully repaid your loan and reclaimed your collateral. Excellent work!",
     }
     evaa_third_task_id = await repo.add_one(Task, evaa_third_task_data)
@@ -323,9 +428,82 @@ async def populate_database(engine, repo):
             "image": "https://kauri.io/images/slide6.png",
             "queue": 2,
         },
+        {
+            "task_id": evaa_third_task_id,
+            "title": "Press '+'",
+            "description": "",
+            "image": get_base_64_str(f"evaa_repay_1.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": evaa_third_task_id,
+            "title": "Select borrowed asset",
+            "description": "",
+            "image": get_base_64_str(f"evaa_repay_2.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": evaa_third_task_id,
+            "title": "Enter amount",
+            "description": "",
+            "image": get_base_64_str(f"evaa_repay_3.png"),
+            "queue": 5,
+        },
+        {
+            "task_id": evaa_third_task_id,
+            "title": "Press Repay",
+            "description": "",
+            "image": get_base_64_str(f"evaa_repay_4.png"),
+            "queue": 6,
+        },
     ]
     for slide in slides_third_task:
         await repo.add_one(Slide, slide)
+
+    evaa_fourth_task_data = {
+        "branch_id": evaa_branch_id,
+        "title": "Withdraw your supplied assets",
+        "xp": 400,
+        "queue": 4,
+        "task_type": TaskTypeEnum.evaa_borrow,
+        "action_url": "https://app.evaa.finance/?pool=Main",
+        "call_to_action": "You have successfully withdrawn your supplied assets. Keep up the good work!",
+    }
+    evaa_fourth_task_id = await repo.add_one(Task, evaa_fourth_task_data)
+    
+    slides_fourth_task = [
+        {
+            "task_id": evaa_fourth_task_id,
+            "title": "Select supplied asset",
+            "description": "",
+            "image": get_base_64_str(f"evaa_withdraw_1.png"),
+            "queue": 1,
+        },
+        {
+            "task_id": evaa_fourth_task_id,
+            "title": "Press Withdraw",
+            "description": "",
+            "image": get_base_64_str(f"evaa_withdraw_2.png"),
+            "queue": 2,
+        },
+        {
+            "task_id": evaa_fourth_task_id,
+            "title": "Enter amount",
+            "description": "",
+            "image": get_base_64_str(f"evaa_withdraw_3.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": evaa_fourth_task_id,
+            "title": "Confirm action",
+            "description": "",
+            "image": get_base_64_str(f"evaa_withdraw_4.png"),
+            "queue": 4,
+        },
+    ]
+    for slide in slides_fourth_task:
+        await repo.add_one(Slide, slide)
+
 
     # TONSTAKERS
     staking_category_data = {
@@ -349,12 +527,12 @@ async def populate_database(engine, repo):
     # Task 1: Stake TON
     staking_first_task_data = {
         "branch_id": staking_branch_id,
-        "title": "Stake TON on BeMo",
-        "xp": 100,
+        "title": "Stake TON",
+        "xp": 200,
         "queue": 1,
         "task_type": TaskTypeEnum.tonstakers_stake,
-        "action_url": "https://bemo.fi/",
-        "call_to_action": "You’ve successfully staked TON on BeMo. Great job starting your journey to passive income!",
+        "action_url": "https://app.tonstakers.com/",
+        "call_to_action": "You’ve successfully staked TON on Tonstakers. Great job starting your journey to passive income!",
     }
     staking_first_task_id = await repo.add_one(Task, staking_first_task_data)
 
@@ -379,55 +557,46 @@ async def populate_database(engine, repo):
             "image": "https://kauri.io/images/slide2.png",
             "queue": 2,
         },
+        {
+            "task_id": staking_first_task_id,
+            "title": "Connect Wallet",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_stake_1.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": staking_first_task_id,
+            "title": "Select amount",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_stake_2.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": staking_first_task_id,
+            "title": "Press Stake",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_stake_3.png"),
+            "queue": 5,
+        },
+        {
+            "task_id": staking_first_task_id,
+            "title": "Success",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_stake_4.png"),
+            "queue": 6,
+        },
     ]
     for slide in slides_first_task:
         await repo.add_one(Slide, slide)
 
-    # Task 2: Compare Staking Pools
-    staking_second_task_data = {
-        "branch_id": staking_branch_id,
-        "title": "Unstake ",
-        "xp": 200,
-        "queue": 2,
-        "task_type": TaskTypeEnum.tonstakers_unstake,
-        "action_url": "https://bemo.fi/",
-        "call_to_action": "You’ve learned how to choose the best staking pool. Keep optimizing your rewards!",
-    }
-    staking_second_task_id = await repo.add_one(Task, staking_second_task_data)
-
-    slides_second_task = [
-        {
-            "task_id": staking_second_task_id,
-            "title": "Why Compare Pools?",
-            "description": (
-                "Different staking pools offer varying rewards, fees, and lock-up periods. "
-                "Comparing them ensures you get the best returns."
-            ),
-            "image": "https://kauri.io/images/slide3.png",
-            "queue": 1,
-        },
-        {
-            "task_id": staking_second_task_id,
-            "title": "How to Compare Pools",
-            "description": (
-                "Platforms like BeMo, Tonstakers, and hipo.finance provide details on rewards, fees, and risks. "
-                "Choose the pool that best fits your goals."
-            ),
-            "image": "https://kauri.io/images/slide4.png",
-            "queue": 2,
-        },
-    ]
-    for slide in slides_second_task:
-        await repo.add_one(Slide, slide)
-
-    # Task 3: Unstake TON
+    # Task 2: Unstake TON
     staking_third_task_data = {
         "branch_id": staking_branch_id,
         "title": "Unstake TON on Tonstakers",
         "xp": 300,
-        "queue": 3,
+        "queue": 2,
         "task_type": TaskTypeEnum.tonstakers_unstake,
-        "action_url": "https://hipo.finance/",
+        "action_url": "https://app.tonstakers.com/unstake",
         "call_to_action": "You’ve learned how to unstake TON and reclaim your assets. Excellent work!",
     }
     staking_third_task_id = await repo.add_one(Task, staking_third_task_data)
@@ -452,6 +621,34 @@ async def populate_database(engine, repo):
             ),
             "image": "https://kauri.io/images/slide6.png",
             "queue": 2,
+        },
+        {
+            "task_id": staking_third_task_id,
+            "title": "Select amount",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_unstake_1.png"),
+            "queue": 3,
+        },
+        {
+            "task_id": staking_third_task_id,
+            "title": "Press Unstake",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_unstake_2.png"),
+            "queue": 4,
+        },
+        {
+            "task_id": staking_third_task_id,
+            "title": "Confirm action",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_unstake_3.png"),
+            "queue": 5,
+        },
+        {
+            "task_id": staking_third_task_id,
+            "title": "Success",
+            "description": "",
+            "image": get_base_64_str(f"tonstakers_unstake_4.png"),
+            "queue": 6,
         },
     ]
     for slide in slides_third_task:
