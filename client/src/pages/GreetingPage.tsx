@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchUser, updateUserAddress } from '../store/slices/userSlice';
 import ClipLoader from "react-spinners/ClipLoader";
-import { retrieveLaunchParams, type LaunchParams } from '@telegram-apps/sdk';
+import { retrieveLaunchParams } from '@telegram-apps/sdk';
 import { api } from '../api/Router';
 
 const GreetingPage = () => {
