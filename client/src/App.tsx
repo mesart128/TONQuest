@@ -11,19 +11,15 @@ import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import SliderPage from './pages/SliderPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import React from 'react'
 
 function App() {
-  // useEffect(() => {
-  //     const tg = window.Telegram.WebApp;
-  //     tg.ready();
-  //     tg.expand();
-  // }, []);
+
   document.body.classList.add('bg-black');
   return (
     <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/isamarcev/CryptoWallet/refs/heads/TEMPORARY/web3_wallet_logo.json">
       <ToastContainer
         className="toast-position"
-        position="top-center"
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
