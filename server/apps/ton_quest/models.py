@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.base import BaseSqlModel
@@ -144,7 +144,7 @@ class UserTask(BaseSqlModel):
 
 class User(BaseSqlModel):
     __tablename__ = "users"
-    telegram_id: Mapped[int] = mapped_column()
+    telegram_id: Mapped[int] = mapped_column('telegram_id', BigInteger)
     username: Mapped[str] = mapped_column(nullable=True)
     first_name: Mapped[str] = mapped_column()
     last_name: Mapped[str] = mapped_column(nullable=True)
