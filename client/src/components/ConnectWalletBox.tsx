@@ -10,6 +10,7 @@ const ConnectWalletBox = ({wallet_address}) => {
   const { options, TonConnectUI } = useTonConnectUI();
  useEffect(() => {
   if (rawAddress) {
+      wallet_address = rawAddress;
      setUserAddress(rawAddress)
   }
  },
