@@ -7,11 +7,11 @@ const TOKEN =
 
 // Axios instance with default settings
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    Authorization: `${TOKEN}`, // Replace with your actual token
-    'web-app-auth': `${TOKEN}`, // Optionally include other specific header
-  },
+  baseURL: API_BASE_URL
+  // headers: {
+  //   Authorization: `${TOKEN}`, // Replace with your actual token
+  //   'web-app-auth': `${TOKEN}`, // Optionally include other specific header
+  // },
 });
 
 // Utility function to get Authorization token from storage (localStorage or sessionStorage, etc.)
