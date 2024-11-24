@@ -18,7 +18,7 @@ const GreetingPage = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  if (error) return <p>Error: {error}</p>;
+  //if (error) return <p>Error: {error}</p>;
 
   const handleContinue = () => {
     navigate('/quest');
