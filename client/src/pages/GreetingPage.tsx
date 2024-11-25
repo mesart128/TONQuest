@@ -26,6 +26,7 @@ const GreetingPage = () => {
   // }, []);
   const navigate = useNavigate();
 
+
   const dispatch = useDispatch();
 
   const { user, status, error } = useSelector((state) => state.user);
