@@ -24,6 +24,8 @@ const NFTPage = () => {
   const dispatch = useDispatch();
   const branches = useSelector((state) => state.nft);
 
+  const { user, status, error } = useSelector((state) => state.user);
+
   useEffect(() => {
     dispatch(fetchNft());
   }, [dispatch]);
@@ -142,24 +144,24 @@ const NFTPage = () => {
 
   return (
     <div className="h-screen flex flex-col items-center overflow-y-auto">
-      <div className="bg-[#C3FF00] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[500px]"></div>
+      <div className="bg-[#C3FF00] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
       <div className="flex flex-col overflow-y-auto z-10">
-        <Navbar />
-        <div className="flex-1 mt-8 overflow-y-auto">
-          <section className="max-w-md flex flex-col">
-            <div className="flex items-center justify-center relative rounded-3xl mr-8">
-              <div className="h-[400px] w-[400px] rounded-3xl absolute inset-0 mx-auto grid grid-cols-2 overflow-hidden shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        <Navbar user={user}/>
+        <div className="flex-1 mt-8 overflow-y-auto max-w-[100vw] mb-[50px] p-5">
+          <section className="flex flex-col items-center">
+            <div className="flex items-center justify-center relative rounded-3xl w-[85vw] h-auto">
+              <div className="h-[100%] w-[100%] rounded-3xl absolute inset-0 mx-auto grid grid-cols-2 overflow-hidden shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
                 {tasks.map((item) => {
                   if (item.isCompleted) {
                     return (
-                      <div className="h-[200px] w-[200px] flex flex-col justify-center items-center">
+                      <div className="flex flex-col justify-center items-center">
                         {/* <p className="font-medium">{item.taskId + 1} part</p> */}
                         {/* <LockOpen className="h-4 w-4" /> */}
                       </div>
                     );
                   } else {
                     return (
-                      <div className="h-[200px] w-[200px] flex flex-col justify-center items-center bg-black/90 backdrop-blur-md">
+                      <div className="flex flex-col justify-center items-center bg-black/90 backdrop-blur-md">
                         <p className="font-medium">{item.taskId + 1} part</p>
                         <Lock className="h-4 w-4" />
                       </div>
@@ -169,7 +171,7 @@ const NFTPage = () => {
               </div>
               <img
                 src={nftMonkey}
-                className="object-cover rounded-3xl h-[400px] w-[400px]"
+                className="object-cover rounded-3xl h-[100%] w-[100%]"
               />
             </div>
             <h2 className="text-3xl font-bold mt-8 text-center text-white">
@@ -181,8 +183,9 @@ const NFTPage = () => {
             <Carousel items={cards} />
           </section>
         </div>
-        <BottomMenu />
       </div>
+      <BottomMenu />
+      <div className="p-[20px]"></div>
     </div>
   );
 };

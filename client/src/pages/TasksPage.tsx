@@ -78,7 +78,8 @@ const TasksPage = () => {
   };
   
   return (
-    <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col bg-gradient-to-b from-black via-[#00a1ff] to-black items-center">
+    <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col items-center">
+      <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[200px]"></div>
       <TopContextMenu info={true} title={title} type={type} />
       <h2 className="text-center text-2xl font-bold mt-2">Tasks</h2>
 
@@ -90,6 +91,7 @@ const TasksPage = () => {
             title={task.title}
             xp={task.xp}
             status={task.status}
+            task_type={task.task_type}
             actionURL={task.action_url}
             callToAction={task.call_to_action}
             onTaskComplete={refreshAllTasks}

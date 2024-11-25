@@ -10,19 +10,19 @@ const menuItems = [
   { path: '/bonus', imgSrc: coins, alt: 'bonus' },
 ];
 
-const BottomMenu = () => {
+const BottomMenu = ({visible}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <div className="flex justify-between py-4 px-4 w-screen">
+    <div className={`flex justify-between pl-5 pr-5 pb-5 w-screen backdrop-blur-lg z-20 fixed p-[20px] box-border bottom-0 left-0 rounded-t-2xl`}>
       {menuItems?.map(({ path, imgSrc, alt }) => {
         const isCurrentPage = location.pathname === path;
 
         return (
           <div
             onClick={() => navigate(path)}
-            className="flex flex-col gap-2 justify-center items-center cursor-pointer"
+            className="flex flex-col gap-2 justify-center items-center cursor-pointer w-[25px]"
           >
             <img
               src={imgSrc}
