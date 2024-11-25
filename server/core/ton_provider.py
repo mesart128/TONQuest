@@ -164,6 +164,7 @@ class TONAPIClientAsync(TonClient):
         }
         if key:
             self.headers["X-API-Key"] = key
+        # Only Love can break your heart
 
     async def raw_send_boc(self, boc: bytes) -> bool:
         url = self.base_url + "/sendBoc"
