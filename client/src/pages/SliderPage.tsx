@@ -32,9 +32,7 @@ const SliderPage = () => {
     navigate('/tasks-page');
   };
 
-  const goToHandler = () => {
-    navigate();
-  };
+  console.log(slides)
 
   return (
     <div className="min-h-screen relative flex flex-col items-center w-full bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center">
@@ -69,7 +67,7 @@ const SliderPage = () => {
                 </div>
 
                 <h1 className="text-white text-4xl font-bold mb-4">
-                  Task description
+                  {activeTask.title}
                 </h1>
 
                 <p className="text-gray-300 text-lg mb-8">
@@ -93,7 +91,6 @@ const SliderPage = () => {
                   <a href={actionURL} target="_blank">
                     <GradientButton
                       children="Go to service"
-                      onClick={goToHandler}
                     />
                   </a>
                 )}

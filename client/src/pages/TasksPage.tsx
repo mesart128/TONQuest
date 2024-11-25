@@ -29,7 +29,7 @@ const TasksPage = () => {
 
   const onSliderHandler = async () => {
     if (user?.wallet_address)  {
-      navigate('/task_slider');
+      navigate('/task-slider');
     }
     else {
       console.log('no wallet');

@@ -34,7 +34,7 @@ const QuestPage = () => {
           </h2>
         <div className="flex flex-col flex-1 justify-center mb-10">
           
-          <section className="max-w-md m-auto	pl-3">
+          <section className="max-w-md m-auto	pl-5">
             <div className="quest-slider-container relative">
               <Swiper
                 modules={[Pagination]}
