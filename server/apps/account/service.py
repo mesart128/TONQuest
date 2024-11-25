@@ -152,7 +152,7 @@ class AccountService:
             await ton_quest_manager.check_task(
                 user_account=tracked_account, event_type=message.event_type
             )
-            logging.info(f"Detected dedust message from {tracked_account.wallet_address}")
+            logging.info(f"Detected OUR USER dedust message from {tracked_account.wallet_address}")
         else:
             # user = User(
             #     telegram_id=randint(1, 1000),
@@ -168,12 +168,14 @@ class AccountService:
 
     async def handle_out_msg(self, tx: Transaction, out_msg: MessageAny) -> None:
         if out_msg.info.dest is None:
-            account: FullAccountState = await self.ton_rpc_client.get_address_information(
-                out_msg.info.src.to_str()
-            )
-            if account.code == dedust_swap_pool_code_b64:
-                logging.debug(f"Detected dedust message {tx.cell.hash.hex()}")
+            # account: FullAccountState = await self.ton_rpc_client.get_address_information(
+            #     out_msg.info.src.to_str()
+            # )
+            try:
                 await self.handle_dedust_event_flow(out_msg=out_msg)
+                logging.debug(f"Detected dedust message {tx.cell.hash.hex()}")
+            except Exception:
+                pass
         if out_msg.info.src.to_str(is_user_friendly=False) == tonstakers_main_address:
             logging.debug(f"Detected tonstakers message {tx.cell.hash.hex()}")
             await self.handle_tonstakers_event_flow(out_msg=out_msg)

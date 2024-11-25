@@ -266,6 +266,7 @@ class BlockScanner:
         for tx in transactions:
             tx: Transaction
             await self.scan_transaction(tx, block)
+        await self.scan_transaction(tx, block)
 
         # logging.debug(
         #     f"Scanned shard block {block.shard} {block.seqno} with {len(transactions)=}"
