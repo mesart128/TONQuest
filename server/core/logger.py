@@ -1,15 +1,34 @@
+import asyncio
 import logging.config
 import os
 import typing
 
 import yaml
+from aiogram import Bot
 
+from core.config import base_config
 # from gunicorn import glogging
 # from gunicorn import glogging
 from pythonjsonlogger import jsonlogger
 
 from core.config import BASE_DIR, CONTEXT_ID, LOG_DIR, LoggerSettings
 from core.enums import CustomLoggingLevels
+
+bot = Bot(token=base_config.bot_token)
+
+
+class TelegramLogger:
+
+    def __init__(self):
+        self.bot = Bot(token=base_config.bot_token)
+
+    async def info(self, text: str = "Default", chat_ids: typing.List[int] = base_config.admin_ids_list):
+        for chat_id in chat_ids:
+            await self.bot.send_message(chat_id=chat_id, text=text)
+
+def setup_telegram_logger():
+    logger = TelegramLogger()
+    return logger
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):

@@ -2,6 +2,7 @@ import logging
 from typing import List, Optional, Union
 from uuid import UUID
 
+from aiogram import Bot
 from aiogram.utils.web_app import (
     WebAppInitData,
     parse_webapp_init_data,
@@ -11,9 +12,11 @@ from pytoniq_core import Address
 
 from apps.ton_quest import models, schemas
 from apps.ton_quest.enums import TaskStatusEnum, TaskTypeEnum
-from apps.ton_quest.models import Branch, Piece
+from apps.ton_quest.models import Branch, Piece, User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo
 from apps.ton_quest.web_app_auth import WebAppAuthHeader
+from core.config import base_config
+from core.logger import setup_telegram_logger, TelegramLogger
 from database import initial_data
 from database.engine import db, engine
 from database.initial_data import populate_database
@@ -21,6 +24,9 @@ from database.repository import NotFound
 
 db: TonQuestSQLAlchemyRepo
 
+telegram_logger: TelegramLogger = setup_telegram_logger()
+
+bot = Bot(token=base_config.bot_token)
 
 class CustomWebAppAuthHeader(WebAppAuthHeader):
     async def __call__(self, request: Request) -> Optional[WebAppInitData]:
@@ -63,7 +69,7 @@ async def get_user(
     web_app_init_data: WebAppInitData = Security(web_app_auth_header),
 ) -> schemas.User:
     try:
-        user = await db.get_user(web_app_init_data.user.id)
+        user: User = await db.get_user(web_app_init_data.user.id)
     except NotFound:
         user = models.User(
             telegram_id=web_app_init_data.user.id,
@@ -72,7 +78,8 @@ async def get_user(
             last_name=web_app_init_data.user.last_name,
             image=web_app_init_data.user.photo_url,
         )
-        user = await db.create_user(user)
+        user: User = await db.create_user(user)
+    await telegram_logger.info(text=f"User {user} logged in")
     response_dict = user.to_read_model()
     response_dict['wallet_address'] = Address(response_dict['wallet_address']).to_str() if response_dict['wallet_address'] else None
     response_dict["xp"] = await calculate_user_xp(user, db)
@@ -105,6 +112,7 @@ async def set_user_address(
     for task in wallet_task:
         await db.create_user_task(user_.id, task.id, completed=True)
     updated_user = await db.get_user_by(id=user_.id)
+    await telegram_logger.info(text=f"User {updated_user} set address {address}")
     response = updated_user.to_read_model()
     response['wallet_address'] = Address(response['wallet_address']).to_str()
     response["xp"] = await calculate_user_xp(updated_user, db)
@@ -156,6 +164,7 @@ async def claim_task(
     completed = await db.check_task_completed(user.id, task_id)
     if not completed:
         return {"error": "Task not completed"}
+    await telegram_logger.info(text=f"User {user} claimed task {task}")
     await db.claim_task(user.id, task_id)
     return {"success": True}
 
@@ -187,7 +196,7 @@ async def complete_task(
             return {"error": "Task already completed"}
     except NotFound:
         user_task = await db.create_user_task(user.id, task_id)
-
+    await telegram_logger.info(text=f"User {user} completed task {task}")
     await db.complete_task(user.id, task_id)
     return {"success": True}
 
@@ -292,6 +301,7 @@ async def check_branch(
             return {"error": "Not all tasks in branch completed"}
     updated_branch = await db.complete_branch(user.id, branch_id)
     logging.debug(f"Branch {branch_id} completed. {updated_branch}")
+    await telegram_logger.info(text=f"User {user} completed branch {branch}")
     completed = await db.check_branch_completed(user.id, branch_id)
     return {"completed": completed}
 
@@ -325,6 +335,7 @@ async def complete_branch(
             return {"error": "Not all tasks in branch completed"}
     updated_branch = await db.complete_branch(user.id, branch_id)
     logging.debug(f"Branch {branch_id} completed. {updated_branch}")
+    await telegram_logger.info(text=f"User {user} completed branch {branch}")
     return {"success": True}
 
 
@@ -350,6 +361,7 @@ async def get_nfts(web_app_init_data: WebAppInitData = Security(web_app_auth_hea
             ]
         }
         tasks.append(result)
+    await telegram_logger.info(text=f"User {user} requested NFTs")
     return {"nft": [nft.to_read_model() for nft in nfts], "cards": tasks}
 
     # return schemas.NFT(**first_nft.to_read_model())
@@ -387,6 +399,7 @@ async def claim_piece(
         return {"error": "Branch not completed"}
 
     await db.claim_piece(user.id, piece_id)
+    await telegram_logger.info(text=f"User {user} claimed piece {piece}")
     return {"success": True}
 
 

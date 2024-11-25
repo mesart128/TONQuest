@@ -22,6 +22,8 @@ class ServerConfig(BaseSettings):
     rpc_api_keys: Optional[str]
     preview_url: Optional[str] = "https://google.com"
     debug: bool = True
+    bot_token: Optional[str]
+    admin_ids: str = ""
 
     @property
     def rpc_api_keys_list(self):
@@ -29,6 +31,14 @@ class ServerConfig(BaseSettings):
             key.strip() for key in self.rpc_api_keys.split(",") if key.strip()
         ]
         return rpc_api_keys_list
+
+    @property
+    def admin_ids_list(self):
+        ids = self.admin_ids
+        admin_ids_list: List[int] = [
+            int(admin_id.strip()) for admin_id in ids.split(",") if admin_id.strip()
+        ]
+        return admin_ids_list
 
     class Config:
         extra = "ignore"
