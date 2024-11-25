@@ -106,3 +106,7 @@ button:focus-visible {
   height: 100%;
   overflow: hidden;
 }
+
+.swiper-slide {
+  display: flex;
+}

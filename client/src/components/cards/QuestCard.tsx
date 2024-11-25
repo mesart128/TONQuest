@@ -34,22 +34,22 @@ const QuestCard = ({
   const { branch, error, activeTask } = useSelector((state) => state.branch);
 
   return (
-    <div className="max-w-sm mx-auto flex mb-16" onClick={cardSelectHandler}>
+    <div className="max-w-sm mx-auto flex mb-4" onClick={cardSelectHandler}>
       <div
         className="rounded-3xl flex flex-col justify-around  p-6 text-white
-      border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px]"
+      border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px] bg-black/10 backdrop-blur-lg"
       >
         <div className="text-center mb-8 flex flex-col items-center justify-center space-y-4">
           <div className="space-y-1">
-            <h2 className="text-4xl font-bold opacity-50">{type}</h2>
-            <h1 className="text-3xl font-bold">{title}</h1>
+            <h2 className="text-3xl font-bold opacity-60">{type}</h2>
+            <h1 className="text-4xl font-bold">{title}</h1>
           </div>
           <p className="text-xl text-blue-100 opacity-75">{description}</p>
         </div>
 
         <div className="flex justify-center mb-8">
-          <div className="relative w-24 h-24">
-            <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[50%]">
+            <div className="inset-0 flex items-center justify-center">
               <img
                 className="w-full max-h-48 object-cover rounded"
                 src={`data:image/png;base64,${imageUrl}`}
