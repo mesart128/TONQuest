@@ -79,7 +79,7 @@ async def get_user(
             image=web_app_init_data.user.photo_url,
         )
         user: User = await db.create_user(user)
-    await telegram_logger.info(text=f"User {user.to_read_model()} logged in")
+    await telegram_logger.info(text=f"User({user.telegram_id}) {user.first_name}{f' - @{user.username}' if user.username else ''} logged in")
     response_dict = user.to_read_model()
     response_dict['wallet_address'] = Address(response_dict['wallet_address']).to_str() if response_dict['wallet_address'] else None
     response_dict["xp"] = await calculate_user_xp(user, db)
@@ -112,7 +112,7 @@ async def set_user_address(
     for task in wallet_task:
         await db.create_user_task(user_.id, task.id, completed=True)
     updated_user = await db.get_user_by(id=user_.id)
-    await telegram_logger.info(text=f"User {updated_user.first_name}{f' - {updated_user.username}' if updated_user.username else ''} set address {address}")
+    await telegram_logger.info(text=f"User({user.telegram_id}) {user.first_name}{f' - @{user.username}' if user.username else ''} set address {address}")
     response = updated_user.to_read_model()
     response['wallet_address'] = Address(response['wallet_address']).to_str()
     response["xp"] = await calculate_user_xp(updated_user, db)
