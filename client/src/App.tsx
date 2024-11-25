@@ -40,7 +40,7 @@ function App() {
           <Route path="/banner-page" element={<BannerPage />} />
           <Route path="/tasks-page" element={<TaskPage />} />
           <Route path="/exp" element={<ExpPage />} />
-          <Route path="/task_slider" element={<SliderPage />} />
+          <Route path="/task-slider" element={<SliderPage />} />
         </Routes>
       </Router>
     </TonConnectUIProvider>
