@@ -67,7 +67,7 @@ const SliderPage = () => {
                 </div>
 
                 <h1 className="text-white text-4xl font-bold mb-4">
-                  {activeTask.title}
+                  {slide.title}
                 </h1>
 
                 <p className="text-gray-300 text-lg mb-8">
