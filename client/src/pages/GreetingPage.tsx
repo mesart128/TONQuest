@@ -20,6 +20,7 @@ const GreetingPage = () => {
     "web-app-auth": initDataRaw
   };
 
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
