@@ -55,7 +55,7 @@ async def populate_database(engine, repo):
         "head": "Getting Started",
         "description": "Learn how to connect your wallet to the TON ecosystem",
         "image": get_base_64_str(f"category/INTRO.png"),
-        "subtitle": "This branch introduces users to the TON ecosystem by explaining how to connect their wallet.",
+        "subtitle": "Your wallet is your digital key to the TON ecosystem, allowing you to store assets, manage transactions, and interact with decentralized applications.",
     }
     connect_wallet_category_id = await repo.add_one(Category, category_connect_wallet_data)
 
@@ -84,9 +84,9 @@ async def populate_database(engine, repo):
         "title": "Easy start",
         "description": "You will learn how to use decentralized exchange tools",
         "image": get_base_64_str(f"category/DEX.png"),
-        "subtitle": "This branch focuses on introducing users"
-        " to Dedust through hands-on tasks, with interactive and easy-to-understand explanations.",
-    }
+        "subtitle": "This branch provides a beginner-friendly introduction to Dedust, guiding you through interactive tasks and clear, practical explanations.",
+        # TODO - можно поменять на странице Баннер пейдж(первая страница после выбора категорий)
+}
     dex_category_id = await repo.add_one(Category, dex_category_data)
     dedust_branch_data = {
         "title": "Dedust",
@@ -105,37 +105,75 @@ async def populate_database(engine, repo):
     }
     dedust_first_task_id = await repo.add_one(Task, dedust_first_task_data)
 
-    slides_first_task = [
+    slides_dedust_tasks = [
         {
             "task_id": dedust_first_task_id,
-            "title": "Connect Wallet",
-            "description": "",
-            "image": get_base_64_str("Frame 2087326246.png"),
+            "title": "What is Token Swapping?",
+            "description": (
+                "Token swapping allows you to exchange one token for another directly on the Dedust platform. "
+                "It's a quick and decentralized way to exchange resources without intermediaries."
+            ),
+            "image": None,  # todo я бы вставил что то типо exchange.png
             "queue": 1,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Select Swap token pair",
-            "description": "",
-            "image": get_base_64_str("Frame 2087326241.png"),
+            "title": "Fiat Example",
+            "description": (
+                "Imagine going to a currency exchange office to convert USD into EUR. "
+                "Token swapping works the same way but with cryptocurrencies, without needing a bank."
+            ),
+            "image": None,
             "queue": 2,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Confirm Swap",
-            "description": "",
-            "image": get_base_64_str("Frame 2087326241 (1).png"),
+            "title": "Connect Your Wallet",
+            "description": (
+                "This ensures you can access your tokens securely."
+            ),
+            "image": get_base_64_str(f"dedust_swap_1.png"),
             "queue": 3,
         },
         {
             "task_id": dedust_first_task_id,
-            "title": "Wait for transaction confirmation",
-            "description": "",
-            "image": get_base_64_str("Frame 2087326241 (2).png"),
+            "title": "Select swap token pair",
+            "description": None,
+            "image": get_base_64_str(f"dedust_swap_2.png"),
             "queue": 4,
-        }
+        },
+        {
+            "task_id": dedust_first_task_id,
+            "title": "Specify how much of the token you want to swap",
+            "description": (
+                "Dedust will calculate the approximate value."
+            ),
+            "image": get_base_64_str(f"dedust_swap_3.png"),
+            "queue": 5,
+        },
+        {
+            "task_id": dedust_first_task_id,
+            "title": "Review Details and Confirm",
+            "description": None,
+            "image": get_base_64_str(f"dedust_swap_4.png"),
+            "queue": 6,
+        },
+        {
+            "task_id": dedust_first_task_id,
+            "title": "Approve in Wallet",
+            "description": None,
+            "image": get_base_64_str(f"dedust_swap_5.png"),
+            "queue": 7,
+        },
+        {
+            "task_id": dedust_first_task_id,
+            "title": None,
+            "description": None,
+            "image": get_base_64_str(f"dedust_swap_6.png"),
+            "queue": 8,
+        },
     ]
-    for slide in slides_first_task:
+    for slide in slides_dedust_tasks:
         await repo.add_one(Slide, slide)
 
     dedust_second_task_data = {
@@ -278,7 +316,7 @@ async def populate_database(engine, repo):
                 "Supplying assets means depositing your tokens into the EVAA protocol. "
                 "In return, you earn interest on your assets while they are used by others."
             ),
-            "image": "https://kauri.io/images/slide1.png",
+            "image": None,
             "queue": 1,
         },
         {
@@ -288,7 +326,7 @@ async def populate_database(engine, repo):
                 "Supplying is like putting your money in a savings account. While your money is in the bank, "
                 "it earns interest because the bank lends it to others or invests it."
             ),
-            "image": "https://kauri.io/images/slide2.png",
+            "image": None,
             "queue": 2,
         },
         {
