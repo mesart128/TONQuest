@@ -17,11 +17,11 @@ const BonusPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center min-w-[432px] w-full">
-      <div className="bg-[#B428B4] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[250px]"></div>
-      <div className="flex-1 flex flex-col px-4 mx-auto w-full z-10">
-        <Navbar />
-        <div className="flex flex-col flex-1 mt-8">
+    <div className="h-screen flex flex-col items-center overflow-y-auto">
+      <div className="bg-[#B428B4] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
+      <div className="flex-1 flex flex-col mx-auto w-full z-10">
+        <Navbar user={user}/>
+        <div className="flex flex-col flex-1 mt-8 mb-20 p-10">
           <section className="max-w-md flex flex-col flex-1">
             <div className="flex items-center justify-center">
               <img className="w-full object-cover rounded" src={spiral} />

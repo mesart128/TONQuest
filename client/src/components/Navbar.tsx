@@ -20,7 +20,7 @@ const Navbar = ({user}) => {
 
 
   return (
-    <nav className="h-16 flex justify-between items-center w-full">
+    <nav className="h-16 flex justify-between w-full pl-5 pr-5 z-10">
       <div className="flex justify-between gap-4 w-full">
         <div className="flex items-center gap-3">
           <button className="p-2 rounded-full hover:bg-primary/20 transition-all mt-4">

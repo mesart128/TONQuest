@@ -23,15 +23,16 @@ const BannerPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
+    <div className="min-h-screen relative flex flex-col items-center w-full">
+      <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[200px]"></div>
       <TopContextMenu title={title} type={type} />
 
-      <div className="flex flex-col items-center justify-center gap-12 mt-16">
+      <div className="flex flex-col items-center justify-center gap-2 mt-16">
         <img className="max-w-xs" src={`data:image/png;base64,${imageUrl}`} />
-        <h1 className="text-3xl font-bold mb-4">
+        <h1 className="text-2xl font-bold mb-4 text-center text-white ">
           {title} ({type})
         </h1>
-        <p className="text-xl text-blue-100 opacity-75 max-w-sm text-center">
+        <p className="text-l text-white opacity-75 max-w-sm text-center ">
           {description}
         </p>
       </div>
