@@ -6,9 +6,14 @@ import { toast } from 'react-toastify';
 import { completeBranchById, checkBranchById } from '../../store/slices/branchSlice';
 import { claimPieceById } from '../../store/slices/pieceSlice';
 import { fetchUser } from '../../store/slices/userSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { setUserAddress } from '../../api/Router';
+import { useTonConnectModal,useTonAddress } from '@tonconnect/ui-react';
 
-const TaskCard = ({ part, title, xp, status, actionURL, callToAction, onTaskComplete }) => {
+const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction, onTaskComplete }) => {
   const dispatch = useDispatch();
+  const { state, open, close } = useTonConnectModal();
+  const rawAddress = useTonAddress(false);
   const { branch, error, activeTask } = useSelector((state) => state.branch);
   const { imageUrl, description, type, branches } = useSelector(
     (state) => state.selectedCard,
@@ -17,6 +22,8 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction, onTaskComp
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
   const [localStatus, setLocalStatus] = useState(status);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLocalStatus(status);
@@ -52,6 +59,18 @@ const TaskCard = ({ part, title, xp, status, actionURL, callToAction, onTaskComp
       console.log(`taskId: ${taskId}`);
       if (!taskCheck?.completed) {
         toast.error("Task is not completed.");
+        if (task_type === 'connect_wallet') {
+          if (rawAddress) {
+            console.log('address connected');
+            await setUserAddress(rawAddress);
+          }
+          else {
+            open();
+          }
+        }
+        else {
+          navigate('/task-slider');
+        }
         return false;
       }
     
