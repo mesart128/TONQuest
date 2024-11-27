@@ -21,6 +21,7 @@ def get_base_64_str(filename):
     :return: Base64 строка, либо пустая строка в случае ошибки
     """
     filename = os.path.join(static_root_path, filename)
+    return filename
     try:
         # Проверяем, существует ли файл
         if not os.path.isfile(filename):

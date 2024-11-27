@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI
 from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 
 from core.config import LoggerSettings
 from core.dependencies import CoreContainer, initialize_container
@@ -42,6 +43,8 @@ def app_factory():
     setup_middlewares(fastapi_app)
     core_container = CoreContainer()
     fastapi_app.container = core_container
+    fastapi_app.mount("/static", StaticFiles(directory="static"), name="static")
+
     return fastapi_app
 
 
