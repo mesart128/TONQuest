@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories } from '../store/slices/categorySlice';
 import ClipLoader from "react-spinners/ClipLoader";
 import {useNavigate} from 'react-router-dom';
-import { init, backButton } from '@telegram-apps/sdk-react';
+import { Page } from '../Page';
 
 const QuestPage = () => {
   const dispatch = useDispatch();
@@ -26,13 +26,10 @@ const QuestPage = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  init();
-  backButton.mount();
-  backButton.show();
-
 
 
   return (
+    <Page back={false} disableMainButton={true}>
     <div className="h-screen flex flex-col items-center">
       <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
       {!cards && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
@@ -71,6 +68,7 @@ const QuestPage = () => {
                         imageUrl={card.image}
                         branches={card.branches}
                         percentage={card.percentage}
+                        subtitle={card.subtitle}
                       />
                     </div>
                   </SwiperSlide>
@@ -80,11 +78,11 @@ const QuestPage = () => {
             </div>
           </section>
         </div>
-        <BottomMenu visible={true}/>
       </div>
       <BottomMenu />
       
     </div>
+    </Page>
   );
 };
 

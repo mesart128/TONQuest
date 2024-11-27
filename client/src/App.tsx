@@ -16,11 +16,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser, updateUserAddress } from './store/slices/userSlice';
 import { on, retrieveLaunchParams, postEvent, init, backButton, showBackButton } from '@telegram-apps/sdk';
 import { api } from './api/Router';
-import {useNavigate} from 'react-router-dom';
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   // init();
   // backButton.mount()
   // if (backButton.show.isAvailable()) {
@@ -35,22 +33,17 @@ function App() {
     "web-app-auth": initDataRaw
   };
   // web_app_setup_back_button
-  postEvent('web_app_setup_closing_behavior', true);
+  // postEvent('web_app_setup_closing_behavior', true);
 
-  useEffect(() => {
-    console.log('location', window.location.pathname);
-    if (window.location.pathname !== '/quest') {
-      postEvent('web_app_setup_back_button', true);
-    }
-    else {
-      postEvent('web_app_setup_back_button', false);
-    }
-  }, [window.location.pathname]);
-
-  const removeBackButtonListener = on('back_button_pressed', () => {
-    console.log('back_button_pressed');
-    navigate(-1);
-  });
+  // useEffect(() => {
+  //   console.log('location', window.location.pathname);
+  //   if (window.location.pathname !== '/quest') {
+  //     postEvent('web_app_setup_back_button', true);
+  //   }
+  //   else {
+  //     postEvent('web_app_setup_back_button', false);
+  //   }
+  // }, [window.location.pathname]);
 
   const { user, status, error } = useSelector((state) => state.user);
 
@@ -73,6 +66,7 @@ function App() {
         draggable
         pauseOnHover
       />
+      <Router>
         <Routes>
           <Route path="/" element={<GreetingPage />} />
           <Route path="/quest" element={<QuestPage />} />
@@ -83,6 +77,7 @@ function App() {
           <Route path="/exp" element={<ExpPage />} />
           <Route path="/task-slider" element={<SliderPage />} />
         </Routes>
+      </Router>
     </TonConnectUIProvider>
   );
 }

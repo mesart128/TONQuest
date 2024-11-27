@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GradientButton from '../buttons/GradientButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { claimTaskById, checkTaskById } from '../../store/slices/taskSlice';
+import { fetchBranchById } from '../../store/slices/branchSlice';
 import { toast } from 'react-toastify';
 import { completeBranchById, checkBranchById } from '../../store/slices/branchSlice';
 import { claimPieceById } from '../../store/slices/pieceSlice';
@@ -44,7 +45,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
         setLocalStatus('claimed');
         setShowSuccessModal(true);
       }
-      
+      await dispatch(fetchBranchById(branch.id)).unwrap();
       if (onTaskComplete) {
         onTaskComplete();
       }
@@ -164,17 +165,17 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
   return (
     <div className="w-full max-w-md">
       {localStatus === 'blocked' ? (
-        <div className="bg-gray-800 text-white p-4 rounded-lg mb-4 relative overflow-hidden">
+        <div className="bg-gray-800 text-white p-4 rounded-2xl mb-4 relative overflow-hidden">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Part {part}</span>
             <span className="text-sm bg-gray-700 rounded-full px-2 py-1">
               +{xp} XP
             </span>
           </div>
-          <h3 className="text-lg font-bold mb-4">
+          <h3 className="text-lg font-bold mb-12">
             Unlock after the {part - 1} task
           </h3>
-          <div className="absolute inset-0 flex justify-center items-center backdrop-blur bg-black/30">
+          <div className="absolute inset-0 flex flex-col justify-center items-center backdrop-blur bg-black/30 ">
             <div className="bg-black/50 p-3 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -191,35 +192,57 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
                 />
               </svg>
             </div>
+            <div className="text-lg">
+            Unlock after the {part - 1} task
+            </div>
           </div>
+          <GradientButton
+            blocked={true}
+            children="Check completion"
+            onClick={checkIsCompleted}
+          />
         </div>
       ) : localStatus === 'active' ? (
-        <div className="bg-gradient-to-r from-[#003E6B] via-[#004F8C] to-[#003E6B] text-white p-4 rounded-lg mb-4 shadow-lg">
+        <div className="backdrop-blur-lg bg-black/10 border-[2px] border-white/30 text-white p-4 rounded-2xl mb-4 shadow-lg">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">Part {part}</span>
-            <span className="text-sm bg-blue-500 rounded-full px-2 py-1">
+            <span className="text-sm font-medium">Part {part -1}</span>
+            <span className="text-sm backdrop-blur-lg bg-black/10 border border-[#0096FF]/60 rounded-xl p-2">
               +{xp} XP
             </span>
           </div>
-          <h3 className="text-lg font-bold mb-4">{title}</h3>
+          <h3 className="text-lg font-bold mb-12">{title}</h3>
           <GradientButton
             blocked={false}
-            children="Check the execution"
+            children="Check completion"
             onClick={checkIsCompleted}
           />
         </div>
       ) : localStatus === 'claimed' ? (
-        <div className="bg-gray-500 from-[#003E6B] via-[#004F8C] to-[#003E6B] text-white p-4 rounded-lg mb-4 shadow-lg">
+        // <div className="bg-gray-500 from-[#003E6B] via-[#004F8C] to-[#003E6B] text-white p-4 rounded-lg mb-4 shadow-lg">
+        //   <div className="flex justify-between items-center mb-2">
+        //     <span className="text-sm font-medium">Part {part}</span>
+        //     <span className="text-sm bg-blue-500 rounded-full px-2 py-1">
+        //       +{xp} XP
+        //     </span>
+        //   </div>
+        //   <h3 className="text-lg font-bold mb-4">{title}</h3>
+        //   <GradientButton
+        //     blocked={true}
+        //     children="Check the execution"
+        //     onClick={checkIsCompleted}
+        //   />
+        // </div>
+        <div className="backdrop-blur-lg bg-black/10 border-[3px] border-white/10 text-white p-4 rounded-2xl mb-4 shadow-lg">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Part {part}</span>
-            <span className="text-sm bg-blue-500 rounded-full px-2 py-1">
+            <span className="text-sm backdrop-blur-lg bg-black/10 border border-[#0096FF]/60 rounded-xl p-2">
               +{xp} XP
             </span>
           </div>
-          <h3 className="text-lg font-bold mb-4">{title}</h3>
+          <h3 className="text-lg font-bold mb-12">{title}</h3>
           <GradientButton
             blocked={true}
-            children="Check the execution"
+            children="The task is completed"
             onClick={checkIsCompleted}
           />
         </div>

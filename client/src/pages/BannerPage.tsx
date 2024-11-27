@@ -10,36 +10,42 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import GradientButton from '../components/buttons/GradientButton';
+import { Page } from '../Page';
+import { mainButton } from '@telegram-apps/sdk-react';
 
 const BannerPage = () => {
   const navigate = useNavigate();
 
-  const { imageUrl, description, title, type, branches } = useSelector(
+  const { imageUrl, description, title, type, branches, subtitle } = useSelector(
     (state) => state.selectedCard,
   );
-
-  const nextButtonHandler = () => {
-    navigate('/tasks-page');
-  };
+  useEffect(() => {
+    mainButton.setParams({
+      isVisible: true,
+      text: 'Next',
+    });
+    return mainButton.onClick(() => {
+      navigate('/tasks-page');
+    });
+  }, []);
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center w-full">
-      <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[200px]"></div>
-      <TopContextMenu title={title} type={type} />
-
-      <div className="flex flex-col items-center justify-center gap-2 mt-16">
-        <img className="max-w-xs" src={`data:image/png;base64,${imageUrl}`} />
-        <h1 className="text-2xl font-bold mb-4 text-center text-white ">
-          {title} ({type})
-        </h1>
-        <p className="text-l text-white opacity-75 max-w-sm text-center ">
-          {description}
-        </p>
+    <Page>
+      <div className="min-h-screen relative flex flex-col items-center w-[100vw]">
+        <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
+        <div className="flex flex-col items-center justify-center gap-2 mt-16 z-10">
+          <img className="max-w-[60%]" src={`data:image/png;base64,${imageUrl}`} />
+          <h1 className="text-2xl font-bold mb-4 text-center text-white max-w-[70%]">
+            {title} ({type})
+          </h1>
+          <p className="text-l text-white opacity-75 max-w-[85%] text-center ">
+            {subtitle}
+          </p>
+        </div>
+        <div className="mt-auto mb-14">
+        </div>
       </div>
-      <div className="mt-auto mb-14">
-        <GradientButton children="Next" onClick={nextButtonHandler} />
-      </div>
-    </div>
+    </Page>
   );
 };
 
