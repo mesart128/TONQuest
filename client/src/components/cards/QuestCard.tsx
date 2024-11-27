@@ -11,7 +11,8 @@ const QuestCard = ({
   xpReward,
   imageUrl,
   branches,
-  percentage
+  percentage,
+  subtitle,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const QuestCard = ({
         xpReward,
         imageUrl,
         branches,
+        subtitle,
       }),
     );
 

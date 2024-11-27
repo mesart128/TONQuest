@@ -15,7 +15,7 @@ const BottomMenu = ({visible}) => {
   const location = useLocation();
 
   return (
-    <div className={`flex justify-between pl-5 pr-5 pb-5 w-screen backdrop-blur-lg z-20 fixed p-[20px] box-border bottom-0 left-0 rounded-t-2xl`}>
+    <div className="flex justify-between pl-5 pr-5 pb-5 w-screen backdrop-blur-lg z-20 sticky p-[20px] box-border bottom-0 left-0 rounded-t-2xl">
       {menuItems?.map(({ path, imgSrc, alt }) => {
         const isCurrentPage = location.pathname === path;
 

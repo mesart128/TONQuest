@@ -4,7 +4,9 @@ import {
     themeParams,
     miniApp,
     initData,
+    closingBehavior,
     $debug,
+    mainButton,
     init as initSDK,
   } from '@telegram-apps/sdk-react';
   
@@ -24,6 +26,27 @@ import {
     if (!backButton.isSupported() || !miniApp.isSupported()) {
       throw new Error('ERR_NOT_SUPPORTED');
     }
+
+    if (mainButton.mount.isAvailable()) {
+      mainButton.mount();
+      mainButton.isMounted(); // true
+      mainButton.setParams({
+        backgroundColor: '#0096FF',
+        hasShineEffect: true,
+        isEnabled: true,
+        isLoaderVisible: false,
+        isVisible: false,
+        text: 'My text',
+        textColor: '#ffffff'
+      });
+    }
+    
+    if (closingBehavior.mount.isAvailable()) {
+      closingBehavior.mount();
+      console.log(closingBehavior.isMounted()) // true
+      closingBehavior.enableConfirmation();
+      console.log(closingBehavior.isConfirmationEnabled()) // true
+    }
   
     // Mount all components used in the project.
     backButton.mount();
@@ -38,5 +61,9 @@ import {
       .then(() => {
         viewport.bindCssVars();
       });
-      backButton.show();
+    // backButton.show();
+    // backButton.onClick(() => {
+    //   console.log('Back button clicked');
+    // });
+    // backButton.hide();
   }
