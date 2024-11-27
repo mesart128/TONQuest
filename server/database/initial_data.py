@@ -189,38 +189,56 @@ async def populate_database(engine, repo):
     slides_second_task = [
         {
             "task_id": dedust_second_task_id,
+            "title": "What is adding a liquidity pool",
+            "description": (
+                "When you create a liquidity pool, you are giving someone the opportunity to exchange the cryptocurrency pair you have locked." 
+                "In return for this you receive a commission from the exchange transaction in your pool." ),
+            "image": None,
+            "queue": 1, 
+        },
+        {
+            "task_id": dedust_second_task_id,
+            "title": "Fiat analogy",
+            "description": (
+                "Imagine that a liquidity pool is a kind of “exchange office” that contains a pair of cryptocurrencies, for example TON/USDT."
+                "For the exchange to take place, participants (you, for example) contributed both TON and USDT to the pool in advance, creating a balance between these assets"),
+            "image": None,
+            "queue": 2,
+        },
+        {
+            "task_id": dedust_second_task_id,
             "title": "Select liquidity pool",
             "description": "",
             "image": get_base_64_str(f"dedust_add_liquidity_1.png"),
-            "queue": 1,
+            "queue": 3,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Deposit",
             "description": "",
             "image": get_base_64_str(f"dedust_add_liquidity_2.png"),
-            "queue": 2,
+            "queue": 4,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Enter amount of tokens",
             "description": "",
             "image": get_base_64_str(f"dedust_add_liquidity_3.png"),
-            "queue": 3,
+            "queue": 5,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Press Deposit",
             "description": "",
             "image": get_base_64_str(f"dedust_add_liquidity_4.png"),
-            "queue": 4,
+            "queue": 6,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Confirm in wallet",
             "description": "",
             "image": get_base_64_str(f"dedust_add_liquidity_5.png"),
-            "queue": 5,
+            "queue": 7,
         }
     ]
     for slide in slides_second_task:
@@ -233,45 +251,59 @@ async def populate_database(engine, repo):
         "queue": 3,
         "task_type": TaskTypeEnum.dedust_withdraw,
         "action_url": "https://dedust.io/pools/",
-        "call_to_action": "You have learned how to withdraw liquidity and reclaim the tokens you added to the pool. ",
+        "call_to_action": "You have learned how to withdraw liquidity you added to the pool. ",
     }
     dedust_third_task_id = await repo.add_one(Task, dedust_third_task_data)
 
     slides_third_task = [
         {
             "task_id": dedust_third_task_id,
+            "title": "What does it mean ?",
+            "description": "Here you will withdraw liquidity/currency from the pool you created",
+            "image": None,
+            "queue": 1,
+        },
+        {
+            "task_id": dedust_third_task_id,
+            "title": "Fiat analogy",
+            "description": "It's like withdrawing money from the reserve of an exchange office or bank",
+            "image": None,
+            "queue": 2,
+        },
+        {
+            "task_id": dedust_third_task_id,
             "title": "Go to your positions",
             "description": "",
             "image": get_base_64_str(f"dedust_withdraw_liquidity_1.png"),
-            "queue": 1,
+            "queue": 3,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Select pool",
             "description": "",
             "image": get_base_64_str(f"dedust_withdraw_liquidity_2.png"),
-            "queue": 2,
+            "queue": 4,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Press Withdraw",
             "description": "",
             "image": get_base_64_str(f"dedust_withdraw_liquidity_3.png"),
-            "queue": 3,
+            "queue": 5,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Press Withdraw",
             "description": "",
             "image": get_base_64_str(f"dedust_withdraw_liquidity_4.png"),
-            "queue": 4,
+            "queue": 6,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Confirm action",
             "description": "",
             "image": get_base_64_str(f"dedust_withdraw_liquidity_5.png"),
-            "queue": 5,
+            "queue": 7,
         },
     ]
     for slide in slides_third_task:
