@@ -31,10 +31,11 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
   }, [status]);
 
   const areAllTasksCompleted = () => {
-    if (!branch?.tasks?.length) {
-      return false;
-    }
-    return branch.tasks.every(task => task.status === 'claimed' || task.completed);
+    // if (!branch?.tasks?.length) {
+    //   return false;
+    // }
+    // return branch.tasks.every(task => task.status === 'claimed' || task.completed);
+    return true;
   };
 
   const refreshTaskState = async () => {
@@ -100,17 +101,18 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
 
     try {
       const branchCheck = await dispatch(checkBranchById(branchId)).unwrap();
+      console.log(`branchId CHECK: ${branchId}`);
 
-      if (!branchCheck?.completed) {
+      if (branchCheck.completed === false) {
         toast.error("Branch is not completed.");
         return false;
       }
     
-      const branchCompletion = await dispatch(completeBranchById(branchId)).unwrap();
-      if (!branchCompletion.success) {
-        toast.error("Error occurred.");
-        return false;
-      }
+      // const branchCompletion = await dispatch(completeBranchById(branchId)).unwrap();
+      // if (!branchCompletion.success) {
+      //   toast.error("Error occurred.");
+      //   return false;
+      // }
     
       await refreshTaskState();
       return true;
@@ -144,18 +146,22 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
         toast.error("No active task found.");
         return;
       }
-
+      console.log('ACTIVE TASK:', activeTask);
       const isTaskCompleted = await validateTaskCompletion(activeTask.id);
+      console.log('VALIDATE TASK COMPLETION:', isTaskCompleted);
       if (!isTaskCompleted) return;
 
+      console.log('ARE ALL TASKS COMPLETED:', areAllTasksCompleted());
       if (areAllTasksCompleted()) {
+        console.log('ALL TASKS COMPLETED');
         const isBranchCompleted = await validateBranchCompletion(branch.id);
         if (!isBranchCompleted) return;
-    
-        const isRewardClaimed = await claimReward(branch.pieces[0].id);
-        if (!isRewardClaimed) return;
+        
+        navigate('/congratulations');
+        // const isRewardClaimed = await claimReward(branch.pieces[0].id);
+        // if (!isRewardClaimed) return;
 
-        setLocalStatus('claimed');
+        // setLocalStatus('claimed');
       }
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'An error occurred');
@@ -205,7 +211,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
       ) : localStatus === 'active' ? (
         <div className="backdrop-blur-lg bg-black/10 border-[2px] border-white/30 text-white p-4 rounded-2xl mb-4 shadow-lg">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">Part {part -1}</span>
+            <span className="text-sm font-medium">Part {part}</span>
             <span className="text-sm backdrop-blur-lg bg-black/10 border border-[#0096FF]/60 rounded-xl p-2">
               +{xp} XP
             </span>
@@ -249,7 +255,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
       ) : (
         <></>
       )}
-      {showSuccessModal && (
+      {/* {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-gradient-to-b from-blue-900 to-black p-8 rounded-lg text-white text-center max-w-md w-full mx-4">
             <button 
@@ -290,7 +296,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSelectedCard } from '../../store/slices/selectedCardSlice';
 import { useSelector } from 'react-redux';
+import { API_BASE_URL } from '../../api/Router';
 
 const QuestCard = ({
   type,
@@ -43,8 +44,8 @@ const QuestCard = ({
       >
         <div className="text-center mb-8 flex flex-col items-center justify-center space-y-4">
           <div className="space-y-1">
-            <h2 className="text-3xl font-bold opacity-60">{type}</h2>
-            <h1 className="text-4xl font-bold">{title}</h1>
+            <h2 className="text-3xl font-medium opacity-60">{type}</h2>
+            <h1 className="text-4xl font-medium">{title}</h1>
           </div>
           <p className="text-xl text-blue-100 opacity-75">{description}</p>
         </div>
@@ -54,7 +55,7 @@ const QuestCard = ({
             <div className="inset-0 flex items-center justify-center">
               <img
                 className="w-full max-h-48 object-cover rounded"
-                src={`data:image/png;base64,${imageUrl}`}
+                src={`${API_BASE_URL}/${imageUrl}`}
               />
             </div>
           </div>
@@ -63,7 +64,7 @@ const QuestCard = ({
         <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
           <div>{percentage}%</div>
           {/* TODO: % calculation */}
-          <div className="relative bg-white rounded-full h-2 w-32 flex-1">
+          <div className="relative bg-gray-400 rounded-full h-[0.7rem] w-32 flex-1">
             <div
               className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"
               style={{ width: `${percentage}%` }}

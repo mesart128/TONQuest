@@ -11,8 +11,8 @@ const NextSlideButton = ({actionURL}) => {
     const onClick = () => {
         console.log('last slide', swiper.isEnd);
         if (swiper.isEnd === true) {
-            navigate(-1);
             openLink(actionURL);
+            navigate(-1);
         } else {
             swiper.slideNext();
         }

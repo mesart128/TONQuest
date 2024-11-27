@@ -29,7 +29,7 @@ const TasksPage = () => {
     if (isBranchCompleted) {
       navigate('/quest');
     } else {
-      navigate('/task-slider');
+      onSliderHandler();
     }
   }
 
@@ -47,7 +47,9 @@ const TasksPage = () => {
 
   const onSliderHandler = async () => {
     if (user?.wallet_address)  {
-      navigate('/task-slider');
+      if (activeTask.task_type !== 'connect_wallet') {
+        navigate('/task-slider');
+      }
     }
     else {
       console.log('no wallet');
@@ -72,7 +74,7 @@ const TasksPage = () => {
 
   useEffect(() => {
     if (rawAddress) {
-      console.log(rawAddress);
+      setUserAddress(rawAddress);
     }
   }
   , [rawAddress]);

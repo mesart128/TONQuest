@@ -7,10 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentSlide } from '../store/slices/branchSlice';
 import { fetchTask } from '../store/slices/taskSlice';
 import TopContextMenu from '../components/TopContextMenu';
-import GradientButton from '../components/buttons/GradientButton';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '../Page';
 import NextSlideButton from '../components/buttons/NextSlideButton';
+import { API_BASE_URL } from '../api/Router';
 
 const SliderPage = () => {
   const dispatch = useDispatch();
@@ -78,7 +78,7 @@ const SliderPage = () => {
 
                   <div className="rounded-3xl overflow-hidden mb-8">
                     <img
-                      src={`data:image/png;base64,${slide.image}`}
+                      src={`${API_BASE_URL}/${slide.image}`}
                       alt={slide.title}
                       style={{
                         maxHeight: '75vh',

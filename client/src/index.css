@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 900;
+  font-style: normal;
+  src: url('../public/Webfonts/CraftworkSans-Black.eot');
+  src: url('../public/Webfonts/CraftworkSans-Black.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Black.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Black.ttf') format('truetype'),  
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 700;
+  src: url('../public/Webfonts/CraftworkSans-Bold.eot');
+  src: url('../public/Webfonts/CraftworkSans-Bold.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Bold.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Bold.ttf') format('truetype'),  
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 600;
+  src: url('../public/Webfonts/CraftworkSans-SemiBold.eot');
+  src: url('../public/Webfonts/CraftworkSans-SemiBold.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-SemiBold.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-SemiBold.ttf') format('truetype'),
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 500;
+  src: url('../public/Webfonts/CraftworkSans-Medium.eot');
+  src: url('../public/Webfonts/CraftworkSans-Medium.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Medium.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Medium.ttf') format('truetype'),  
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 400;
+  src: url('../public/Webfonts/CraftworkSans-Regular.eot');
+  src: url('../public/Webfonts/CraftworkSans-Regular.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Regular.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Regular.ttf') format('truetype'),  
+}
+
 html,
 body {
   margin: 0;
@@ -9,6 +55,7 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  font-family: 'CraftworkSans', sans-serif;
 }
 
 :root {
