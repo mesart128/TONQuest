@@ -5,6 +5,7 @@ const initialState = {
   description: '',
   title: '',
   type: '',
+  subtitle: '',
   branches: [],
 };
 

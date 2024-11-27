@@ -143,11 +143,11 @@ const NFTPage = () => {
   // ];
 
   return (
-    <div className="h-screen flex flex-col items-center overflow-y-auto">
+    <div className="h-screen flex flex-col items-center o">
       <div className="bg-[#C3FF00] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
-      <div className="flex flex-col overflow-y-auto z-10">
+      <div className="flex flex-col z-10">
         <Navbar user={user}/>
-        <div className="flex-1 mt-8 overflow-y-auto max-w-[100vw] mb-[50px] p-5">
+        <div className="flex-1 overflow-y-auto max-w-[100vw] p-5">
           <section className="flex flex-col items-center">
             <div className="flex items-center justify-center relative rounded-3xl w-[85vw] h-auto">
               <div className="h-[100%] w-[100%] rounded-3xl absolute inset-0 mx-auto grid grid-cols-2 overflow-hidden shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -185,7 +185,6 @@ const NFTPage = () => {
         </div>
       </div>
       <BottomMenu />
-      <div className="p-[20px]"></div>
     </div>
   );
 };

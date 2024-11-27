@@ -1,10 +1,10 @@
 import React from 'react';
 
 const GradientButton = ({ children, onClick, blocked }) => {
-  const blockedStyle = `bg-gray-600 w-full disabled max-w-md py-4 px-8
-                    font-semibold rounded-2xl z-10`;
-  const activeStyle = `w-full max-w-md py-4 px-8 bg-gradient-to-r from-[#00C7FF]/30 via-[#0096FF] to-[#00C7FF]/30 hover:bg-[#0096FF]/50
-                    text-white font-semibold rounded-2xl
+  const blockedStyle = `bg-[#0096FF]/25 w-full disabled max-w-md p-1.5 text-white/65
+                   rounded-[12px] z-10`;
+  const activeStyle = `w-full max-w-md p-1.5 bg-gradient-to-r from-[#0096FF]/65 via-[#0096FF] to-[#0096FF]/65 hover:bg-[#0096FF]/50
+                    text-white rounded-[12px]
                     backdrop-blur-sm transition-all duration-300
                     border border-white/10
                     active:transform active:scale-[0.98]

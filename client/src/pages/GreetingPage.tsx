@@ -3,13 +3,23 @@ import logo from '../assets/greeting-logo.png';
 import GradientButton from '../components/buttons/GradientButton.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-// import { useTelegram } from '../providers/TelegramContext';
 import { fetchUser, updateUserAddress } from '../store/slices/userSlice';
 import ClipLoader from "react-spinners/ClipLoader";
+import { mainButton } from '@telegram-apps/sdk-react';
 
 const GreetingPage = () => {
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    mainButton.setParams({
+      isVisible: true,
+      text: 'Continue',
+    });
+    return mainButton.onClick(() => {
+      navigate('/quest');
+    });
+  }, []);
 
   //if (error) return <p>Error: {error}</p>;
   const { user, status, error } = useSelector((state) => state.user);
@@ -36,7 +46,7 @@ const GreetingPage = () => {
           earn points and become a real expert in the field of blockchain.
         </p>
       </div>
-      <GradientButton blocked={false} children="Continue" onClick={handleContinue} />
+      {/* <GradientButton blocked={false} children="Continue" onClick={handleContinue} /> */}
     </div>
   );
 };
