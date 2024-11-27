@@ -4,6 +4,9 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    target: 'esnext' //browsers can handle the latest ES features
+  },
   plugins: [react(), mkcert()],
   esbuild: {
     supported: {
