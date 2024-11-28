@@ -114,7 +114,7 @@ async def populate_database(engine, repo):
                 "Token swapping allows you to exchange one token for another directly on the Dedust platform. "
                 "It's a quick and decentralized way to exchange resources without intermediaries."
             ),
-            "image": None,  # todo я бы вставил что то типо exchange.png
+            "image": '',  # todo я бы вставил что то типо exchange.png
             "queue": 1,
         },
         {
@@ -124,7 +124,7 @@ async def populate_database(engine, repo):
                 "Imagine going to a currency exchange office to convert USD into EUR. "
                 "Token swapping works the same way but with cryptocurrencies, without needing a bank."
             ),
-            "image": None,
+            "image": "",
             "queue": 2,
         },
         {
@@ -187,7 +187,7 @@ async def populate_database(engine, repo):
             "description": (
                 "When you create a liquidity pool, you are giving someone the opportunity to exchange the cryptocurrency pair you have locked." 
                 "In return for this you receive a commission from the exchange transaction in your pool." ),
-            "image": None,
+            "image": "",
             "queue": 1, 
         },
         {
@@ -196,7 +196,7 @@ async def populate_database(engine, repo):
             "description": (
                 "Imagine that a liquidity pool is a kind of “exchange office” that contains a pair of cryptocurrencies, for example TON/USDT."
                 "For the exchange to take place, participants (you, for example) contributed both TON and USDT to the pool in advance, creating a balance between these assets"),
-            "image": None,
+            "image": "",
             "queue": 2,
         },
         {
@@ -254,14 +254,14 @@ async def populate_database(engine, repo):
             "task_id": dedust_third_task_id,
             "title": "What does it mean ?",
             "description": "Here you will withdraw liquidity/currency from the pool you created",
-            "image": None,
+            "image": "",
             "queue": 1,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Fiat analogy",
             "description": "It's like withdrawing money from the reserve of an exchange office or bank",
-            "image": None,
+            "image": "",
             "queue": 2,
         },
         {
@@ -342,7 +342,7 @@ async def populate_database(engine, repo):
                 "Supplying assets means depositing your tokens into the EVAA protocol. "
                 "In return, you earn interest on your assets while they are used by others."
             ),
-            "image": None,
+            "image": "",
             "queue": 1,
         },
         {
@@ -352,7 +352,7 @@ async def populate_database(engine, repo):
                 "Supplying is like putting your money in a savings account. While your money is in the bank, "
                 "it earns interest because the bank lends it to others or invests it."
             ),
-            "image": None,
+            "image": "",
             "queue": 2,
         },
         {
