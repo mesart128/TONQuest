@@ -21,7 +21,7 @@ const BonusPage = () => {
       <div className="bg-[#B428B4] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
       <div className="flex-1 flex flex-col mx-auto w-full z-10">
         <Navbar user={user}/>
-        <div className="flex flex-col flex-1 mt-8 mb-20 p-10">
+        <div className="flex flex-col flex-1 mt-8 mb-20 p-5">
           <section className="max-w-md flex flex-col flex-1">
             <div className="flex items-center justify-center">
               <img className="w-full object-cover rounded" src={spiral} />
@@ -35,7 +35,7 @@ const BonusPage = () => {
             </p>
             {/* TODO: this trick won't work with transparent backgrounds, need to find a workaround */}
             <div className="bg-gradient-to-r from-[#9333EA] via-[#3B82F6] to-[#16A34A] rounded-xl px-0.5 py-0.5 flex items-center justify-between mt-4 flex-grow-0 self-center">
-              <button className="rounded-xl hover:bg-primary/20 transition-all flex-grow-0">
+              <button className="rounded-xl hover:bg-primary/20 transition-all flex-grow-0 bg-black/80">
                 <h3 className="text-white text-sm font-semibold">My history</h3>
               </button>
             </div>
