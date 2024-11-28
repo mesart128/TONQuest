@@ -20,7 +20,6 @@ const SliderPage = () => {
   const tasks = useSelector((state) => state.task.tasks);
   const slides = tasks?.[activeTask?.id]?.slides;
   const xp = tasks?.[activeTask?.id]?.xp;
-  const actionURL = tasks?.[activeTask?.id]?.action_url;
 
   useEffect(() => {
     if (activeTask?.id) {
@@ -93,7 +92,7 @@ const SliderPage = () => {
                 </div>
               </SwiperSlide>
             ))}
-            <NextSlideButton actionURL={actionURL} />
+            <NextSlideButton actionURL={activeTask.action_url} />
           </Swiper>
         </div>
       </div>

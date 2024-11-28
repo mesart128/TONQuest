@@ -3,6 +3,7 @@ import TaskCard from '../components/cards/TaskCard';
 import TopContextMenu from '../components/TopContextMenu';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBranchById } from '../store/slices/branchSlice';
+import { fetchUser } from '../store/slices/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setSelectedCard } from '../store/slices/selectedCardSlice';
 import { useTonConnectModal, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
@@ -55,7 +56,9 @@ const TasksPage = () => {
       console.log('no wallet');
       if (rawAddress) {
         console.log('address connected');
-        await setUserAddress(rawAddress);
+        setUserAddress(rawAddress).then(() => {
+          dispatch(fetchUser());
+        });
       }
       else {
         console.log('address not connected');
@@ -74,7 +77,9 @@ const TasksPage = () => {
 
   useEffect(() => {
     if (rawAddress) {
-      setUserAddress(rawAddress);
+      setUserAddress(rawAddress).then(() => {
+        dispatch(fetchUser());
+      });
     }
   }
   , [rawAddress]);
