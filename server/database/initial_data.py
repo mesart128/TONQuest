@@ -165,13 +165,6 @@ async def populate_database(engine, repo):
             "image": get_base_64_str(f"dedust_swap_5.png"),
             "queue": 7,
         },
-        {
-            "task_id": dedust_first_task_id,
-            "title": None,
-            "description": None,
-            "image": get_base_64_str(f"dedust_swap_6.png"),
-            "queue": 8,
-        },
     ]
     for slide in slides_dedust_tasks:
         await repo.add_one(Slide, slide)
