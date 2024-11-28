@@ -139,7 +139,7 @@ async def populate_database(engine, repo):
         {
             "task_id": dedust_first_task_id,
             "title": "Select swap token pair",
-            "description": None,
+            "description": "",
             "image": get_base_64_str(f"dedust_swap_2.png"),
             "queue": 4,
         },
@@ -155,14 +155,14 @@ async def populate_database(engine, repo):
         {
             "task_id": dedust_first_task_id,
             "title": "Review Details and Confirm",
-            "description": None,
+            "description": "",
             "image": get_base_64_str(f"dedust_swap_4.png"),
             "queue": 6,
         },
         {
             "task_id": dedust_first_task_id,
             "title": "Approve in Wallet",
-            "description": None,
+            "description": "",
             "image": get_base_64_str(f"dedust_swap_5.png"),
             "queue": 7,
         },
