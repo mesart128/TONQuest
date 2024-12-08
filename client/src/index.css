@@ -2,24 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 900;
+  font-style: normal;
+  src: url('../public/Webfonts/CraftworkSans-Black.eot');
+  src: url('../public/Webfonts/CraftworkSans-Black.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Black.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Black.ttf') format('truetype'),  
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 700;
+  src: url('../public/Webfonts/CraftworkSans-Bold.eot');
+  src: url('../public/Webfonts/CraftworkSans-Bold.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Bold.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Bold.ttf') format('truetype'),  
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 600;
+  src: url('../public/Webfonts/CraftworkSans-SemiBold.eot');
+  src: url('../public/Webfonts/CraftworkSans-SemiBold.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-SemiBold.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-SemiBold.ttf') format('truetype'),
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 500;
+  src: url('../public/Webfonts/CraftworkSans-Medium.eot');
+  src: url('../public/Webfonts/CraftworkSans-Medium.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Medium.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Medium.ttf') format('truetype'),  
+}
+
+@font-face {
+  font-family: 'CraftworkSans';
+  font-weight: 400;
+  src: url('../public/Webfonts/CraftworkSans-Regular.eot');
+  src: url('../public/Webfonts/CraftworkSans-Regular.woff2') format('woff2'),
+       url('../public/Webfonts/CraftworkSans-Regular.woff') format('woff'),
+       url('../public/Webfonts/CraftworkSans-Regular.ttf') format('truetype'),  
+}
+
 html,
 body {
   margin: 0;
-  /* height: 100%; */
-  /* overflow: hidden; */
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'CraftworkSans', sans-serif;
 }
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  /* height: 100%; */
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -36,11 +81,11 @@ a:hover {
 }
 
 body {
-  margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -103,6 +148,25 @@ button:focus-visible {
   background: #fff;
 }
 
-.toast-position {
-  left: 14rem !important;
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  display: flex;
+}
+
+.border-gradient {
+  border-image: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 3px, transparent 3px) 0% 0%/8px 8px no-repeat,
+  radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 3px, transparent 3px) 100% 0%/8px 8px no-repeat,
+  radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 3px, transparent 3px) 0% 100%/8px 8px no-repeat,
+  radial-gradient(circle at 0 0, #ffffff 0, #ffffff 3px, transparent 3px) 100% 100%/8px 8px no-repeat,
+  linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 16px) no-repeat,
+  linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 16px) calc(100% - 10px) no-repeat,
+  linear-gradient(106deg, #48abe0 0%, rgba(255,255,255,0) 50%, #48abe0 100%);
+  border-radius: 8px;
+  padding: 9px;
+  box-sizing: border-box;
 }

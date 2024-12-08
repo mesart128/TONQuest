@@ -1,9 +1,9 @@
 import axios from '../../node_modules/axios/index';
 
 // Base URL of the API
-const API_BASE_URL = 'http://194.61.53.28:8000/';
+export const API_BASE_URL = 'https://tonquest.connect-four.online:80';
 // const TOKEN =
-//   'query_id=AAGOkjdJAAAAAI6SN0lDtNz9&user=%7B%22id%22%3A1228378766%2C%22first_name%22%3A%22%5B%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%5D%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22thinkfull%22%2C%22language_code%22%3A%22uk%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FO7kJtb7caW-l-UgHnh9ORATe5Ku_evvsvmZVI_6uCMI.svg%22%7D&auth_date=1732117099&signature=dUMV-_0Y-X96X7wcCy0CB5_ddeoH0-ZOjTObuKA26XDhdqS4TKGgGFb6qviJBXHPsT0R_v4y1e79-kVSKIkBDg&hash=43b9d3336c940d1f39d71e32f61ecb39b430ee2de887be1f3083ada3a84c68cb';
+// 'query_id=AAGOkjdJAAAAAI6SN0lDtNz9&user=%7B%22id%22%3A1228378766%2C%22first_name%22%3A%22%5B%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%7C%E2%80%A2%5D%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22thinkfull%22%2C%22language_code%22%3A%22uk%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FO7kJtb7caW-l-UgHnh9ORATe5Ku_evvsvmZVI_6uCMI.svg%22%7D&auth_date=1732117099&signature=dUMV-_0Y-X96X7wcCy0CB5_ddeoH0-ZOjTObuKA26XDhdqS4TKGgGFb6qviJBXHPsT0R_v4y1e79-kVSKIkBDg&hash=43b9d3336c940d1f39d71e32f61ecb39b430ee2de887be1f3083ada3a84c68cb';
 
 // Axios instance with default settings
 export const api = axios.create({
@@ -14,9 +14,8 @@ export const api = axios.create({
   // },
 });
 
-
 // Utility function to get Authorization token from storage (localStorage or sessionStorage, etc.)
-const getAuthToken = () => {
+export const getAuthToken = () => {
   // Example: Assuming token is stored in localStorage
   return localStorage.getItem('token');
 };

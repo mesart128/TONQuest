@@ -1,0 +1,25 @@
+From e57df8fc03140cc9dbb62be611fa691463bcc529 Mon Sep 17 00:00:00 2001
+From: Ihor Samartsev <isamarcev1994@gmail.com>
+Date: Sun, 24 Nov 2024 01:28:09 +0200
+Subject: [PATCH] added nft
+
+---
+ client/src/store/index.ts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/client/src/store/index.ts b/client/src/store/index.ts
+index 29d5478..b2fe6a1 100644
+--- a/client/src/store/index.ts
++++ b/client/src/store/index.ts
+@@ -32,6 +32,8 @@ const rootReducer = combineReducers({
+   branch: branchReducer,
+   selectedCard: selectedCardReducer,
+   piece: pieceReducer,
++  nft: nftReducer,
++
+ });
+ 
+ const persistedReducer = persistReducer(persistConfig, rootReducer);
+-- 
+2.47.0.windows.2
+

@@ -11,34 +11,43 @@ import BottomMenu from '../components/BottomMenu';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories } from '../store/slices/categorySlice';
 import ClipLoader from "react-spinners/ClipLoader";
+import {useNavigate} from 'react-router-dom';
+import { Page } from '../Page';
 
 const QuestPage = () => {
   const dispatch = useDispatch();
 
   const cards = useSelector((state) => state.category.list);
   const { user, status, error } = useSelector((state) => state.user);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+
+
   return (
-    <div className="h-screen relative bg-gradient-to-b from-black via-[#00a1ff] to-black flex flex-col items-center min-w-[432px]">
+    <Page back={false} disableMainButton={true}>
+    <div className="h-screen flex flex-col items-center">
+      <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
       {!cards && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
       <ClipLoader color="#36d7b7" size={50} />
       </div>}
-      <div className="flex-1 flex flex-col px-4 mx-auto">
+      <div className="flex-1 flex flex-col w-[100vw]">
         <Navbar user={user}/>
-        <div className="flex flex-col flex-1 justify-center">
-          <h2 className="text-2xl font-bold text-center mb-8">
+        {/* <h2 className="text-2xl font-bold text-center mt-5 mr-8">
             Welcome to Quest
-          </h2>
-          <section className="max-w-md">
+          </h2> */}
+        <div className="flex flex-col flex-1 justify-center mb-10 ">
+          
+          <section className="max-w-[85vw] m-auto">
             <div className="quest-slider-container relative">
               <Swiper
                 modules={[Pagination]}
                 spaceBetween={20}
-                slidesPerView={1.2}
+                slidesPerView={1}
                 centeredSlides={true}
                 pagination={{
                   clickable: true,
@@ -59,6 +68,7 @@ const QuestPage = () => {
                         imageUrl={card.image}
                         branches={card.branches}
                         percentage={card.percentage}
+                        subtitle={card.subtitle}
                       />
                     </div>
                   </SwiperSlide>
@@ -68,9 +78,11 @@ const QuestPage = () => {
             </div>
           </section>
         </div>
-        <BottomMenu />
       </div>
+      <BottomMenu />
+      
     </div>
+    </Page>
   );
 };
 
