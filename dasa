@@ -1,0 +1,275 @@
+[33mcommit e101014573791ebae829cfa1bb8632e651a3eeb0[m[33m ([m[1;36mHEAD[m[33m)[m
+Merge: e57df8f b57187b
+Author: Ihor Samartcev <36453239+isamarcev@users.noreply.github.com>
+Date:   Sun Nov 24 01:49:07 2024 +0200
+
+    Merge pull request #13 from dim-anis/client
+    
+    add 'coming soon' card to BonusPage
+
+[33mcommit b57187b7aecb3f3440979a2a6f05cdfd84a35d96[m
+Merge: 6c6e45f e57df8f
+Author: Ihor Samartcev <36453239+isamarcev@users.noreply.github.com>
+Date:   Sun Nov 24 01:48:16 2024 +0200
+
+    Merge branch 'client' into client
+
+[33mcommit e57df8fc03140cc9dbb62be611fa691463bcc529[m
+Author: Ihor Samartsev <isamarcev1994@gmail.com>
+Date:   Sun Nov 24 01:28:09 2024 +0200
+
+    added nft
+
+[33mcommit e87e87305cfbfc0b1117bdf820aa416ee081158e[m
+Merge: 691972f fb7ea4d
+Author: Leroy-bit <leroysay2007@gmail.com>
+Date:   Sun Nov 24 01:19:02 2024 +0200
+
+    Merge branch 'client' of https://github.com/mesart128/TONQuest into client
+
+[33mcommit 691972f517391e449620729184f7987e2e1b197b[m
+Merge: 0abca7b 5c38e11
+Author: Leroy-bit <leroysay2007@gmail.com>
+Date:   Sun Nov 24 01:18:47 2024 +0200
+
+    Merge branch 'client' of https://github.com/mesart128/TONQuest into client
+
+[33mcommit fb7ea4d2d17634dfc9fbdb3a457e165388656919[m
+Merge: 5c38e11 52836a6
+Author: Leroy-bit <71983682+Leroy-bit@users.noreply.github.com>
+Date:   Sun Nov 24 01:17:50 2024 +0200
+
+    Merge pull request #15 from mesart128/nft/client
+    
+    Nft/client
+
+[33mcommit 52836a6db031300355c663a207ba1bce6cc0ec2f[m[33m ([m[1;31morigin/nft/client[m[33m)[m
+Merge: c3b7dfc 5c38e11
+Author: Leroy-bit <71983682+Leroy-bit@users.noreply.github.com>
+Date:   Sun Nov 24 01:17:41 2024 +0200
+
+    Merge branch 'client' into nft/client
+
+[33mcommit 0abca7be301da7299af945ddb639271d94ed891f[m
+Author: Leroy-bit <leroysay2007@gmail.com>
+Date:   Sun Nov 24 01:10:55 2024 +0200
+
+    add ton connect
+
+[33mcommit c3b7dfc0f35b056808a8998eb285a36d05324d59[m
+Author: Ihor Samartsev <isamarcev1994@gmail.com>
+Date:   Sun Nov 24 00:57:04 2024 +0200
+
+    add nft page logic
+
+[33mcommit 5c38e11b8a80f9d402abb04e7a01706e1c5c0021[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Sat Nov 23 23:49:43 2024 +0100
+
+    sync 9
+
+[33mcommit 9b2df325f410380d7eaffd6a018fd17989df3324[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Sat Nov 23 22:44:33 2024 +0100
+
+    sync 8
+
+[33mcommit cc38963bbdb8d62c9ec57552d2cc867751507dbd[m
+Author: Ihor Samartsev <isamarcev1994@gmail.com>
+Date:   Sat Nov 23 23:19:31 2024 +0200
+
+    asfd
+
+[33mcommit 3faa329c5403d35b43e8c0cbf91dac0c9ba4a21f[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Sat Nov 23 22:09:05 2024 +0100
+
+    sync 7
+
+[33mcommit 1ffb64832c8976a3ea96c7d01dd89de58c7d476e[m
+Author: Ihor Samartsev <isamarcev1994@gmail.com>
+Date:   Sat Nov 23 22:35:03 2024 +0200
+
+    add nft page
+
+[33mcommit 435ac373b9a8ec2ff1d81a80dae2f92105260eb8[m
+Author: Leroy-bit <leroysay2007@gmail.com>
+Date:   Sat Nov 23 22:10:35 2024 +0200
+
+    fixed backgrounds
+
+[33mcommit 6c6e45fc87307c73858da65e977ff36e430a8cda[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sun Nov 24 00:48:10 2024 +0700
+
+    add coming soon card to BonusPage
+
+[33mcommit 8c4457313e8df01866c2ab2a28574dcf4dbd4bc6[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sun Nov 24 00:47:47 2024 +0700
+
+    add assets
+
+[33mcommit 488a700ec3d18aab39adad89d72e1edd8c3246a4[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Sat Nov 23 18:00:54 2024 +0100
+
+    sync 6
+
+[33mcommit 450753952cf7314200ba6053ce84b620f0649c31[m
+Merge: c9c4de6 76da73d
+Author: Pulzze92 <76836870+Pulzze92@users.noreply.github.com>
+Date:   Sat Nov 23 18:00:07 2024 +0100
+
+    Merge pull request #12 from dim-anis/client
+    
+    fill out nft page
+
+[33mcommit 76da73dc6d799e6e93d3611e611a0c53d1129a2b[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 23:55:42 2024 +0700
+
+    add mosaic image cover, card carousel
+
+[33mcommit b26bc8a4f9a73ce6e80273e9acdd690fd743ca57[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 23:55:05 2024 +0700
+
+    add carousel component
+
+[33mcommit 8eec94d4d4bbe570ab550f097eec3eb91a38eb3b[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 23:54:53 2024 +0700
+
+    add assets
+
+[33mcommit c9c4de68413745574c32fd4c1079a03fb921508f[m
+Merge: 8e93dec 065ae53
+Author: Pulzze92 <76836870+Pulzze92@users.noreply.github.com>
+Date:   Sat Nov 23 12:29:06 2024 +0100
+
+    Merge pull request #9 from dim-anis/client
+    
+    fix layout jumps, fill out some pages
+
+[33mcommit 065ae53cebc8f66454ccddfcf869088c99798b42[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 14:09:27 2024 +0700
+
+    refactor(QuestPage): no more layout jumps on page switch
+
+[33mcommit 8b789a2789a3408b79c208939d69b86c4a3e6c60[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 14:07:59 2024 +0700
+
+    add placeholders to NFTPage
+
+[33mcommit 66af45ed285a0015c2d8769114a2c0907b2d96eb[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 14:06:08 2024 +0700
+
+    add some content to BonusPage
+
+[33mcommit 2771f626c2167570c033107c0bbd1458627d1081[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 13:59:43 2024 +0700
+
+    refactor(BottomMenu): use path to highlight currently active page
+
+[33mcommit 1412c9d527b8ee1a63dd4ef668a6508d78a1f278[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 13:57:45 2024 +0700
+
+    remove background gradient
+
+[33mcommit c6f96942149072202ef678c2de8b7b772d1e7711[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 13:55:48 2024 +0700
+
+    make navbar transparent
+
+[33mcommit 596dc226d428f2368a5f4a162051a47477eccd8a[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 13:53:58 2024 +0700
+
+    add asset
+
+[33mcommit 177a35ebfc1ca3040dce5117056b60c7545ef516[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Sat Nov 23 11:28:58 2024 +0700
+
+    fix: add horizontal padding, reduce the gap between the icon and the text
+
+[33mcommit 8e93decdcdf94f91ea9037dc1f8ed9ec61de6d7d[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Sat Nov 23 01:04:40 2024 +0100
+
+    sync 5
+
+[33mcommit 760fd2d77d93e01c6e71956d23bbbc776be312dc[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Fri Nov 22 21:24:27 2024 +0100
+
+    sync (ton connect)
+
+[33mcommit 64e80705a46ba15816cb91b2e8529a9752f5af2d[m
+Merge: 8cb5c0c 4e3650c
+Author: Pulzze92 <76836870+Pulzze92@users.noreply.github.com>
+Date:   Fri Nov 22 20:58:40 2024 +0100
+
+    Merge pull request #7 from dim-anis/client
+    
+    layout fixes
+
+[33mcommit 4e3650c37e0cc73d7e16af8affd256573cf4a653[m
+Merge: def2b40 8cb5c0c
+Author: Pulzze92 <76836870+Pulzze92@users.noreply.github.com>
+Date:   Fri Nov 22 20:57:50 2024 +0100
+
+    Merge branch 'client' into client
+
+[33mcommit 8cb5c0c64dd43d2dff3b65fdf58e0c8957d77936[m[33m ([m[1;31morigin/client-reserve[m[33m)[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Fri Nov 22 15:52:20 2024 +0100
+
+    sync
+
+[33mcommit def2b40916139992cd393d9a0b76c0167e7f7791[m
+Merge: 565f089 35b38d9
+Author: Dmitry Anisov <36299471+dim-anis@users.noreply.github.com>
+Date:   Fri Nov 22 22:44:42 2024 +0700
+
+    Merge branch 'client' into client
+
+[33mcommit 565f089a322b81bc2008f7f047f2aa4227cdffdd[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Fri Nov 22 22:33:39 2024 +0700
+
+    fix: make card containers same size
+
+[33mcommit 35b38d9dc142a023d8990aa2306817830fe50818[m
+Author: Aleksandr Bakshtaev <abakshtaev@aquivalabs.com>
+Date:   Fri Nov 22 15:52:20 2024 +0100
+
+    sync
+
+[33mcommit 3c68c113cf6b415e93d8329b8f8fe14cf6e782a5[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Fri Nov 22 22:09:15 2024 +0700
+
+    fix: move button to the bottom of the page
+
+[33mcommit 0745174eed625231f2f9a10cf91631503b75d4f7[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Fri Nov 22 22:08:24 2024 +0700
+
+    fix: bottom menu intersects with slider controls
+
+[33mcommit 4602d1f4c85e033e33d53a90fc59a95a7c44d8ca[m
+Author: dim-anis <anis.dim@gmail.com>
+Date:   Fri Nov 22 22:07:28 2024 +0700
+
+    fix: make progress bar span full width of the container
+
+[33mcommit 57398a073e4da7807e213f57eca1b77f01ae4311[m
+Author: dim-anis <anis.dim@gmail.
