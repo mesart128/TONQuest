@@ -69,15 +69,15 @@ const SliderPage = () => {
 
                     <div className="rounded-3xl overflow-hidden mb-8">
                       {slide.image && (
-                          <img
-                              src={`${API_BASE_URL}/${slide.image}`}
-                              alt={slide.title}
-                              style={{
-                                maxHeight: '75vh',
-                                objectFit: 'contain',
-                              }}
-                              className="m-auto"
-                          />
+                        <img
+                          src={`${API_BASE_URL}/${slide.image}`}
+                          alt={slide.title}
+                          style={{
+                            maxHeight: '75vh',
+                            objectFit: 'contain',
+                          }}
+                          className="m-auto"
+                        />
                       )}
                     </div>
                   </div>
