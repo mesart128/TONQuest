@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-
+import React from 'react';
 const TopContextMenu = ({ info, title, type, step }) => {
   const navigate = useNavigate();
 
@@ -19,10 +19,10 @@ const TopContextMenu = ({ info, title, type, step }) => {
   };
 
   return (
-    <div className="flex justify-around w-full">
+    <div className="flex justify-between px-5 py-2 w-screen z-10">
       {info && (
         <>
-          <button onClick={backButtonHandler}>Back</button>
+          {/*<button onClick={backButtonHandler}>Back</button>*/}
           <div className="flex items-center">
             {title} ({type}){' '}
           </div>
