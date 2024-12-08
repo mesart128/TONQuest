@@ -1,28 +1,30 @@
 import { useNavigate } from 'react-router-dom';
 import { backButton, mainButton } from '@telegram-apps/sdk-react';
 import { PropsWithChildren, useEffect } from 'react';
-import React from 'react'
+import React from 'react';
 
-
-export function Page({ children, back = true, disableMainButton = false }: PropsWithChildren<{
-    /**
-     * True if it is allowed to go back from this page.
-     */
-    back?: boolean
-    /**
-     * True if the main button should be disabled.
-     */
-    disableMainButton?: boolean
+export function Page({
+  children,
+  back = true,
+  disableMainButton = false,
+}: PropsWithChildren<{
+  /**
+   * True if it is allowed to go back from this page.
+   */
+  back?: boolean;
+  /**
+   * True if the main button should be disabled.
+   */
+  disableMainButton?: boolean;
 }>) {
-useEffect(() => {
+  useEffect(() => {
     if (disableMainButton) {
-        mainButton.setParams({
-            isVisible: false,
-        });
-        return mainButton.onClick(() => {});
+      mainButton.setParams({
+        isVisible: false,
+      });
+      return mainButton.onClick(() => {});
     }
-    }
-    , [disableMainButton]);
+  }, [disableMainButton]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,8 +36,6 @@ useEffect(() => {
     }
     backButton.hide();
   }, [back]);
-
-
 
   return <>{children}</>;
 }

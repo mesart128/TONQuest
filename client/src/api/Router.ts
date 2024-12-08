@@ -117,14 +117,14 @@ export const getCategories = async () => {
 };
 
 export const getNft = async () => {
-    try {
-        const response = await api.get('/nft');
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch NFT:', error);
-        throw error;
-    }
-}
+  try {
+    const response = await api.get('/nft');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch NFT:', error);
+    throw error;
+  }
+};
 
 // 8. **Get Category by ID**
 export const getCategoryById = async (categoryId) => {

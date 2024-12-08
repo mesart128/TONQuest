@@ -14,7 +14,7 @@ import { API_BASE_URL } from '../api/Router';
 
 const SliderPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const { activeTask } = useSelector((state) => state.branch);
   const tasks = useSelector((state) => state.task.tasks);
@@ -31,14 +31,14 @@ const SliderPage = () => {
     navigate('/tasks-page');
   };
 
-  console.log(slides)
+  console.log(slides);
 
   return (
     <Page>
       <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col items-center">
         <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[200px]"></div>
         <div className="w-full max-w-[100vw]">
-          <div className="flex justify-between items-center mb-6 px-10 w-full fixed top-0 left-0 z-10 sticky top-0">
+          <div className="flex justify-between items-center mb-6 px-10 py-3 w-full fixed top-0 left-0 z-10 sticky top-0">
             <div className="text-sm backdrop-blur-lg bg-black/10 border border-white/60 rounded-xl p-2">
               +{xp} XP
             </div>
@@ -49,51 +49,43 @@ const SliderPage = () => {
               Close
             </button>
           </div>
-          <Swiper
-            modules={[Pagination]}
-            pagination={{
-              clickable: true,
-              type: 'bullets',
-              bulletActiveClass: 'swiper-pagination-bullet-active bg-blue-500',
-              bulletClass: 'swiper-pagination-bullet bg-gray-400 mx-1',
-            }}
-            spaceBetween={30}
-            slidesPerView={1}
-            centeredSlides={true}
-            className="w-full h-full"
-            // onSlideChange={(swiper) => setIsLastSlide(swiper.activeIndex === slides?.length - 1)}
-          >
-            {slides?.map((slide) => (
-              <SwiperSlide key={slide.id}>
-                <div className="p-6 h-full">
+          <div className="flex items-center justify-center h-screen">
+            <Swiper
+              loop={true}
+              className="w-full h-full"
+              slidesPerView={1}
+              // onSlideChange={(swiper) => setIsLastSlide(swiper.activeIndex === slides?.length - 1)}
+            >
+              {slides?.map((slide) => (
+                <SwiperSlide key={slide.id}>
+                  <div className="flex flex-col items-center justify-center h-full text-center">
+                    <h1 className="text-white text-3xl font-bold mb-4">
+                      {slide.title}
+                    </h1>
 
-                  <h1 className="text-white text-3xl font-bold mb-4">
-                    {slide.title}
-                  </h1>
+                    <p className="text-gray-300 text-lg mb-8 max-w-[90%]">
+                      {slide.description}
+                    </p>
 
-                  <p className="text-gray-300 text-lg mb-8">
-                    {slide.description}
-                  </p>
-
-                  <div className="rounded-3xl overflow-hidden mb-8">
-                    <img
-                      src={`${API_BASE_URL}/${slide.image}`}
-                      alt={slide.title}
-                      style={{
-                        maxHeight: '75vh',
-                        // maxWidth: '75%',
-                        objectFit: 'contain',
-                      }}
-                      className="m-auto"
-                    />
+                    <div className="rounded-3xl overflow-hidden mb-8">
+                      {slide.image && (
+                          <img
+                              src={`${API_BASE_URL}/${slide.image}`}
+                              alt={slide.title}
+                              style={{
+                                maxHeight: '75vh',
+                                objectFit: 'contain',
+                              }}
+                              className="m-auto"
+                          />
+                      )}
+                    </div>
                   </div>
-
-                  
-                </div>
-              </SwiperSlide>
-            ))}
-            <NextSlideButton actionURL={activeTask.action_url} />
-          </Swiper>
+                </SwiperSlide>
+              ))}
+              <NextSlideButton actionURL={activeTask.action_url} />
+            </Swiper>
+          </div>
         </div>
       </div>
     </Page>

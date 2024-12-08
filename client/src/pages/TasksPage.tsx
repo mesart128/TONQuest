@@ -6,7 +6,11 @@ import { fetchBranchById } from '../store/slices/branchSlice';
 import { fetchUser } from '../store/slices/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setSelectedCard } from '../store/slices/selectedCardSlice';
-import { useTonConnectModal, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
+import {
+  useTonConnectModal,
+  useTonConnectUI,
+  useTonAddress,
+} from '@tonconnect/ui-react';
 import { setUserAddress } from '../api/Router';
 import { checkBranchById } from '../store/slices/branchSlice';
 import { getTask } from '../api/Router';
@@ -24,21 +28,21 @@ const TasksPage = () => {
   );
   console.log(activeTask);
 
-  const isBranchCompleted = !branch?.tasks.some((el) => el.status === 'active' );
-  
+  const isBranchCompleted = !branch?.tasks.some((el) => el.status === 'active');
+
   const onClick = () => {
     if (isBranchCompleted) {
       navigate('/quest');
     } else {
       onSliderHandler();
     }
-  }
+  };
 
   useEffect(() => {
-      mainButton.setParams({
-        isVisible: true,
-        text: isBranchCompleted ? 'Back to Branches' : 'Start the task',
-      })
+    mainButton.setParams({
+      isVisible: true,
+      text: isBranchCompleted ? 'Back to Branches' : 'Start the task',
+    });
     return mainButton.onClick(onClick);
   }, [isBranchCompleted]);
 
@@ -47,26 +51,23 @@ const TasksPage = () => {
   );
 
   const onSliderHandler = async () => {
-    if (user?.wallet_address)  {
+    if (user?.wallet_address) {
       if (activeTask.task_type !== 'connect_wallet') {
         navigate('/task-slider');
       }
-    }
-    else {
+    } else {
       console.log('no wallet');
       if (rawAddress) {
         console.log('address connected');
         setUserAddress(rawAddress).then(() => {
           dispatch(fetchUser());
         });
-      }
-      else {
+      } else {
         console.log('address not connected');
         open();
       }
     }
   };
-  
 
   useEffect(() => {
     const branchId = branches?.[0]?.id;
@@ -81,8 +82,7 @@ const TasksPage = () => {
         dispatch(fetchUser());
       });
     }
-  }
-  , [rawAddress]);
+  }, [rawAddress]);
 
   if (error) {
     return <div>{error}</div>;
@@ -91,9 +91,9 @@ const TasksPage = () => {
   const refreshAllTasks = async () => {
     try {
       if (!branch?.id) return;
-      
+
       const branchCheck = await dispatch(checkBranchById(branch.id)).unwrap();
-      
+
       if (branchCheck) {
         await dispatch(checkBranchById(branch.id));
       }
@@ -101,7 +101,7 @@ const TasksPage = () => {
       console.error('Error refreshing tasks:', error);
     }
   };
-  
+
   return (
     <Page>
       <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col items-center max-h-screen">
@@ -126,8 +126,7 @@ const TasksPage = () => {
         </div>
 
         <footer className="p-4 w-full max-w-3xl">
-          
-            {/* {isBranchCompleted ? (
+          {/* {isBranchCompleted ? (
               <button
             className="bg-gray-500 disabled text-white w-full rounded-md py-2 mb-2"
           >
@@ -142,7 +141,6 @@ const TasksPage = () => {
           </button>
             )
   } */}
-          
         </footer>
       </div>
     </Page>
