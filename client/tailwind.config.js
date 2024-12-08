@@ -4,6 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
+        'bullet-active': '#ffffff',
+        'bullet-inactive': '#d1d5db',
         primary: {
           DEFAULT: '#0088CC',
           dark: '#006699',

@@ -9,8 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { init } from './init';
 import './mockEnv.ts';
 
-
-const root = createRoot(document.getElementById('root')!)
+const root = createRoot(document.getElementById('root')!);
 
 try {
   // Configure all application dependencies.
@@ -19,13 +18,10 @@ try {
   root.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-          <App />
+        <App />
       </PersistGate>
     </Provider>,
   );
 } catch (e) {
   console.error('Error initializing the application:', e);
 }
-
-
-

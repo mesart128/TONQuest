@@ -7,45 +7,50 @@
   font-weight: 900;
   font-style: normal;
   src: url('../public/Webfonts/CraftworkSans-Black.eot');
-  src: url('../public/Webfonts/CraftworkSans-Black.woff2') format('woff2'),
-       url('../public/Webfonts/CraftworkSans-Black.woff') format('woff'),
-       url('../public/Webfonts/CraftworkSans-Black.ttf') format('truetype'),  
+  src:
+    url('../public/Webfonts/CraftworkSans-Black.woff2') format('woff2'),
+    url('../public/Webfonts/CraftworkSans-Black.woff') format('woff'),
+    url('../public/Webfonts/CraftworkSans-Black.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'CraftworkSans';
   font-weight: 700;
   src: url('../public/Webfonts/CraftworkSans-Bold.eot');
-  src: url('../public/Webfonts/CraftworkSans-Bold.woff2') format('woff2'),
-       url('../public/Webfonts/CraftworkSans-Bold.woff') format('woff'),
-       url('../public/Webfonts/CraftworkSans-Bold.ttf') format('truetype'),  
+  src:
+    url('../public/Webfonts/CraftworkSans-Bold.woff2') format('woff2'),
+    url('../public/Webfonts/CraftworkSans-Bold.woff') format('woff'),
+    url('../public/Webfonts/CraftworkSans-Bold.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'CraftworkSans';
   font-weight: 600;
   src: url('../public/Webfonts/CraftworkSans-SemiBold.eot');
-  src: url('../public/Webfonts/CraftworkSans-SemiBold.woff2') format('woff2'),
-       url('../public/Webfonts/CraftworkSans-SemiBold.woff') format('woff'),
-       url('../public/Webfonts/CraftworkSans-SemiBold.ttf') format('truetype'),
+  src:
+    url('../public/Webfonts/CraftworkSans-SemiBold.woff2') format('woff2'),
+    url('../public/Webfonts/CraftworkSans-SemiBold.woff') format('woff'),
+    url('../public/Webfonts/CraftworkSans-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'CraftworkSans';
   font-weight: 500;
   src: url('../public/Webfonts/CraftworkSans-Medium.eot');
-  src: url('../public/Webfonts/CraftworkSans-Medium.woff2') format('woff2'),
-       url('../public/Webfonts/CraftworkSans-Medium.woff') format('woff'),
-       url('../public/Webfonts/CraftworkSans-Medium.ttf') format('truetype'),  
+  src:
+    url('../public/Webfonts/CraftworkSans-Medium.woff2') format('woff2'),
+    url('../public/Webfonts/CraftworkSans-Medium.woff') format('woff'),
+    url('../public/Webfonts/CraftworkSans-Medium.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'CraftworkSans';
   font-weight: 400;
   src: url('../public/Webfonts/CraftworkSans-Regular.eot');
-  src: url('../public/Webfonts/CraftworkSans-Regular.woff2') format('woff2'),
-       url('../public/Webfonts/CraftworkSans-Regular.woff') format('woff'),
-       url('../public/Webfonts/CraftworkSans-Regular.ttf') format('truetype'),  
+  src:
+    url('../public/Webfonts/CraftworkSans-Regular.woff2') format('woff2'),
+    url('../public/Webfonts/CraftworkSans-Regular.woff') format('woff'),
+    url('../public/Webfonts/CraftworkSans-Regular.ttf') format('truetype');
 }
 
 html,
@@ -112,6 +117,14 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.slick-dots li button {
+  @apply w-3 h-3 bg-gray-300 rounded-full transition-colors duration-300;
+}
+
+.slick-dots li.slick-active button {
+  @apply bg-white;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -125,27 +138,20 @@ button:focus-visible {
   }
 }
 
-.custom-pagination .swiper-pagination-bullet {
-  background-color: white;
-  width: 12px;
-  height: 12px;
-  opacity: 40%;
-  transition: background-color 0.3s ease;
+.slick-dots li button:before {
+  display: none;
 }
-
-.custom-pagination .swiper-pagination-bullet-active {
-  background-color: white;
-  opacity: 1;
-}
-
-.pagination-custom-task-slider .swiper-pagination-bullet {
+.slick-dots li button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.5);
-  width: 8px;
-  height: 8px;
+  transition: all 0.3s ease;
 }
-
-.pagination-custom-task-slider .swiper-pagination-bullet-active {
-  background: #fff;
+.slick-dots li.slick-active div {
+  background: white !important;
+  width: 10px;
+  height: 10px;
 }
 
 .container {
@@ -154,19 +160,36 @@ button:focus-visible {
   overflow: hidden;
 }
 
-.swiper-slide {
-  display: flex;
-}
-
 .border-gradient {
-  border-image: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 3px, transparent 3px) 0% 0%/8px 8px no-repeat,
-  radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 3px, transparent 3px) 100% 0%/8px 8px no-repeat,
-  radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 3px, transparent 3px) 0% 100%/8px 8px no-repeat,
-  radial-gradient(circle at 0 0, #ffffff 0, #ffffff 3px, transparent 3px) 100% 100%/8px 8px no-repeat,
-  linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 16px) no-repeat,
-  linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 16px) calc(100% - 10px) no-repeat,
-  linear-gradient(106deg, #48abe0 0%, rgba(255,255,255,0) 50%, #48abe0 100%);
+  border-image:
+    radial-gradient(
+        circle at 100% 100%,
+        #ffffff 0,
+        #ffffff 3px,
+        transparent 3px
+      )
+      0% 0%/8px 8px no-repeat,
+    radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 3px, transparent 3px)
+      100% 0%/8px 8px no-repeat,
+    radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 3px, transparent 3px)
+      0% 100%/8px 8px no-repeat,
+    radial-gradient(circle at 0 0, #ffffff 0, #ffffff 3px, transparent 3px) 100%
+      100%/8px 8px no-repeat,
+    linear-gradient(#ffffff, #ffffff) 50% 50% / calc(100% - 10px)
+      calc(100% - 16px) no-repeat,
+    linear-gradient(#ffffff, #ffffff) 50% 50% / calc(100% - 16px)
+      calc(100% - 10px) no-repeat,
+    linear-gradient(
+      106deg,
+      #48abe0 0%,
+      rgba(255, 255, 255, 0) 50%,
+      #48abe0 100%
+    );
   border-radius: 8px;
   padding: 9px;
   box-sizing: border-box;
+}
+
+.swiper {
+  height: 36rem;
 }

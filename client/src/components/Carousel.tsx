@@ -44,9 +44,11 @@ const Carousel = ({ items }: CarouselProps) => {
                       <p className="text-md text-white/70 leading-4 mt-0.5">
                         {subtitle}
                       </p>
-                        <p className={`text-md text-white/70 leading-4 mt-0.5 'line-through' : ''}`}>
-                            Total {subtasks.length} tasks
-                        </p>
+                      <p
+                        className={`text-md text-white/70 leading-4 mt-0.5 'line-through' : ''}`}
+                      >
+                        Total {subtasks.length} tasks
+                      </p>
                     </div>
                   </div>
                   <div className="flex w-full gap-1 px-4">

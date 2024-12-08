@@ -1,18 +1,17 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {getNft} from "../../api/Router.ts";
-import {fetchCategories, fetchCategoryById} from "./categorySlice.ts";
-
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getNft } from '../../api/Router.ts';
+import { fetchCategories, fetchCategoryById } from './categorySlice.ts';
 
 export const fetchNft = createAsyncThunk(
-    'nft',
-    async (_, { rejectWithValue }) => {
-        try {
-        return await getNft();
-        } catch (error) {
-        return rejectWithValue(error.message);
-        }
-    },
-    );
+  'nft',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await getNft();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const initialState = {
   cards: [],
@@ -28,14 +27,12 @@ const nftCardSlice = createSlice({
     },
     clearNftCard: () => initialState,
   },
-    extraReducers: (builder) => {
-    builder
-      .addCase(fetchNft.fulfilled, (state, action) => {
-        state.cards = action.payload.cards;
-        state.nft = action.payload.nft[0];
-      });
+  extraReducers: (builder) => {
+    builder.addCase(fetchNft.fulfilled, (state, action) => {
+      state.cards = action.payload.cards;
+      state.nft = action.payload.nft[0];
+    });
   },
-
 });
 
 export const { setNftCard, clearNftCard } = nftCardSlice.actions;

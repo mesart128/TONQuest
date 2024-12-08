@@ -30,7 +30,7 @@ export const TelegramProvider = ({
       app.WebApp.setBackgroundColor('#000');
       setWebApp(app);
       setLoading(false);
-      console.log(webApp)
+      console.log(webApp);
     }
   }, [pathname]);
 
@@ -46,20 +46,20 @@ export const TelegramProvider = ({
   }, [webApp, pathname, router]);
 
   useEffect(() => {
-      (async () => {
-        if (webApp?.WebApp.initDataUnsafe?.user) {
-          const user = await getUser(webApp.WebApp.initDataUnsafe.user.id);
-          // console.log(user.error)
-          if (!user) {
-            await createUser({
-              telegram_id: webApp.WebApp.initDataUnsafe.user.id,
-              first_name: webApp.WebApp.initDataUnsafe.user.first_name,
-              username: webApp.WebApp.initDataUnsafe.user.username,
-              last_name: webApp.WebApp.initDataUnsafe.user.last_name,
-            });
-          }
+    (async () => {
+      if (webApp?.WebApp.initDataUnsafe?.user) {
+        const user = await getUser(webApp.WebApp.initDataUnsafe.user.id);
+        // console.log(user.error)
+        if (!user) {
+          await createUser({
+            telegram_id: webApp.WebApp.initDataUnsafe.user.id,
+            first_name: webApp.WebApp.initDataUnsafe.user.first_name,
+            username: webApp.WebApp.initDataUnsafe.user.username,
+            last_name: webApp.WebApp.initDataUnsafe.user.last_name,
+          });
         }
-      })();
+      }
+    })();
   }, [webApp]);
 
   return (
