@@ -179,7 +179,7 @@ const TaskCard = ({
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="max-w-md m-auto">
       {localStatus === 'blocked' ? (
         <div className="bg-gray-800 text-white p-4 rounded-2xl mb-4 relative overflow-hidden">
           <div className="flex justify-between items-center mb-2">
@@ -266,7 +266,7 @@ const TaskCard = ({
       {/* {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-gradient-to-b from-blue-900 to-black p-8 rounded-lg text-white text-center max-w-md w-full mx-4">
-            <button 
+            <button
               onClick={() => setShowSuccessModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white"
             >
@@ -276,11 +276,11 @@ const TaskCard = ({
             </button>
 
             <h2 className="text-2xl font-bold mb-2">The task is completed</h2>
-            
+
             <div className="my-8">
-              <img 
-                src="/path-to-your-target-icon.svg" 
-                alt="Target" 
+              <img
+                src="/path-to-your-target-icon.svg"
+                alt="Target"
                 className="w-24 h-24 mx-auto"
               />
             </div>

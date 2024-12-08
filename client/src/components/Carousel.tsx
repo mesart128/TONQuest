@@ -13,12 +13,7 @@ type CarouselProps = {
 const Carousel = ({ items }: CarouselProps) => {
   return (
     <div className="w-full max-w-lg mx-auto mt-4 h-[300px]">
-      <Swiper
-        spaceBetween={20}
-        slidesPerView={2.5}
-        loop={true}
-        className="h-full w-full"
-      >
+      <Swiper spaceBetween={20} slidesPerView={2.5} className="h-full w-full">
         {items.map(({ title, subtitle, subtasks, status, image, alt }, idx) => (
           <SwiperSlide key={idx}>
             <div className="h-full w-full flex justify-center items-center rounded-3xl shadow-md">

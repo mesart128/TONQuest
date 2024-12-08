@@ -50,11 +50,20 @@ const QuestPage = () => {
     appendDots: (dots) => (
       <div
         style={{
-          bottom: '-20px',
+          top: '15px',
           position: 'relative',
         }}
       >
-        <ul style={{ margin: '0px' }}>{dots}</ul>
+        <ul
+          style={{
+            margin: '0px',
+            padding: '0px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {dots}
+        </ul>
       </div>
     ),
     customPaging: (i) => (
@@ -68,33 +77,30 @@ const QuestPage = () => {
         }}
       ></div>
     ),
+    arrows: false,
   };
 
   return (
     <Page back={false} disableMainButton={true}>
-      <div className="h-screen flex flex-col items-center">
+      <div className="h-screen flex flex-col overflow-hidden">
         <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
         {!cards && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100vh',
-            }}
-          >
+          <div className="flex-1 flex justify-center items-center">
             <ClipLoader color="#36d7b7" size={50} />
           </div>
         )}
         <div className="flex-1 flex flex-col w-[100vw]">
           <Navbar user={user} />
-          <div className="flex flex-col flex-1 justify-center mb-10 ">
-            <section className="">
-              <div className="quest-slider-container">
-                <Slider {...sliderSettings} className="quest-slider pb-10">
+          <div className="flex-1 flex flex-col justify-center overflow-hidden">
+            <section className="flex-1 overflow-hidden flex items-center justify-center">
+              <div className="quest-slider-container w-full max-w-4xl h-full">
+                <Slider
+                  {...sliderSettings}
+                  className="w-full h-full quest-slider"
+                >
                   {cards?.map((card) => (
-                    <div key={card.id} className="flex justify-center">
-                      <div className="w-full">
+                    <div key={card.id} className="flex justify-center h-full">
+                      <div className="w-full h-full flex items-center justify-center">
                         <QuestCard
                           type={card.head}
                           title={card.title}

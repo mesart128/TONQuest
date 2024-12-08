@@ -19,10 +19,12 @@ const TopContextMenu = ({ info, title, type, step }) => {
   };
 
   return (
-    <div className="flex justify-between px-5 py-2 w-screen z-10">
+    <div className="flex justify-between px-5 py-2 w-screen z-10 items-center">
       {info && (
         <>
-          {/*<button onClick={backButtonHandler}>Back</button>*/}
+          <button className="p-2" onClick={backButtonHandler}>
+            &lt;
+          </button>
           <div className="flex items-center">
             {title} ({type}){' '}
           </div>

@@ -30,7 +30,7 @@ const BannerPage = () => {
 
   return (
     <Page>
-      <div className="min-h-screen relative flex items-center w-[100vw]">
+      <div className="min-h-screen relative flex items-center justify-center w-[100vw]">
         <div className="bg-[#0096FF] w-full h-3/5 rounded-full absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
         <div className="flex flex-col items-center justify-center gap-2 z-10">
           <img
