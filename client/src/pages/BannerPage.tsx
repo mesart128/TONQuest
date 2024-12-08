@@ -16,9 +16,8 @@ import { API_BASE_URL } from '../api/Router';
 const BannerPage = () => {
   const navigate = useNavigate();
 
-  const { imageUrl, description, title, type, branches, subtitle } = useSelector(
-    (state) => state.selectedCard,
-  );
+  const { imageUrl, description, title, type, branches, subtitle } =
+    useSelector((state) => state.selectedCard);
   useEffect(() => {
     mainButton.setParams({
       isVisible: true,
@@ -34,7 +33,10 @@ const BannerPage = () => {
       <div className="min-h-screen relative flex items-center w-[100vw]">
         <div className="bg-[#0096FF] w-full h-3/5 rounded-full absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
         <div className="flex flex-col items-center justify-center gap-2 z-10">
-          <img className="max-w-[50%] mb-5" src={`${API_BASE_URL}/${imageUrl}`} />
+          <img
+            className="max-w-[50%] mb-5"
+            src={`${API_BASE_URL}/${imageUrl}`}
+          />
           <h1 className="text-2xl font-bold mb-2 text-center text-white max-w-[70%]">
             {title} ({type})
           </h1>

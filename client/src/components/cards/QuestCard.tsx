@@ -37,17 +37,17 @@ const QuestCard = ({
   const { branch, error, activeTask } = useSelector((state) => state.branch);
 
   return (
-    <div className="max-w-sm mx-auto flex mb-4" onClick={cardSelectHandler}>
+    <div className="flex mb-4" onClick={cardSelectHandler}>
       <div
-        className="rounded-3xl flex flex-col justify-around  p-6 text-white
+        className="rounded-3xl max-w-[70vw] max-h-40 m-auto flex flex-col justify-around p-6 text-white
       border border-solid border-[#0096FF] shadow-2xl relative overflow-hidden min-h-[500px] bg-black/10 backdrop-blur-lg"
       >
         <div className="text-center mb-8 flex flex-col items-center justify-center space-y-4">
           <div className="space-y-1">
-            <h2 className="text-3xl font-medium opacity-60">{type}</h2>
-            <h1 className="text-4xl font-medium">{title}</h1>
+            <h2 className="text-2xl font-medium opacity-60">{type}</h2>
+            <h1 className="text-3xl font-medium">{title}</h1>
           </div>
-          <p className="text-xl text-blue-100 opacity-75">{description}</p>
+          <p className="text-xm text-blue-100 opacity-75">{description}</p>
         </div>
 
         <div className="flex justify-center mb-8">
@@ -63,7 +63,6 @@ const QuestCard = ({
 
         <div className="mt-auto bg-gray-900/70 rounded-3xl p-4 text-white shadow-lg flex flex-row items-center gap-4">
           <div>{percentage}%</div>
-          {/* TODO: % calculation */}
           <div className="relative bg-gray-400 rounded-full h-[0.7rem] w-32 flex-1">
             <div
               className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"

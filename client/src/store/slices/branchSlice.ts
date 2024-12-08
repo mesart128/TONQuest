@@ -15,26 +15,26 @@ export const fetchBranchById = createAsyncThunk(
 );
 
 export const completeBranchById = createAsyncThunk(
-    'branch/completeBranchById',
-    async (branchId, { rejectWithValue }) => {
-      try {
-        return await completeBranch(branchId);
-      } catch (error) {
-        return rejectWithValue(error.message);
-      }
-    },
-  );
+  'branch/completeBranchById',
+  async (branchId, { rejectWithValue }) => {
+    try {
+      return await completeBranch(branchId);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-  export const checkBranchById = createAsyncThunk(
-    'branch/checkBranchById',
-    async (branchId, { rejectWithValue }) => {
-      try {
-        return await checkBranch(branchId);
-      } catch (error) {
-        return rejectWithValue(error.message);
-      }
-    },
-  );
+export const checkBranchById = createAsyncThunk(
+  'branch/checkBranchById',
+  async (branchId, { rejectWithValue }) => {
+    try {
+      return await checkBranch(branchId);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const branchSlice = createSlice({
   name: 'branch',
