@@ -4,14 +4,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { claimTaskById, checkTaskById } from '../../store/slices/taskSlice';
 import { fetchBranchById } from '../../store/slices/branchSlice';
 import { toast } from 'react-toastify';
-import { completeBranchById, checkBranchById } from '../../store/slices/branchSlice';
+import {
+  completeBranchById,
+  checkBranchById,
+} from '../../store/slices/branchSlice';
 import { claimPieceById } from '../../store/slices/pieceSlice';
 import { fetchUser } from '../../store/slices/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setUserAddress } from '../../api/Router';
-import { useTonConnectModal,useTonAddress } from '@tonconnect/ui-react';
+import { useTonConnectModal, useTonAddress } from '@tonconnect/ui-react';
 
-const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction, onTaskComplete }) => {
+const TaskCard = ({
+  part,
+  title,
+  xp,
+  status,
+  actionURL,
+  task_type,
+  callToAction,
+  onTaskComplete,
+}) => {
   const dispatch = useDispatch();
   const { state, open, close } = useTonConnectModal();
   const rawAddress = useTonAddress(false);
@@ -23,7 +35,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
   const [localStatus, setLocalStatus] = useState(status);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,46 +66,44 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
       console.error('Error refreshing task state:', error);
     }
   };
-  
+
   const validateTaskCompletion = async (taskId) => {
     try {
       const taskCheck = await dispatch(checkTaskById(taskId)).unwrap();
       console.log(`taskId: ${taskId}`);
       if (!taskCheck?.completed) {
-        toast.error("Task is not completed.");
+        toast.error('Task is not completed.');
         if (task_type === 'connect_wallet') {
           if (rawAddress) {
             console.log('address connected');
             await setUserAddress(rawAddress);
-          }
-          else {
+          } else {
             open();
           }
-        }
-        else {
+        } else {
           navigate('/task-slider');
         }
         return false;
       }
-    
+
       const taskClaim = await dispatch(claimTaskById(taskId)).unwrap();
       if (!taskClaim?.success) {
-        toast.error("Error claiming task.");
+        toast.error('Error claiming task.');
         return false;
       }
-      
-      toast.success("Task successfully claimed");
+
+      toast.success('Task successfully claimed');
       setLocalStatus('claimed');
-      
+
       await refreshTaskState();
-      
+
       return true;
     } catch (error) {
       console.error('Error in validateTaskCompletion:', error);
       return false;
     }
   };
-  
+
   const validateBranchCompletion = async (branchId) => {
     if (!areAllTasksCompleted()) {
       return false;
@@ -104,16 +114,16 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
       console.log(`branchId CHECK: ${branchId}`);
 
       if (branchCheck.completed === false) {
-        toast.error("Branch is not completed.");
+        toast.error('Branch is not completed.');
         return false;
       }
-    
+
       // const branchCompletion = await dispatch(completeBranchById(branchId)).unwrap();
       // if (!branchCompletion.success) {
       //   toast.error("Error occurred.");
       //   return false;
       // }
-    
+
       await refreshTaskState();
       return true;
     } catch (error) {
@@ -121,15 +131,15 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
       return false;
     }
   };
-  
+
   const claimReward = async (pieceId) => {
     try {
       const pieceClaim = await dispatch(claimPieceById(pieceId)).unwrap();
       if (!pieceClaim?.success) {
-        toast.error("Failed to claim the piece.");
+        toast.error('Failed to claim the piece.');
         return false;
       }
-      
+
       setEarnedXP(xp);
       setShowSuccessModal(true);
       await dispatch(fetchUser());
@@ -143,7 +153,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
   const checkIsCompleted = async () => {
     try {
       if (!activeTask?.id) {
-        toast.error("No active task found.");
+        toast.error('No active task found.');
         return;
       }
       console.log('ACTIVE TASK:', activeTask);
@@ -156,7 +166,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
         console.log('ALL TASKS COMPLETED');
         const isBranchCompleted = await validateBranchCompletion(branch.id);
         if (!isBranchCompleted) return;
-        
+
         navigate('/congratulations');
         // const isRewardClaimed = await claimReward(branch.pieces[0].id);
         // if (!isRewardClaimed) return;
@@ -198,9 +208,7 @@ const TaskCard = ({ part, title, xp, status, actionURL, task_type, callToAction,
                 />
               </svg>
             </div>
-            <div className="text-lg">
-            Unlock after the {part - 1} task
-            </div>
+            <div className="text-lg">Unlock after the {part - 1} task</div>
           </div>
           <GradientButton
             blocked={true}

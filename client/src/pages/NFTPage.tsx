@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import BottomMenu from '../components/BottomMenu';
 import Navbar from '../components/Navbar';
 import nftMonkey from '../assets/monkey.webp';
@@ -7,8 +7,8 @@ import { Page } from '../Page';
 import Carousel from '../components/Carousel';
 import one from '../assets/one.png';
 import target from '../assets/target.png';
-import {useDispatch, useSelector} from "react-redux";
-import {fetchNft} from "../store/slices/nftSlice.ts";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNft } from '../store/slices/nftSlice.ts';
 
 export type Card = {
   title: string;
@@ -30,32 +30,35 @@ const NFTPage = () => {
     dispatch(fetchNft());
   }, [dispatch]);
 
-  let cards: Card[] = []
+  let cards: Card[] = [];
   for (let i = 0; i < branches.cards.length; i++) {
-      let card = branches.cards[i].card
-      console.log(card)
-      let subtasks = []
-      let length = card.subtasks? card.subtasks.length : 0
-      for (let j = 0; j < length; j++) {
-      subtasks.push({subtaskId: j, isCompleted: card.subtasks[j].isCompleted})
-      }
-      let status = card.received? "Received" : "In progress"
-      cards.push({
+    let card = branches.cards[i].card;
+    console.log(card);
+    let subtasks = [];
+    let length = card.subtasks ? card.subtasks.length : 0;
+    for (let j = 0; j < length; j++) {
+      subtasks.push({
+        subtaskId: j,
+        isCompleted: card.subtasks[j].isCompleted,
+      });
+    }
+    let status = card.received ? 'Received' : 'In progress';
+    cards.push({
       title: card.title,
       subtitle: card.subtitle,
-      image: "https://i.ibb.co/Sn5KCD7/image.png",
+      image: 'https://i.ibb.co/Sn5KCD7/image.png',
       alt: card.alt,
       status: status,
       isCompleted: card.received,
-      subtasks: subtasks
-      })
+      subtasks: subtasks,
+    });
   }
-  const tasks_ = []
-    for (let i = 0; i < cards.length; i++) {
-        let for_push = {taskId: i, isCompleted: cards[i].isCompleted}
-        tasks_.push(for_push)
-    }
-    const tasks = tasks_
+  const tasks_ = [];
+  for (let i = 0; i < cards.length; i++) {
+    let for_push = { taskId: i, isCompleted: cards[i].isCompleted };
+    tasks_.push(for_push);
+  }
+  const tasks = tasks_;
   // const tasks = [
   //   { taskId: 0, isCompleted: true },
   //   { taskId: 1, isCompleted: true },
@@ -147,7 +150,7 @@ const NFTPage = () => {
       <div className="h-screen flex flex-col items-center o">
         <div className="bg-[#C3FF00] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
         <div className="flex flex-col z-10">
-          <Navbar user={user}/>
+          <Navbar user={user} />
           <div className="flex-1 overflow-y-auto max-w-[100vw] p-5">
             <section className="flex flex-col items-center">
               <div className="flex items-center justify-center relative rounded-3xl w-[85vw] h-auto">

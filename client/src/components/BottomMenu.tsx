@@ -10,7 +10,7 @@ const menuItems = [
   { path: '/bonus', imgSrc: coins, alt: 'bonus' },
 ];
 
-const BottomMenu = ({visible}) => {
+const BottomMenu = ({ visible }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
