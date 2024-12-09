@@ -86,8 +86,9 @@ async def populate_database(engine, repo):
             "task_id": dedust_first_task_id,
             "title": "What is Token Swapping?",
             "description": (
-                "Token swapping allows you to exchange one token for another directly on the Dedust platform. "
-                "It's a quick and decentralized way to exchange resources without intermediaries."
+                "Token swapping is your gateway to easily acquire the resources you need. "
+                "Whether you're exploring new DeFi opportunities, quickly swapping tokens "
+                "to take advantage of market changes or diversifying your crypto assets "
             ),
             "image": get_static_path("elements/Exchange Bitcoin_BTC-Dollar_USD.png"),
             "queue": 1,
@@ -96,8 +97,9 @@ async def populate_database(engine, repo):
             "task_id": dedust_first_task_id,
             "title": "Fiat Example",
             "description": (
-                "Imagine going to a currency exchange office to convert USD into EUR. "
-                "Token swapping works the same way but with cryptocurrencies, without needing a bank."
+                "Token swapping is like exchanging currencies at a traditional exchange office. "
+                "Unlike centralized exchanges, decentralized swaps give you complete control "
+                "over your assets, as you exchanging directly with others "
             ),
             "image": get_static_path("elements/Currencies.png"),
             "queue": 2,
