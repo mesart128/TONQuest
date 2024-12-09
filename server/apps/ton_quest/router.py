@@ -403,7 +403,11 @@ async def claim_piece(
     return {"success": True}
 
 
-@ton_quest_router.get("/reset_database")
-async def reset_database():
+@ton_quest_router.post("/reset_database")
+async def reset_database(
+        database_url: str,
+):
+    if database_url != base_config.database_uri:
+        raise HTTPException(status_code=400, detail="Invalid database url")
     await populate_database(engine, db)
     return {"success": True}
