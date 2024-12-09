@@ -1,14 +1,14 @@
 import asyncio
 
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from apps.ton_quest.enums import TaskTypeEnum
 from apps.ton_quest.models import NFT, Branch, Category, Piece, Slide, Task, User
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo  # Замените на реальный путь
 from database.base import Base
-
 import os
-
+load_dotenv()
 database_url = os.getenv("DATABASE_URI")
 
 static_root_path = os.path.join(os.path.dirname(__file__), "../static")
@@ -30,9 +30,9 @@ async def populate_database(engine, repo):
     category_connect_wallet_data = {
         "title": "Connect Wallet",
         "head": "Getting Started",
-        "description": "Learn how to connect your wallet to the TON ecosystem",
+        "description": "Easily connect your wallet and take your first step into the TON ecosystem ",
         "image": get_static_path(f"category/INTRO.png"),
-        "subtitle": "Your wallet is your digital key to the TON ecosystem, allowing you to store assets, manage transactions, and interact with decentralized applications.",
+        "subtitle": "Your wallet is your secure gateway to TON—connect in one click to manage assets and access ecosystem services. Stay safe by signing transactions only on trusted platforms ",
     }
     connect_wallet_category_id = await repo.add_one(Category, category_connect_wallet_data)
 
@@ -59,9 +59,9 @@ async def populate_database(engine, repo):
     dex_category_data = {
         "head": "DEX",
         "title": "Easy start",
-        "description": "You will learn how to use decentralized exchange tools",
+        "description": "Discover the power of decentralized exchanges and learn how to use them easily.",
         "image": get_static_path(f"category/DEX.png"),
-        "subtitle": "This branch provides a beginner-friendly introduction to Dedust, guiding you through interactive tasks and clear, practical explanations.",
+        "subtitle": "Unlock financial freedom with decentralized exchanges. Manage your assets, without intermediaries, securely swap tokens, and explore EARNing opportunities through a beginner-friendly and hands-on approach",
     }
     dex_category_id = await repo.add_one(Category, dex_category_data)
     dedust_branch_data = {
@@ -86,8 +86,9 @@ async def populate_database(engine, repo):
             "task_id": dedust_first_task_id,
             "title": "What is Token Swapping?",
             "description": (
-                "Token swapping allows you to exchange one token for another directly on the Dedust platform. "
-                "It's a quick and decentralized way to exchange resources without intermediaries."
+                "Token swapping is your gateway to easily acquire the resources you need. "
+                "Whether you're exploring new DeFi opportunities, quickly swapping tokens "
+                "to take advantage of market changes or diversifying your crypto assets "
             ),
             "image": get_static_path("elements/Exchange Bitcoin_BTC-Dollar_USD.png"),
             "queue": 1,
@@ -96,8 +97,9 @@ async def populate_database(engine, repo):
             "task_id": dedust_first_task_id,
             "title": "Fiat Example",
             "description": (
-                "Imagine going to a currency exchange office to convert USD into EUR. "
-                "Token swapping works the same way but with cryptocurrencies, without needing a bank."
+                "Token swapping is like exchanging currencies at a traditional exchange office. "
+                "Unlike centralized exchanges, decentralized swaps give you complete control "
+                "over your assets, as you exchanging directly with others "
             ),
             "image": get_static_path("elements/Currencies.png"),
             "queue": 2,
@@ -292,8 +294,7 @@ async def populate_database(engine, repo):
         "description": "You will learn how to use EVAA lending and borrowing tools in the TON ecosystem.",
         "image": get_static_path(f"category/CREDIT_LOANS.png"),
         "subtitle": (
-            "This branch introduces users to the mechanisms of borrowing and lending on TON "
-            "using EVAA with hands-on tasks and simple, interactive explanations."
+            "Discover the potential of managing your assets: borrow and lend securely while maximizing your financial flexibility with clear and interactive guidance "
         ),
     }
     evaa_category_id = await repo.add_one(Category, evaa_category_data)
