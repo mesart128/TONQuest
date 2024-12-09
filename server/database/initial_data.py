@@ -7,42 +7,18 @@ from apps.ton_quest.models import NFT, Branch, Category, Piece, Slide, Task, Use
 from apps.ton_quest.repository import TonQuestSQLAlchemyRepo  # Замените на реальный путь
 from database.base import Base
 
-import base64
 import os
 
+database_url = os.getenv("DATABASE_URI")
 
 static_root_path = os.path.join(os.path.dirname(__file__), "../static")
 
-def get_base_64_str(filename):
-    """
-    Функция для получения Base64 строки из файла.
 
-    :param filename: Путь к файлу или его название
-    :return: Base64 строка, либо пустая строка в случае ошибки
-    """
-    # filename = os.path.join(static_root_path, filename)
+def get_static_path(filename):
     return "static/" + filename
-    try:
-        # Проверяем, существует ли файл
-        if not os.path.isfile(filename):
-            raise FileNotFoundError(f"Файл {filename} не найден.")
-
-        # Открываем файл и читаем его содержимое в бинарном виде
-        with open(filename, "rb") as file:
-            file_data = file.read()
-
-        # Преобразуем данные файла в строку Base64
-        encoded_str = base64.b64encode(file_data).decode('utf-8')
-        return encoded_str
-    except Exception as e:
-        # В случае ошибки возвращаем пустую строку
-        print(f"Ошибка при чтении файла {filename}: {e}")
-        return ""
 
 
-DATABASE_URL = (
-    "postgresql+asyncpg://creator:creator@localhost/tonquest"  # Укажите свои данные подключения
-)
+DATABASE_URL = database_url
 
 
 async def populate_database(engine, repo):
@@ -55,7 +31,7 @@ async def populate_database(engine, repo):
         "title": "Connect Wallet",
         "head": "Getting Started",
         "description": "Learn how to connect your wallet to the TON ecosystem",
-        "image": get_base_64_str(f"category/INTRO.png"),
+        "image": get_static_path(f"category/INTRO.png"),
         "subtitle": "Your wallet is your digital key to the TON ecosystem, allowing you to store assets, manage transactions, and interact with decentralized applications.",
     }
     connect_wallet_category_id = await repo.add_one(Category, category_connect_wallet_data)
@@ -73,7 +49,7 @@ async def populate_database(engine, repo):
         "task_type": TaskTypeEnum.connect_wallet,
         "action_url": "https://tonos-se.org/",
         "call_to_action": "You have connected your wallet. Great job! "
-        "You've been rewarded by piece of NFT. Keep it up!",
+                          "You've been rewarded by piece of NFT. Keep it up!",
         "branch_id": connect_wallet_branch_id,
     }
 
@@ -84,10 +60,9 @@ async def populate_database(engine, repo):
         "head": "DEX",
         "title": "Easy start",
         "description": "You will learn how to use decentralized exchange tools",
-        "image": get_base_64_str(f"category/DEX.png"),
+        "image": get_static_path(f"category/DEX.png"),
         "subtitle": "This branch provides a beginner-friendly introduction to Dedust, guiding you through interactive tasks and clear, practical explanations.",
-        # TODO - можно поменять на странице Баннер пейдж(первая страница после выбора категорий)
-}
+    }
     dex_category_id = await repo.add_one(Category, dex_category_data)
     dedust_branch_data = {
         "title": "Dedust",
@@ -114,7 +89,7 @@ async def populate_database(engine, repo):
                 "Token swapping allows you to exchange one token for another directly on the Dedust platform. "
                 "It's a quick and decentralized way to exchange resources without intermediaries."
             ),
-            "image": None,  # todo я бы вставил что то типо exchange.png
+            "image": get_static_path("elements/Exchange Bitcoin_BTC-Dollar_USD.png"),
             "queue": 1,
         },
         {
@@ -124,7 +99,7 @@ async def populate_database(engine, repo):
                 "Imagine going to a currency exchange office to convert USD into EUR. "
                 "Token swapping works the same way but with cryptocurrencies, without needing a bank."
             ),
-            "image": None,
+            "image": get_static_path("elements/Currencies.png"),
             "queue": 2,
         },
         {
@@ -133,14 +108,14 @@ async def populate_database(engine, repo):
             "description": (
                 "This ensures you can access your tokens securely."
             ),
-            "image": get_base_64_str(f"dedust_swap_1.png"),
+            "image": get_static_path(f"dedust_swap_1.png"),
             "queue": 3,
         },
         {
             "task_id": dedust_first_task_id,
             "title": "Select swap token pair",
             "description": None,
-            "image": get_base_64_str(f"dedust_swap_2.png"),
+            "image": get_static_path(f"dedust_swap_2.png"),
             "queue": 4,
         },
         {
@@ -149,28 +124,28 @@ async def populate_database(engine, repo):
             "description": (
                 "Dedust will calculate the approximate value."
             ),
-            "image": get_base_64_str(f"dedust_swap_3.png"),
+            "image": get_static_path(f"dedust_swap_3.png"),
             "queue": 5,
         },
         {
             "task_id": dedust_first_task_id,
             "title": "Review Details and Confirm",
             "description": None,
-            "image": get_base_64_str(f"dedust_swap_4.png"),
+            "image": get_static_path(f"dedust_swap_4.png"),
             "queue": 6,
         },
         {
             "task_id": dedust_first_task_id,
             "title": "Approve in Wallet",
             "description": None,
-            "image": get_base_64_str(f"dedust_swap_5.png"),
+            "image": get_static_path(f"dedust_swap_5.png"),
             "queue": 7,
         },
         {
             "task_id": dedust_first_task_id,
             "title": None,
             "description": None,
-            "image": get_base_64_str(f"dedust_swap_6.png"),
+            "image": get_static_path(f"dedust_swap_6.png"),
             "queue": 8,
         },
     ]
@@ -192,10 +167,10 @@ async def populate_database(engine, repo):
             "task_id": dedust_second_task_id,
             "title": "What is adding a liquidity pool",
             "description": (
-                "When you create a liquidity pool, you are giving someone the opportunity to exchange the cryptocurrency pair you have locked." 
-                "In return for this you receive a commission from the exchange transaction in your pool." ),
+                "When you create a liquidity pool, you are giving someone the opportunity to exchange the cryptocurrency pair you have locked."
+                "In return for this you receive a commission from the exchange transaction in your pool."),
             "image": None,
-            "queue": 1, 
+            "queue": 1,
         },
         {
             "task_id": dedust_second_task_id,
@@ -210,35 +185,35 @@ async def populate_database(engine, repo):
             "task_id": dedust_second_task_id,
             "title": "Select liquidity pool",
             "description": "",
-            "image": get_base_64_str(f"dedust_add_liquidity_1.png"),
+            "image": get_static_path(f"dedust_add_liquidity_1.png"),
             "queue": 3,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Deposit",
             "description": "",
-            "image": get_base_64_str(f"dedust_add_liquidity_2.png"),
+            "image": get_static_path(f"dedust_add_liquidity_2.png"),
             "queue": 4,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Enter amount of tokens",
             "description": "",
-            "image": get_base_64_str(f"dedust_add_liquidity_3.png"),
+            "image": get_static_path(f"dedust_add_liquidity_3.png"),
             "queue": 5,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Press Deposit",
             "description": "",
-            "image": get_base_64_str(f"dedust_add_liquidity_4.png"),
+            "image": get_static_path(f"dedust_add_liquidity_4.png"),
             "queue": 6,
         },
         {
             "task_id": dedust_second_task_id,
             "title": "Confirm in wallet",
             "description": "",
-            "image": get_base_64_str(f"dedust_add_liquidity_5.png"),
+            "image": get_static_path(f"dedust_add_liquidity_5.png"),
             "queue": 7,
         }
     ]
@@ -275,35 +250,35 @@ async def populate_database(engine, repo):
             "task_id": dedust_third_task_id,
             "title": "Go to your positions",
             "description": "",
-            "image": get_base_64_str(f"dedust_withdraw_liquidity_1.png"),
+            "image": get_static_path(f"dedust_withdraw_liquidity_1.png"),
             "queue": 3,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Select pool",
             "description": "",
-            "image": get_base_64_str(f"dedust_withdraw_liquidity_2.png"),
+            "image": get_static_path(f"dedust_withdraw_liquidity_2.png"),
             "queue": 4,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Press Withdraw",
             "description": "",
-            "image": get_base_64_str(f"dedust_withdraw_liquidity_3.png"),
+            "image": get_static_path(f"dedust_withdraw_liquidity_3.png"),
             "queue": 5,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Press Withdraw",
             "description": "",
-            "image": get_base_64_str(f"dedust_withdraw_liquidity_4.png"),
+            "image": get_static_path(f"dedust_withdraw_liquidity_4.png"),
             "queue": 6,
         },
         {
             "task_id": dedust_third_task_id,
             "title": "Confirm action",
             "description": "",
-            "image": get_base_64_str(f"dedust_withdraw_liquidity_5.png"),
+            "image": get_static_path(f"dedust_withdraw_liquidity_5.png"),
             "queue": 7,
         },
     ]
@@ -315,7 +290,7 @@ async def populate_database(engine, repo):
         "head": "Lending & Borrowing",
         "title": "Intro to EVAA",
         "description": "You will learn how to use EVAA lending and borrowing tools in the TON ecosystem.",
-        "image": get_base_64_str(f"category/CREDIT_LOANS.png"),
+        "image": get_static_path(f"category/CREDIT_LOANS.png"),
         "subtitle": (
             "This branch introduces users to the mechanisms of borrowing and lending on TON "
             "using EVAA with hands-on tasks and simple, interactive explanations."
@@ -366,35 +341,35 @@ async def populate_database(engine, repo):
             "task_id": evaa_first_task_id,
             "title": "Connect Wallet",
             "description": "",
-            "image": get_base_64_str(f"evaa_supply_1.png"),
+            "image": get_static_path(f"evaa_supply_1.png"),
             "queue": 3,
         },
         {
             "task_id": evaa_first_task_id,
             "title": "Press '+'",
             "description": "",
-            "image": get_base_64_str(f"evaa_supply_2.png"),
+            "image": get_static_path(f"evaa_supply_2.png"),
             "queue": 4,
         },
         {
             "task_id": evaa_first_task_id,
             "title": "Select asset",
             "description": "",
-            "image": get_base_64_str(f"evaa_supply_3.png"),
+            "image": get_static_path(f"evaa_supply_3.png"),
             "queue": 5,
         },
         {
             "task_id": evaa_first_task_id,
             "title": "Enter amount, press Supply",
             "description": "",
-            "image": get_base_64_str(f"evaa_supply_4.png"),
+            "image": get_static_path(f"evaa_supply_4.png"),
             "queue": 6,
         },
         {
             "task_id": evaa_first_task_id,
             "title": "Confirm in wallet",
             "description": "",
-            "image": get_base_64_str(f"evaa_supply_5.png"),
+            "image": get_static_path(f"evaa_supply_5.png"),
             "queue": 7,
         },
     ]
@@ -421,7 +396,7 @@ async def populate_database(engine, repo):
                 "Borrowing on EVAA allows you to access liquidity without selling your tokens. "
                 "You can use your supplied assets as collateral to secure the loan."
             ),
-            "image": "https://kauri.io/images/slide3.png",
+            "image": None,
             "queue": 1,
         },
 
@@ -429,7 +404,7 @@ async def populate_database(engine, repo):
             "task_id": evaa_second_task_id,
             "title": "Press Borrow",
             "description": "",
-            "image": get_base_64_str(f"evaa_borrow_1.png"),
+            "image": get_static_path(f"evaa_borrow_1.png"),
             "queue": 3,
         },
         {
@@ -439,28 +414,28 @@ async def populate_database(engine, repo):
                 "Borrowing is like taking a loan from a bank with your house as collateral. "
                 "If you don’t repay the loan, the bank can claim your house."
             ),
-            "image": "https://kauri.io/images/slide4.png",
+            "image": None,
             "queue": 2,
         },
         {
             "task_id": evaa_second_task_id,
             "title": "Select asset",
             "description": "",
-            "image": get_base_64_str(f"evaa_borrow_2.png"),
+            "image": get_static_path(f"evaa_borrow_2.png"),
             "queue": 4,
         },
         {
             "task_id": evaa_second_task_id,
             "title": "Enter amount, press Borrow",
             "description": "",
-            "image": get_base_64_str(f"evaa_borrow_3.png"),
+            "image": get_static_path(f"evaa_borrow_3.png"),
             "queue": 5,
         },
         {
             "task_id": evaa_second_task_id,
             "title": "Confirm in wallet",
             "description": "",
-            "image": get_base_64_str(f"evaa_borrow_4.png"),
+            "image": get_static_path(f"evaa_borrow_4.png"),
             "queue": 6,
         },
     ]
@@ -487,7 +462,7 @@ async def populate_database(engine, repo):
                 "Repaying a loan means returning the borrowed assets along with any accrued interest. "
                 "Once repaid, your collateral is unlocked."
             ),
-            "image": "https://kauri.io/images/slide5.png",
+            "image": None,
             "queue": 1,
         },
         {
@@ -497,35 +472,35 @@ async def populate_database(engine, repo):
                 "Repaying a loan is like settling a mortgage. Once you pay it off, "
                 "your house (collateral) is fully yours again."
             ),
-            "image": "https://kauri.io/images/slide6.png",
+            "image": None,
             "queue": 2,
         },
         {
             "task_id": evaa_third_task_id,
             "title": "Press '+'",
             "description": "",
-            "image": get_base_64_str(f"evaa_repay_1.png"),
+            "image": get_static_path(f"evaa_repay_1.png"),
             "queue": 3,
         },
         {
             "task_id": evaa_third_task_id,
             "title": "Select borrowed asset",
             "description": "",
-            "image": get_base_64_str(f"evaa_repay_2.png"),
+            "image": get_static_path(f"evaa_repay_2.png"),
             "queue": 4,
         },
         {
             "task_id": evaa_third_task_id,
             "title": "Enter amount",
             "description": "",
-            "image": get_base_64_str(f"evaa_repay_3.png"),
+            "image": get_static_path(f"evaa_repay_3.png"),
             "queue": 5,
         },
         {
             "task_id": evaa_third_task_id,
             "title": "Press Repay",
             "description": "",
-            "image": get_base_64_str(f"evaa_repay_4.png"),
+            "image": get_static_path(f"evaa_repay_4.png"),
             "queue": 6,
         },
     ]
@@ -542,47 +517,46 @@ async def populate_database(engine, repo):
         "call_to_action": "You have successfully withdrawn your supplied assets. Keep up the good work!",
     }
     evaa_fourth_task_id = await repo.add_one(Task, evaa_fourth_task_data)
-    
+
     slides_fourth_task = [
         {
             "task_id": evaa_fourth_task_id,
             "title": "Select supplied asset",
             "description": "",
-            "image": get_base_64_str(f"evaa_withdraw_1.png"),
+            "image": get_static_path(f"evaa_withdraw_1.png"),
             "queue": 1,
         },
         {
             "task_id": evaa_fourth_task_id,
             "title": "Press Withdraw",
             "description": "",
-            "image": get_base_64_str(f"evaa_withdraw_2.png"),
+            "image": get_static_path(f"evaa_withdraw_2.png"),
             "queue": 2,
         },
         {
             "task_id": evaa_fourth_task_id,
             "title": "Enter amount",
             "description": "",
-            "image": get_base_64_str(f"evaa_withdraw_3.png"),
+            "image": get_static_path(f"evaa_withdraw_3.png"),
             "queue": 3,
         },
         {
             "task_id": evaa_fourth_task_id,
             "title": "Confirm action",
             "description": "",
-            "image": get_base_64_str(f"evaa_withdraw_4.png"),
+            "image": get_static_path(f"evaa_withdraw_4.png"),
             "queue": 4,
         },
     ]
     for slide in slides_fourth_task:
         await repo.add_one(Slide, slide)
 
-
     # TONSTAKERS
     staking_category_data = {
         "head": "Staking",
         "title": "Passive Income",
         "description": "Learn how to stake TON for passive income and maximize your returns.",
-        "image": get_base_64_str(f"category/STAKING.png"),
+        "image": get_static_path(f"category/STAKING.png"),
         "subtitle": (
             "This branch introduces users to the staking process, comparing staking pools, "
             "and managing their staked assets for maximum efficiency."
@@ -616,7 +590,7 @@ async def populate_database(engine, repo):
                 "Staking allows you to earn rewards by locking your tokens to support the network's operations. "
                 "It’s like earning interest on a fixed deposit."
             ),
-            "image": "https://kauri.io/images/slide1.png",
+            "image": None,
             "queue": 1,
         },
         {
@@ -626,35 +600,35 @@ async def populate_database(engine, repo):
                 "Staking is like depositing money in a high-yield savings account. "
                 "The longer you stake, the more rewards you earn."
             ),
-            "image": "https://kauri.io/images/slide2.png",
+            "image": None,
             "queue": 2,
         },
         {
             "task_id": staking_first_task_id,
             "title": "Connect Wallet",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_stake_1.png"),
+            "image": get_static_path(f"tonstakers_stake_1.png"),
             "queue": 3,
         },
         {
             "task_id": staking_first_task_id,
             "title": "Select amount",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_stake_2.png"),
+            "image": get_static_path(f"tonstakers_stake_2.png"),
             "queue": 4,
         },
         {
             "task_id": staking_first_task_id,
             "title": "Press Stake",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_stake_3.png"),
+            "image": get_static_path(f"tonstakers_stake_3.png"),
             "queue": 5,
         },
         {
             "task_id": staking_first_task_id,
             "title": "Success",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_stake_4.png"),
+            "image": get_static_path(f"tonstakers_stake_4.png"),
             "queue": 6,
         },
     ]
@@ -681,7 +655,7 @@ async def populate_database(engine, repo):
                 "Unstaking allows you to withdraw your tokens from a staking pool. "
                 "After unstaking, you can use your tokens for trading or other purposes."
             ),
-            "image": "https://kauri.io/images/slide5.png",
+            "image": None,
             "queue": 1,
         },
         {
@@ -691,35 +665,35 @@ async def populate_database(engine, repo):
                 "Unstaking is like withdrawing money from a fixed deposit. "
                 "Once withdrawn, you can use your funds as needed."
             ),
-            "image": "https://kauri.io/images/slide6.png",
+            "image": None,
             "queue": 2,
         },
         {
             "task_id": staking_third_task_id,
             "title": "Select amount",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_unstake_1.png"),
+            "image": get_static_path(f"tonstakers_unstake_1.png"),
             "queue": 3,
         },
         {
             "task_id": staking_third_task_id,
             "title": "Press Unstake",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_unstake_2.png"),
+            "image": get_static_path(f"tonstakers_unstake_2.png"),
             "queue": 4,
         },
         {
             "task_id": staking_third_task_id,
             "title": "Confirm action",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_unstake_3.png"),
+            "image": get_static_path(f"tonstakers_unstake_3.png"),
             "queue": 5,
         },
         {
             "task_id": staking_third_task_id,
             "title": "Success",
             "description": "",
-            "image": get_base_64_str(f"tonstakers_unstake_4.png"),
+            "image": get_static_path(f"tonstakers_unstake_4.png"),
             "queue": 6,
         },
     ]
@@ -731,13 +705,13 @@ async def populate_database(engine, repo):
         "username": "testuser",
         "first_name": "Test",
         "last_name": "User",
-        "image": "https://kauri.io/images/user.png",
+        "image": None,
     }
     await repo.add_one(User, test_user_data)
 
     # NFT и части
     test_nft_data = {
-        "image": get_base_64_str('nft/NFT.webp'),
+        "image": get_static_path('nft/NFT.webp'),
         "contract_address": "0xabcdef123456789",
     }
     test_nft_id = await repo.add_one(NFT, test_nft_data)
@@ -745,25 +719,25 @@ async def populate_database(engine, repo):
     pieces = [
         {
             "nft_id": test_nft_id,
-            "image": "https://kauri.io/images/piece1.png",
+            "image": None,
             "branch_id": connect_wallet_branch_id,
             "queue": 1,
         },
         {
             "nft_id": test_nft_id,
-            "image": "https://kauri.io/images/piece1.png",
+            "image": None,
             "branch_id": dedust_branch_id,
             "queue": 2,
         },
         {
             "nft_id": test_nft_id,
-            "image": "https://kauri.io/images/piece2.png",
+            "image": None,
             "branch_id": evaa_branch_id,
             "queue": 3,
         },
         {
             "nft_id": test_nft_id,
-            "image": "https://kauri.io/images/piece2.png",
+            "image": None,
             "branch_id": staking_branch_id,
             "queue": 4,
         },
