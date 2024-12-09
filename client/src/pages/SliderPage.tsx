@@ -35,21 +35,21 @@ const SliderPage = () => {
 
   return (
     <Page>
-      <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col items-center">
+      <div className="min-h-screen relative flex flex-col items-center w-full flex flex-col items-center ">
         <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[200px]"></div>
         <div className="w-full max-w-[100vw]">
           <div className="flex justify-between items-center mb-6 px-10 py-3 w-full fixed top-0 left-0 z-10 sticky top-0">
-            <div className="text-sm backdrop-blur-lg bg-black/10 border border-white/60 rounded-xl p-2">
+            <div className="text-sm backdrop-blur-lg border border-white/60 rounded-xl p-2">
               +{xp} XP
             </div>
             <button
               onClick={onCloseHandler}
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg"
+              className="text-sm backdrop-blur-lg border border-white/60 rounded-xl p-2"
             >
               Close
             </button>
           </div>
-          <div className="flex items-center justify-center h-screen">
+          <div className="flex items-between justify-center mt-28 mb-10">
             <Swiper
               loop={false}
               className="w-full h-full"
@@ -67,17 +67,17 @@ const SliderPage = () => {
                       {slide.title}
                     </h1>
 
-                    <p className="text-gray-300 text-lg mb-8 max-w-[90%]">
+                    {slide.description ? (<p className="text-gray-300 text-lg mb-8 max-w-[90%]">
                       {slide.description}
-                    </p>
+                    </p>) : <div className="mb-8 max-w-[90%]"></div>}
 
-                    <div className="rounded-3xl overflow-hidden mb-8">
+                    <div className="rounded-3xl overflow-hidden mt-auto">
                       {slide.image ? (
                         <img
                           src={`${API_BASE_URL}/${slide.image}`}
                           alt={slide.title}
                           style={{
-                            maxHeight: '60vh',
+                            maxHeight: '80vh',
                             width: 'auto',
                             maxWidth: '90%',
                             objectFit: 'contain',
