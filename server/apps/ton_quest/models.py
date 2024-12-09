@@ -64,7 +64,7 @@ class Task(BaseSqlModel):
     action_url: Mapped[str] = mapped_column()
     call_to_action: Mapped[str] = mapped_column()
     users = relationship("User", secondary="users_tasks", back_populates="tasks")
-    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task", lazy="noload")
+    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task", lazy="noload", order_by="Slide.queue")
 
     def to_read_model(self):
         return {
