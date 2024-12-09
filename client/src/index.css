@@ -159,6 +159,29 @@ button:focus-visible {
   overflow: hidden;
 }
 
+.custom-pagination .swiper-pagination-bullet {
+  background-color: white;
+  width: 12px;
+  height: 12px;
+  opacity: 40%;
+  transition: background-color 0.3s ease;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+  background-color: white;
+  opacity: 1;
+}
+
+.pagination-custom-task-slider .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.5);
+  width: 8px;
+  height: 8px;
+}
+
+.pagination-custom-task-slider .swiper-pagination-bullet-active {
+  background: #fff;
+}
+
 .border-gradient {
   border-image:
     radial-gradient(
@@ -190,5 +213,5 @@ button:focus-visible {
 }
 
 .swiper {
-  height: 36rem;
+  height: 18rem;
 }

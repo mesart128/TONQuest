@@ -50,7 +50,7 @@ const QuestPage = () => {
     appendDots: (dots) => (
       <div
         style={{
-          top: '15px',
+          bottom: '5px',
           position: 'relative',
         }}
       >
@@ -82,25 +82,25 @@ const QuestPage = () => {
 
   return (
     <Page back={false} disableMainButton={true}>
-      <div className="h-screen flex flex-col overflow-hidden">
+      <div className="min-h-screen flex flex-col" >
         <div className="bg-[#0096FF] w-full h-4/5 rounded-full absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[100px]"></div>
         {!cards && (
           <div className="flex-1 flex justify-center items-center">
             <ClipLoader color="#36d7b7" size={50} />
           </div>
         )}
-        <div className="flex-1 flex flex-col w-[100vw]">
+        <div className="flex-1 flex flex-col">
           <Navbar user={user} />
-          <div className="flex-1 flex flex-col justify-center overflow-hidden">
-            <section className="flex-1 overflow-hidden flex items-center justify-center">
-              <div className="quest-slider-container w-full max-w-4xl h-full">
-                <Slider
-                  {...sliderSettings}
-                  className="w-full h-full quest-slider"
-                >
-                  {cards?.map((card) => (
-                    <div key={card.id} className="flex justify-center h-full">
-                      <div className="w-full h-full flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center h-full lg:max-h-[600px]">
+            <div className="w-full xs:max-h-[150px] max-w-[90vw] md:max-w-[700px] lg:max-w-[800px] lg:max-h-[650px] xl:max-w-[700px] px-4 h-full">
+              <Slider
+                {...sliderSettings}
+                className="quest-slider"
+              >
+                {cards?.map((card) => (
+                  <div key={card.id} className="px-2 py-4 md:py-6 lg:py-8 xl:py-10">
+                    <div className="flex items-center justify-center">
+                      <div className="w-full">
                         <QuestCard
                           type={card.head}
                           title={card.title}
@@ -113,10 +113,10 @@ const QuestPage = () => {
                         />
                       </div>
                     </div>
-                  ))}
-                </Slider>
-              </div>
-            </section>
+                  </div>
+                ))}
+              </Slider>
+            </div>
           </div>
         </div>
         <BottomMenu />

@@ -38,7 +38,7 @@ const QuestCard = ({
 
   return (
     <div
-      className="w-full max-w-[95%] mx-auto px-4 max-h-[calc(100vh-10rem)]"
+      className="w-full min-h-[200px] md:min-h-[700px] lg:min-h-[600px] xl:min-h-[700px]"
       onClick={cardSelectHandler}
     >
       <div
@@ -46,8 +46,8 @@ const QuestCard = ({
         text-white border border-solid border-[#0096FF]
         shadow-2xl overflow-hidden
         bg-black/10 backdrop-blur-lg
-        p-6 space-y-0
-        min-h-[300px] max-h-[70vh]"
+        p-6 md:p-8 lg:p-10 xl:p-12 space-y-4 md:space-y-6 lg:space-y-8 xl:space-y-10
+        min-h-[300px] md:min-h-[700px] lg:min-h-[700px] xl:min-h-[700px]"
       >
         <div className="text-center flex flex-col items-center justify-center space-y-4">
           <div className="space-y-1">

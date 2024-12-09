@@ -51,10 +51,14 @@ const SliderPage = () => {
           </div>
           <div className="flex items-center justify-center h-screen">
             <Swiper
-              loop={true}
+              loop={false}
               className="w-full h-full"
               slidesPerView={1}
-              // onSlideChange={(swiper) => setIsLastSlide(swiper.activeIndex === slides?.length - 1)}
+              style={{
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center'
+              }}
             >
               {slides?.map((slide) => (
                 <SwiperSlide key={slide.id}>
@@ -68,17 +72,20 @@ const SliderPage = () => {
                     </p>
 
                     <div className="rounded-3xl overflow-hidden mb-8">
-                      {slide.image && (
+                      {slide.image ? (
                         <img
                           src={`${API_BASE_URL}/${slide.image}`}
                           alt={slide.title}
                           style={{
-                            maxHeight: '75vh',
+                            maxHeight: '60vh',
+                            width: 'auto',
+                            maxWidth: '90%',
                             objectFit: 'contain',
+                            margin: '0 auto'
                           }}
                           className="m-auto"
                         />
-                      )}
+                      ) : <></>}
                     </div>
                   </div>
                 </SwiperSlide>
