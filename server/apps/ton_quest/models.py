@@ -206,7 +206,7 @@ class User(BaseSqlModel):
 class Piece(BaseSqlModel):
     __tablename__ = "pieces"
     nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
-    image: Mapped[str] = mapped_column()
+    image: Mapped[str] = mapped_column(nullable=True)
     users: Mapped[list["User"]] = relationship(
         "User", secondary="users_pieces", back_populates="pieces"
     )
