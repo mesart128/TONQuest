@@ -26,9 +26,9 @@ class User(pydantic.BaseModel):
 class Slide(pydantic.BaseModel):
     id: UUID
     task_id: UUID
-    title: str
-    description: str
-    image: str
+    title: Optional[str]
+    description: Optional[str]
+    image: Optional[str]
     queue: int
 
 

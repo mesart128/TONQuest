@@ -424,6 +424,14 @@ async def populate_database(engine, repo):
             "image": "https://kauri.io/images/slide3.png",
             "queue": 1,
         },
+
+        {
+            "task_id": evaa_second_task_id,
+            "title": "Press Borrow",
+            "description": "",
+            "image": get_base_64_str(f"evaa_borrow_1.png"),
+            "queue": 3,
+        },
         {
             "task_id": evaa_second_task_id,
             "title": "Fiat Analogy",
@@ -433,13 +441,6 @@ async def populate_database(engine, repo):
             ),
             "image": "https://kauri.io/images/slide4.png",
             "queue": 2,
-        },
-        {
-            "task_id": evaa_second_task_id,
-            "title": "Press Borrow",
-            "description": "",
-            "image": get_base_64_str(f"evaa_borrow_1.png"),
-            "queue": 3,
         },
         {
             "task_id": evaa_second_task_id,
