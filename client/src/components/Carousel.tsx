@@ -12,8 +12,8 @@ type CarouselProps = {
 
 const Carousel = ({ items }: CarouselProps) => {
   return (
-    <div className="w-full max-w-lg mx-auto mt-4 h-[300px]">
-      <Swiper spaceBetween={20} slidesPerView={2.5} className="h-full w-full">
+    <div className="w-full max-w-lg mx-auto mt-4 h-[150px]">
+      <Swiper spaceBetween={20} slidesPerView={2.5} className="w-full h-[50%]">
         {items.map(({ title, subtitle, subtasks, status, image, alt }, idx) => (
           <SwiperSlide key={idx}>
             <div className="h-full w-full flex justify-center items-center rounded-3xl shadow-md">
@@ -27,13 +27,13 @@ const Carousel = ({ items }: CarouselProps) => {
                   <img
                     src={image}
                     alt={alt}
-                    className="h-[60%] w-auto object-contain"
+                    className="h-[25%] w-auto object-contain"
                   />
                 </div>
                 <div className="h-[50%] bg-black flex flex-col items-center text-center">
                   <div className="flex flex-1 justify-between mx-2">
                     <div className="mt-8 flex flex-col flex-1">
-                      <p className="text-md text-white text-lg font-semibold">
+                      <p className="text-md text-white text-sm font-semibold">
                         {title}
                       </p>
                       <p className="text-md text-white/70 leading-4 mt-0.5">
