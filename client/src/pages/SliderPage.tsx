@@ -49,7 +49,7 @@ const SliderPage = () => {
               Close
             </button>
           </div>
-          <div className="flex items-center justify-center h-screen">
+          <div className="flex items-between justify-center mt-28 mb-10">
             <Swiper
               loop={false}
               className="w-full h-full"
@@ -67,17 +67,17 @@ const SliderPage = () => {
                       {slide.title}
                     </h1>
 
-                    <p className="text-gray-300 text-lg mb-8 max-w-[90%]">
+                    {slide.description ? (<p className="text-gray-300 text-lg mb-8 max-w-[90%]">
                       {slide.description}
-                    </p>
+                    </p>) : <div className="mb-8 max-w-[90%]"></div>}
 
-                    <div className="rounded-3xl overflow-hidden mb-8">
+                    <div className="rounded-3xl overflow-hidden mt-auto">
                       {slide.image ? (
                         <img
                           src={`${API_BASE_URL}/${slide.image}`}
                           alt={slide.title}
                           style={{
-                            maxHeight: '60vh',
+                            maxHeight: '80vh',
                             width: 'auto',
                             maxWidth: '90%',
                             objectFit: 'contain',
