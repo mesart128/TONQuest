@@ -43,7 +43,7 @@ const QuestCard = ({
     >
       <div
         className="rounded-3xl w-full flex flex-col justify-between
-        text-white border border-solid border-[#0096FF]
+        text-white border-2 border-solid border-[#0096FF]
         shadow-2xl overflow-hidden
         bg-black/10 backdrop-blur-lg
         p-6 md:p-8 lg:p-10 xl:p-12 space-y-4 md:space-y-6 lg:space-y-8 xl:space-y-10
