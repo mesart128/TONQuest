@@ -26,9 +26,9 @@ class User(pydantic.BaseModel):
 class Slide(pydantic.BaseModel):
     id: UUID
     task_id: UUID
-    title: str
-    description: str
-    image: str
+    title: Optional[str]
+    description: Optional[str]
+    image: Optional[str]
     queue: int
 
 
@@ -70,7 +70,7 @@ class UserTask(pydantic.BaseModel):
 class Piece(pydantic.BaseModel):
     id: UUID
     nft_id: UUID
-    image: str
+    image: Optional[str] = None
     branch_id: Optional[UUID]
     queue: Optional[int]
 

@@ -64,7 +64,7 @@ class Task(BaseSqlModel):
     action_url: Mapped[str] = mapped_column()
     call_to_action: Mapped[str] = mapped_column()
     users = relationship("User", secondary="users_tasks", back_populates="tasks")
-    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task", lazy="noload")
+    slides: Mapped[list[Slide]] = relationship("Slide", back_populates="task", lazy="noload", order_by="Slide.queue")
 
     def to_read_model(self):
         return {
@@ -206,7 +206,7 @@ class User(BaseSqlModel):
 class Piece(BaseSqlModel):
     __tablename__ = "pieces"
     nft_id: Mapped[str] = mapped_column(ForeignKey("nfts.id"))
-    image: Mapped[str] = mapped_column()
+    image: Mapped[str] = mapped_column(nullable=True)
     users: Mapped[list["User"]] = relationship(
         "User", secondary="users_pieces", back_populates="pieces"
     )
