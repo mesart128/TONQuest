@@ -57,7 +57,7 @@ const SliderPage = () => {
               style={{
                 height: '100%',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
               }}
             >
               {slides?.map((slide) => (
@@ -67,9 +67,13 @@ const SliderPage = () => {
                       {slide.title}
                     </h1>
 
-                    {slide.description ? (<p className="text-gray-300 text-lg mb-8 max-w-[90%]">
-                      {slide.description}
-                    </p>) : <div className="mb-8 max-w-[90%]"></div>}
+                    {slide.description ? (
+                      <p className="text-gray-300 text-lg mb-8 max-w-[90%]">
+                        {slide.description}
+                      </p>
+                    ) : (
+                      <div className="mb-8 max-w-[90%]"></div>
+                    )}
 
                     <div className="rounded-3xl overflow-hidden mt-auto">
                       {slide.image ? (
@@ -81,11 +85,13 @@ const SliderPage = () => {
                             width: 'auto',
                             maxWidth: '90%',
                             objectFit: 'contain',
-                            margin: '0 auto'
+                            margin: '0 auto',
                           }}
                           className="m-auto"
                         />
-                      ) : <></>}
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </SwiperSlide>

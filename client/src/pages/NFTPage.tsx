@@ -73,13 +73,14 @@ const NFTPage = () => {
                   {tasks.map((item) => {
                     if (item.isCompleted) {
                       return (
-                        <div className="flex flex-col justify-center items-center">
-                        </div>
+                        <div className="flex flex-col justify-center items-center"></div>
                       );
                     } else {
                       return (
                         <div className="flex flex-col justify-center items-center bg-black/50 backdrop-blur-md">
-                          <p className="font-medium text-lg">{item.taskId + 1} part</p>
+                          <p className="font-medium text-lg">
+                            {item.taskId + 1} part
+                          </p>
                           <Lock className="h-6 w-6" />
                         </div>
                       );
