@@ -23,6 +23,7 @@ class TelegramConfig(BaseSettings):
     BOT_NICKNAME: str
     REDIS_URL: str
     WEB_APP_URL: str
+    CHANNEL_URL: str
 
     # bot moderator
     # CHANNEL_URL: str
@@ -31,17 +32,16 @@ class TelegramConfig(BaseSettings):
     ADMIN_ID: int
 
 
-class MongoConfig(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=PROJECT_DIR / ".env", env_file_encoding="utf-8", extra="allow"
-    )
-    mongo_db_url: str
-    mongo_db_name: str = "needify_tbot"
+# class MongoConfig(BaseSettings):
+#     model_config = SettingsConfigDict(
+#         env_file=PROJECT_DIR / ".env", env_file_encoding="utf-8", extra="allow"
+#     )
+#     mongo_db_url: str
+#     mongo_db_name: str = "needify_tbot"
 
 
 class Config(BaseSettings):
     telegram: TelegramConfig
-    mongo: MongoConfig = MongoConfig()
 
 
 def load_config() -> Config:

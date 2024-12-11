@@ -4,12 +4,11 @@ import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ChatMemberStatus
 from aiogram.exceptions import TelegramBadRequest
-
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from src.core.config import env_config
-from src.core.database import redis_storage
-from src.core.handlers import main_router
-from src.core.logger_settings import setup_logging
-from src.referral.handlers import referral_router
+# from src.core.handlers import main_router
+# from src.core.logger_settings import setup_logging
+# from src.referral.handlers import referral_router
 from src.utils.commands import set_commands
 
 # Bot token can be obtained via https://t.me/BotFather
@@ -36,18 +35,30 @@ async def check_the_user_is_subscriber(bot: Bot, channel_id: int, user_id: int):
         return False
 
 
-@dp.channel_post()
-async def echo(message: types.Message):
-    await check_the_user_is_subscriber(
-        bot, env_config.telegram.CHANNEL_ID, env_config.telegram.ADMIN_ID
+# @dp.channel_post()
+# async def echo(message: types.Message):
+#     await check_the_user_is_subscriber(
+#         bot, env_config.telegram.CHANNEL_ID, env_config.telegram.ADMIN_ID
+#     )
+#     await message.answer(message.text)
+
+@dp.message()
+async def start(message: types.Message):
+    keyboard = [
+        [InlineKeyboardButton(text="Open app", url=env_config.telegram.WEB_APP_URL)],
+        [InlineKeyboardButton(text="Join our channel", url=env_config.telegram.CHANNEL_URL)],
+    ]
+    await message.answer(
+        f"Welcome to the TONQuest!",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard, resize_keyboard=True),
     )
-    await message.answer(message.text)
+
 
 
 async def on_startup():
     logging.warning("Starting connection")
-    dp.include_router(main_router)
-    dp.include_router(referral_router)
+    # dp.include_router(main_router)
+    # dp.include_router(referral_router)
     logging.warning("Connection established")
 
 
@@ -62,5 +73,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    setup_logging()
+    # setup_logging()
     asyncio.run(main())
