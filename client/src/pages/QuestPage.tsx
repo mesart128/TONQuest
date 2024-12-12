@@ -11,6 +11,7 @@ import { fetchCategories } from '../store/slices/categorySlice';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '../Page';
+import ConnectWalletHandler from '../components/ConnectWalletHandler';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -121,6 +122,7 @@ const QuestPage = () => {
         </div>
         <BottomMenu />
       </div>
+      <ConnectWalletHandler />
     </Page>
   );
 };

@@ -16,6 +16,9 @@ import { checkBranchById } from '../store/slices/branchSlice';
 import { getTask } from '../api/Router';
 import { Page } from '../Page';
 import { mainButton } from '@telegram-apps/sdk-react';
+import { getConnectWalletTask } from '../utils';
+import { checkTaskById, claimTaskById } from '../store/slices/taskSlice';
+import ConnectWalletHandler from '../components/ConnectWalletHandler';
 
 const TasksPage = () => {
   const dispatch = useDispatch();
@@ -23,6 +26,7 @@ const TasksPage = () => {
   const { state, open, close } = useTonConnectModal();
   const rawAddress = useTonAddress(false);
   const user = useSelector((state) => state.user.user);
+  const categories = useSelector((state) => state.category.list);
   const { branch, status, error, activeTask } = useSelector(
     (state) => state.branch,
   );
@@ -58,12 +62,9 @@ const TasksPage = () => {
     } else {
       console.log('no wallet');
       if (rawAddress) {
-        console.log('address connected');
-        setUserAddress(rawAddress).then(() => {
-          dispatch(fetchUser());
-        });
+
       } else {
-        console.log('address not connected');
+        console.log('wallet not connected');
         open();
       }
     }
@@ -75,14 +76,6 @@ const TasksPage = () => {
       dispatch(fetchBranchById(branchId));
     }
   }, [title, type, branches, dispatch]);
-
-  useEffect(() => {
-    if (rawAddress) {
-      setUserAddress(rawAddress).then(() => {
-        dispatch(fetchUser());
-      });
-    }
-  }, [rawAddress]);
 
   if (error) {
     return <div>{error}</div>;
@@ -143,6 +136,7 @@ const TasksPage = () => {
   } */}
         </footer>
       </div>
+      <ConnectWalletHandler />
     </Page>
   );
 };
