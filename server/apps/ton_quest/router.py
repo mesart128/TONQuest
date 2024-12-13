@@ -86,6 +86,19 @@ async def get_user(
     return schemas.User(**response_dict)
 
 
+@ton_quest_router.delete("/users")
+async def delete_user(
+        user_telegram_id: int,
+        web_app_init_data: WebAppInitData = Security(web_app_auth_header),
+):
+    if web_app_init_data.user.id not in base_config.admin_ids_list:
+        return {"error": "Actor user is not admin"}
+    try:
+        await db.delete_user(user_telegram_id)
+    except NotFound:
+        return {"error": "User not found"}
+    return {"success": True}
+
 # @ton_quest_router.get("/users/{address}/")
 # async def get_completed_user(address: str) -> List[schemas.Task]:
 #     try:
@@ -122,10 +135,18 @@ async def set_user_address(
 @ton_quest_router.get(
     "/tasks/{task_id}",
 )
-async def get_task(task_id: UUID) -> schemas.Task:
+async def get_task(
+        task_id: UUID,
+        web_app_init_data: WebAppInitData = Security(web_app_auth_header)
+) -> schemas.Task:
     task = await db.get_task_with_slides(str(task_id))
+    try:
+        user = await db.get_user(web_app_init_data.user.id)
+    except NotFound:
+        raise HTTPException(status_code=403, detail="User not found")
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
+    await telegram_logger.info(text=f"User({user.telegram_id}) {user.first_name}{f' - @{user.username}' if user.username else ''} request task {task.title}")
     return schemas.Task(**task.to_read_model())
 
 

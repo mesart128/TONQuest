@@ -129,6 +129,25 @@ class TonQuestSQLAlchemyRepo(BaseSQLAlchemyRepo):
             raise NotFound("User not found")
         return user
 
+    async def delete_user(self, telegram_id: int):
+        async with self._session_factory() as session:
+            async with session.begin():
+                stmt = select(User).where(User.telegram_id == telegram_id)
+                result = await session.execute(stmt)
+                user = result.scalar_one_or_none()
+                if user is None:
+                    raise NotFound("User not found")
+                await session.execute(
+                    delete(UserTask).where(UserTask.user_id == user.id)
+                )
+                await session.execute(
+                    delete(UserBranch).where(UserBranch.user_id == user.id)
+                )
+                await session.execute(
+                    delete(UserPiece).where(UserPiece.user_id == user.id)
+                )
+                await session.delete(user)
+
     async def get_user_by(self, **kwargs) -> User | None:
         """Получить пользователя по ID."""
         smtp = (

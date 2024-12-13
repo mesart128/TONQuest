@@ -152,15 +152,22 @@ class User(BaseSqlModel):
     wallet_address: Mapped[str] = mapped_column(nullable=True)
 
     tasks: Mapped[list["Task"]] = relationship(
-        "Task", secondary="users_tasks", back_populates="users"
+        "Task", secondary="users_tasks", back_populates="users",
+        cascade="all, delete",
+
     )
     branches: Mapped[list["Branch"]] = relationship(
-        "Branch", secondary="users_branches", back_populates="users"
+        "Branch", secondary="users_branches",
+        back_populates="users", cascade="all, delete"
     )
     pieces: Mapped[list["Piece"]] = relationship(
-        "Piece", secondary="users_pieces", back_populates="users"
+        "Piece", secondary="users_pieces", back_populates="users",
+        cascade="all, delete"
     )
-    nfts: Mapped[list["NFT"]] = relationship("NFT", secondary="users_nfts", back_populates="users")
+    nfts: Mapped[list["NFT"]] = relationship(
+        "NFT", secondary="users_nfts",
+        back_populates="users",cascade="all, delete"
+    )
 
     completed_tasks: Mapped[list[UserTask]] = relationship(
         "UserTask",
