@@ -13,6 +13,7 @@ import { fetchUser } from '../../store/slices/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setUserAddress } from '../../api/Router';
 import { useTonConnectModal, useTonAddress } from '@tonconnect/ui-react';
+import ConnectWalletHandler from '../ConnectWalletHandler';
 
 const TaskCard = ({
   part,
@@ -28,6 +29,7 @@ const TaskCard = ({
   const { state, open, close } = useTonConnectModal();
   const rawAddress = useTonAddress(false);
   const { branch, error, activeTask } = useSelector((state) => state.branch);
+  const user = useSelector((state) => state.user.user);
   const { imageUrl, description, type, branches } = useSelector(
     (state) => state.selectedCard,
   );
@@ -73,10 +75,9 @@ const TaskCard = ({
       console.log(`taskId: ${taskId}`);
       if (!taskCheck?.completed) {
         toast.error('Task is not completed.');
-        if (task_type === 'connect_wallet') {
+        if (task_type === 'connect_wallet' || !user?.wallet_address) {
           if (rawAddress) {
             console.log('address connected');
-            await setUserAddress(rawAddress);
           } else {
             open();
           }
